@@ -19,25 +19,18 @@ package com.geomatys.geoapi.geotools;
 /**
  * GeoAPI wrapper for an object from the GeoTools API.
  *
- * @param <S> the interface from the GeoTools API of the wrapped implementation.
- *
  * @author Martin Desruisseaux (Geomatys)
  */
-class Identifier<S extends org.geotools.api.metadata.Identifier>
-        extends Wrapper implements org.opengis.metadata.Identifier
+class LocalName<S extends org.geotools.api.util.LocalName>
+        extends GenericName<S> implements org.opengis.util.LocalName
 {
-    /**
-     * The GeoTools implementation on which to delegate all methods.
-     */
-    final S impl;
-
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    Identifier(final S impl) {
-        this.impl = impl;
+    LocalName(final S impl) {
+        super(impl);
     }
 
     /**
@@ -47,26 +40,12 @@ class Identifier<S extends org.geotools.api.metadata.Identifier>
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static org.opengis.metadata.Identifier wrap(final org.geotools.api.metadata.Identifier impl) {
+    static org.opengis.util.LocalName wrap(final org.geotools.api.util.LocalName impl) {
         switch (impl) {
             case null: return null;
-            case org.geotools.api.referencing.ReferenceIdentifier c: return new ReferenceIdentifier(c);
-            default: return new Identifier<>(impl);
+            case org.geotools.api.util.TypeName   c: return new TypeName  (c);
+            case org.geotools.api.util.MemberName c: return new MemberName(c);
+            default: return new LocalName<>(impl);
         }
-    }
-
-    @Override
-    final Object implementation() {
-        return impl;
-    }
-
-    @Override
-    public String getCode() {
-        return impl.getCode();
-    }
-
-    @Override
-    public org.opengis.metadata.citation.Citation getAuthority() {
-        return Citation.wrap(impl.getAuthority());
     }
 }

@@ -26,8 +26,8 @@ import java.util.Set;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-class IdentifiedObject<S extends org.geotools.api.referencing.IdentifiedObject> extends Wrapper
-        implements org.opengis.referencing.IdentifiedObject
+class IdentifiedObject<S extends org.geotools.api.referencing.IdentifiedObject>
+        extends Wrapper implements org.opengis.referencing.IdentifiedObject
 {
     /**
      * The GeoTools implementation on which to delegate all methods.
@@ -73,8 +73,7 @@ class IdentifiedObject<S extends org.geotools.api.referencing.IdentifiedObject> 
 
     @Override
     public Collection<org.opengis.util.GenericName> getAlias() {
-        impl.getAlias();
-        return null;    // TODO
+        return wrap(impl.getAlias(), GenericName::wrap);
     }
 
     @Override

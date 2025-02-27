@@ -16,6 +16,7 @@
 package com.geomatys.geoapi.geotools;
 
 import java.util.Set;
+import java.util.List;
 import java.util.Collection;
 import java.util.function.Function;
 import org.opengis.util.CodeList;
@@ -50,7 +51,7 @@ abstract class Wrapper {
      * @param wrapper the {@code wrap(…)} function to invoke for wrapping each element of the given list.
      * @return a list of wrappers around the GeoTools object.
      */
-    static <S,T> Collection<T> wrap(
+    static <S,T> List<T> wrap(
             final Collection<S> impl,
             final Function<S,T> wrapper)
     {

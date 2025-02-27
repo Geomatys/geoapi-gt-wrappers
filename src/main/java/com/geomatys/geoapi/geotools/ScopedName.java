@@ -19,25 +19,16 @@ package com.geomatys.geoapi.geotools;
 /**
  * GeoAPI wrapper for an object from the GeoTools API.
  *
- * @param <S> the interface from the GeoTools API of the wrapped implementation.
- *
  * @author Martin Desruisseaux (Geomatys)
  */
-class Identifier<S extends org.geotools.api.metadata.Identifier>
-        extends Wrapper implements org.opengis.metadata.Identifier
-{
-    /**
-     * The GeoTools implementation on which to delegate all methods.
-     */
-    final S impl;
-
+final class ScopedName extends GenericName<org.geotools.api.util.ScopedName> implements org.opengis.util.ScopedName {
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    Identifier(final S impl) {
-        this.impl = impl;
+    ScopedName(final org.geotools.api.util.ScopedName impl) {
+        super(impl);
     }
 
     /**
@@ -47,26 +38,17 @@ class Identifier<S extends org.geotools.api.metadata.Identifier>
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static org.opengis.metadata.Identifier wrap(final org.geotools.api.metadata.Identifier impl) {
-        switch (impl) {
-            case null: return null;
-            case org.geotools.api.referencing.ReferenceIdentifier c: return new ReferenceIdentifier(c);
-            default: return new Identifier<>(impl);
-        }
+    static org.opengis.util.ScopedName wrap(final org.geotools.api.util.ScopedName impl) {
+        return (impl == null) ? null : new ScopedName(impl);
     }
 
     @Override
-    final Object implementation() {
-        return impl;
+    public org.opengis.util.GenericName tail() {
+        return GenericName.wrap(impl.tail());
     }
 
     @Override
-    public String getCode() {
-        return impl.getCode();
-    }
-
-    @Override
-    public org.opengis.metadata.citation.Citation getAuthority() {
-        return Citation.wrap(impl.getAuthority());
+    public org.opengis.util.GenericName path() {
+        return GenericName.wrap(impl.path());
     }
 }
