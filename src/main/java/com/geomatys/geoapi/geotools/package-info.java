@@ -15,8 +15,15 @@
  */
 
 /**
- * Implementation of GeoAPI 3 interfaces by delegating to the equivalent GeoTools interface.
+ * Implementation of GeoAPI 3.0 interfaces as wrappers around the GeoTools library.
+ * Projects using GeoAPI interfaces for their metadata and referencing services have
+ * more flexibility for changing implementation according their needs. It also makes
+ * possible to use GeoTools with projects designed for GeoAPI. For example, it makes
+ * possible to run the <a href="https://github.com/IOGP-GIGS/GIGSGeoAPI">GIGS tests</a>
+ * against GeoTools.
  *
  * @author Martin Desruisseaux (Geomatys)
+ *
+ * @see <a href="https://www.geoapi.org/">GeoAPI web site</a>
  */
 package com.geomatys.geoapi.geotools;
