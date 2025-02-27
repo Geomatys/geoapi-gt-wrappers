@@ -15,8 +15,10 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import java.util.Locale;
-import java.util.stream.IntStream;
+import org.opengis.metadata.citation.Contact;
+import org.opengis.metadata.citation.Role;
+import org.opengis.metadata.citation.ResponsibleParty;
+import org.opengis.util.InternationalString;
 
 
 /**
@@ -24,18 +26,18 @@ import java.util.stream.IntStream;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class InternationalString extends Wrapper implements org.opengis.util.InternationalString {
+final class ResponsiblePartyFromGT extends WrapperFromGT implements ResponsibleParty {
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.util.InternationalString impl;
+    private final org.geotools.api.metadata.citation.ResponsibleParty impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    private InternationalString(final org.geotools.api.util.InternationalString impl) {
+    private ResponsiblePartyFromGT(final org.geotools.api.metadata.citation.ResponsibleParty impl) {
         this.impl = impl;
     }
 
@@ -46,8 +48,8 @@ final class InternationalString extends Wrapper implements org.opengis.util.Inte
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static org.opengis.util.InternationalString wrap(final org.geotools.api.util.InternationalString impl) {
-        return (impl == null) ? null : new InternationalString(impl);
+    static ResponsibleParty wrap(final org.geotools.api.metadata.citation.ResponsibleParty impl) {
+        return (impl == null) ? null : new ResponsiblePartyFromGT(impl);
     }
 
     /**
@@ -59,46 +61,27 @@ final class InternationalString extends Wrapper implements org.opengis.util.Inte
     }
 
     @Override
-    public boolean isEmpty() {
-        return impl.isEmpty();
+    public String getIndividualName() {
+        return impl.getIndividualName();
     }
 
     @Override
-    public int length() {
-        return impl.length();
+    public InternationalString getOrganisationName() {
+        return InternationalStringFromGT.wrap(impl.getOrganisationName());
     }
 
     @Override
-    public char charAt(int index) {
-        return impl.charAt(index);
+    public InternationalString getPositionName() {
+        return InternationalStringFromGT.wrap(impl.getPositionName());
     }
 
     @Override
-    public CharSequence subSequence(int start, int end) {
-        return impl.subSequence(start, end);
+    public Contact getContactInfo() {
+        return ContactFromGT.wrap(impl.getContactInfo());
     }
 
     @Override
-    public IntStream chars() {
-        return impl.chars();
-    }
-
-    @Override
-    public IntStream codePoints() {
-        return impl.codePoints();
-    }
-
-    @Override
-    public String toString(Locale locale) {
-        return impl.toString(locale);
-    }
-
-    @Override
-    public int compareTo(org.opengis.util.InternationalString o) {
-        if (o instanceof InternationalString i18n) {
-            return impl.compareTo(i18n.impl);
-        } else {
-            return toString().compareTo(o.toString());
-        }
+    public Role getRole() {
+        return wrap(impl.getRole(), Role::valueOf);
     }
 }

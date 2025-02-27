@@ -15,40 +15,27 @@
  */
 package com.geomatys.geoapi.geotools;
 
+import org.opengis.util.MemberName;
+import org.opengis.util.TypeName;
+
 
 /**
  * GeoAPI wrapper for an object from the GeoTools API.
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class ScopedName extends GenericName<org.geotools.api.util.ScopedName> implements org.opengis.util.ScopedName {
+final class MemberNameFromGT extends LocalNameFromGT<org.geotools.api.util.MemberName> implements MemberName {
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    ScopedName(final org.geotools.api.util.ScopedName impl) {
+    MemberNameFromGT(final org.geotools.api.util.MemberName impl) {
         super(impl);
     }
 
-    /**
-     * Creates a new wrapper of the most appropriate type for the given instance.
-     * If the given implementation is {@code null}, then this method returns {@code null}.
-     *
-     * @param impl the GeoTools implementation on which to delegate all methods
-     * @return wrapper for the given implementation
-     */
-    static org.opengis.util.ScopedName wrap(final org.geotools.api.util.ScopedName impl) {
-        return (impl == null) ? null : new ScopedName(impl);
-    }
-
     @Override
-    public org.opengis.util.GenericName tail() {
-        return GenericName.wrap(impl.tail());
-    }
-
-    @Override
-    public org.opengis.util.GenericName path() {
-        return GenericName.wrap(impl.path());
+    public TypeName getAttributeType() {
+        return TypeNameFromGT.wrap(impl.getAttributeType());
     }
 }

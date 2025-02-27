@@ -15,7 +15,9 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import java.util.Collection;
+import java.util.Locale;
+import java.util.stream.IntStream;
+import org.opengis.util.InternationalString;
 
 
 /**
@@ -23,18 +25,18 @@ import java.util.Collection;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class Address extends Wrapper implements org.opengis.metadata.citation.Address {
+final class InternationalStringFromGT extends WrapperFromGT implements InternationalString {
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.metadata.citation.Address impl;
+    private final org.geotools.api.util.InternationalString impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    private Address(final org.geotools.api.metadata.citation.Address impl) {
+    private InternationalStringFromGT(final org.geotools.api.util.InternationalString impl) {
         this.impl = impl;
     }
 
@@ -45,8 +47,8 @@ final class Address extends Wrapper implements org.opengis.metadata.citation.Add
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static org.opengis.metadata.citation.Address wrap(final org.geotools.api.metadata.citation.Address impl) {
-        return (impl == null) ? null : new Address(impl);
+    static InternationalString wrap(final org.geotools.api.util.InternationalString impl) {
+        return (impl == null) ? null : new InternationalStringFromGT(impl);
     }
 
     /**
@@ -58,32 +60,46 @@ final class Address extends Wrapper implements org.opengis.metadata.citation.Add
     }
 
     @Override
-    public Collection<String> getDeliveryPoints() {
-        return impl.getDeliveryPoints();
+    public boolean isEmpty() {
+        return impl.isEmpty();
     }
 
     @Override
-    public org.opengis.util.InternationalString getCity() {
-        return InternationalString.wrap(impl.getCity());
+    public int length() {
+        return impl.length();
     }
 
     @Override
-    public org.opengis.util.InternationalString getAdministrativeArea() {
-        return InternationalString.wrap(impl.getAdministrativeArea());
+    public char charAt(int index) {
+        return impl.charAt(index);
     }
 
     @Override
-    public String getPostalCode() {
-        return impl.getPostalCode();
+    public CharSequence subSequence(int start, int end) {
+        return impl.subSequence(start, end);
     }
 
     @Override
-    public org.opengis.util.InternationalString getCountry() {
-        return InternationalString.wrap(impl.getCountry());
+    public IntStream chars() {
+        return impl.chars();
     }
 
     @Override
-    public Collection<String> getElectronicMailAddresses() {
-        return impl.getElectronicMailAddresses();
+    public IntStream codePoints() {
+        return impl.codePoints();
+    }
+
+    @Override
+    public String toString(Locale locale) {
+        return impl.toString(locale);
+    }
+
+    @Override
+    public int compareTo(final InternationalString o) {
+        if (o instanceof InternationalStringFromGT i18n) {
+            return impl.compareTo(i18n.impl);
+        } else {
+            return toString().compareTo(o.toString());
+        }
     }
 }

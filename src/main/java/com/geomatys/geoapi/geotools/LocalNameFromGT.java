@@ -15,25 +15,24 @@
  */
 package com.geomatys.geoapi.geotools;
 
+import org.opengis.util.LocalName;
+
 
 /**
  * GeoAPI wrapper for an object from the GeoTools API.
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class NameSpace extends Wrapper implements org.opengis.util.NameSpace {
-    /**
-     * The GeoTools implementation on which to delegate all methods.
-     */
-    private final org.geotools.api.util.NameSpace impl;
-
+class LocalNameFromGT<S extends org.geotools.api.util.LocalName>
+        extends GenericNameFromGT<S> implements LocalName
+{
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    private NameSpace(final org.geotools.api.util.NameSpace impl) {
-        this.impl = impl;
+    LocalNameFromGT(final S impl) {
+        super(impl);
     }
 
     /**
@@ -43,25 +42,12 @@ final class NameSpace extends Wrapper implements org.opengis.util.NameSpace {
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static org.opengis.util.NameSpace wrap(final org.geotools.api.util.NameSpace impl) {
-        return (impl == null) ? null : new NameSpace(impl);
-    }
-
-    /**
-     * {@return the GeoTools implementation on which this wrapper delegates all operations}.
-     */
-    @Override
-    final Object implementation() {
-        return impl;
-    }
-
-    @Override
-    public boolean isGlobal() {
-        return impl.isGlobal();
-    }
-
-    @Override
-    public org.opengis.util.GenericName name() {
-        return GenericName.wrap(impl.name());
+    static LocalName wrap(final org.geotools.api.util.LocalName impl) {
+        switch (impl) {
+            case null: return null;
+            case org.geotools.api.util.TypeName   c: return new TypeNameFromGT  (c);
+            case org.geotools.api.util.MemberName c: return new MemberNameFromGT(c);
+            default: return new LocalNameFromGT<>(impl);
+        }
     }
 }

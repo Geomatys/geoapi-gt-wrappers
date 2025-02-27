@@ -15,7 +15,8 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.opengis.metadata.citation.Role;
+import org.opengis.util.GenericName;
+import org.opengis.util.NameSpace;
 
 
 /**
@@ -23,18 +24,18 @@ import org.opengis.metadata.citation.Role;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class ResponsibleParty extends Wrapper implements org.opengis.metadata.citation.ResponsibleParty {
+final class NameSpaceFromGT extends WrapperFromGT implements NameSpace {
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.metadata.citation.ResponsibleParty impl;
+    private final org.geotools.api.util.NameSpace impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    private ResponsibleParty(final org.geotools.api.metadata.citation.ResponsibleParty impl) {
+    private NameSpaceFromGT(final org.geotools.api.util.NameSpace impl) {
         this.impl = impl;
     }
 
@@ -45,8 +46,8 @@ final class ResponsibleParty extends Wrapper implements org.opengis.metadata.cit
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static org.opengis.metadata.citation.ResponsibleParty wrap(final org.geotools.api.metadata.citation.ResponsibleParty impl) {
-        return (impl == null) ? null : new ResponsibleParty(impl);
+    static NameSpace wrap(final org.geotools.api.util.NameSpace impl) {
+        return (impl == null) ? null : new NameSpaceFromGT(impl);
     }
 
     /**
@@ -58,27 +59,12 @@ final class ResponsibleParty extends Wrapper implements org.opengis.metadata.cit
     }
 
     @Override
-    public String getIndividualName() {
-        return impl.getIndividualName();
+    public boolean isGlobal() {
+        return impl.isGlobal();
     }
 
     @Override
-    public org.opengis.util.InternationalString getOrganisationName() {
-        return InternationalString.wrap(impl.getOrganisationName());
-    }
-
-    @Override
-    public org.opengis.util.InternationalString getPositionName() {
-        return InternationalString.wrap(impl.getPositionName());
-    }
-
-    @Override
-    public org.opengis.metadata.citation.Contact getContactInfo() {
-        return Contact.wrap(impl.getContactInfo());
-    }
-
-    @Override
-    public Role getRole() {
-        return wrap(impl.getRole(), Role::valueOf);
+    public GenericName name() {
+        return GenericNameFromGT.wrap(impl.name());
     }
 }

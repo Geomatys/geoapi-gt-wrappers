@@ -15,19 +15,21 @@
  */
 package com.geomatys.geoapi.geotools;
 
+import org.opengis.util.TypeName;
+
 
 /**
  * GeoAPI wrapper for an object from the GeoTools API.
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class TypeName extends LocalName<org.geotools.api.util.TypeName> implements org.opengis.util.TypeName {
+final class TypeNameFromGT extends LocalNameFromGT<org.geotools.api.util.TypeName> implements TypeName {
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    TypeName(final org.geotools.api.util.TypeName impl) {
+    TypeNameFromGT(final org.geotools.api.util.TypeName impl) {
         super(impl);
     }
 
@@ -38,7 +40,7 @@ final class TypeName extends LocalName<org.geotools.api.util.TypeName> implement
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static org.opengis.util.TypeName wrap(final org.geotools.api.util.TypeName impl) {
-        return (impl == null) ? null : new TypeName(impl);
+    static TypeName wrap(final org.geotools.api.util.TypeName impl) {
+        return (impl == null) ? null : new TypeNameFromGT(impl);
     }
 }

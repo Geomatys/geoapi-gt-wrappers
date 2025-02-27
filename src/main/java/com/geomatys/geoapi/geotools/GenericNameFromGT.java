@@ -16,6 +16,11 @@
 package com.geomatys.geoapi.geotools;
 
 import java.util.List;
+import org.opengis.util.GenericName;
+import org.opengis.util.InternationalString;
+import org.opengis.util.LocalName;
+import org.opengis.util.NameSpace;
+import org.opengis.util.ScopedName;
 
 
 /**
@@ -25,8 +30,8 @@ import java.util.List;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-class GenericName<S extends org.geotools.api.util.GenericName>
-        extends Wrapper implements org.opengis.util.GenericName
+class GenericNameFromGT<S extends org.geotools.api.util.GenericName>
+        extends WrapperFromGT implements GenericName
 {
     /**
      * The GeoTools implementation on which to delegate all methods.
@@ -38,7 +43,7 @@ class GenericName<S extends org.geotools.api.util.GenericName>
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    GenericName(final S impl) {
+    GenericNameFromGT(final S impl) {
         this.impl = impl;
     }
 
@@ -49,14 +54,14 @@ class GenericName<S extends org.geotools.api.util.GenericName>
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static org.opengis.util.GenericName wrap(final org.geotools.api.util.GenericName impl) {
+    static GenericName wrap(final org.geotools.api.util.GenericName impl) {
         switch (impl) {
             case null: return null;
-            case org.geotools.api.util.TypeName   c: return new TypeName   (c);
-            case org.geotools.api.util.MemberName c: return new MemberName (c);
-            case org.geotools.api.util.LocalName  c: return new LocalName<>(c);
-            case org.geotools.api.util.ScopedName c: return new ScopedName (c);
-            default: return new GenericName<>(impl);
+            case org.geotools.api.util.TypeName   c: return new TypeNameFromGT   (c);
+            case org.geotools.api.util.MemberName c: return new MemberNameFromGT (c);
+            case org.geotools.api.util.LocalName  c: return new LocalNameFromGT<>(c);
+            case org.geotools.api.util.ScopedName c: return new ScopedNameFromGT (c);
+            default: return new GenericNameFromGT<>(impl);
         }
     }
 
@@ -66,8 +71,8 @@ class GenericName<S extends org.geotools.api.util.GenericName>
      * @param wrapper the wrapper from which to get the GeoTools implementation.
      * @throws ClassCastException if the given value is not a wrapper for GeoTools.
      */
-    static org.geotools.api.util.GenericName unwrap(final org.opengis.util.GenericName wrapper) {
-        return (wrapper == null) ? null : ((GenericName) wrapper).impl;
+    static org.geotools.api.util.GenericName unwrap(final GenericName wrapper) {
+        return (wrapper == null) ? null : ((GenericNameFromGT) wrapper).impl;
     }
 
     /**
@@ -79,8 +84,8 @@ class GenericName<S extends org.geotools.api.util.GenericName>
     }
 
     @Override
-    public org.opengis.util.NameSpace scope() {
-        return NameSpace.wrap(impl.scope());
+    public NameSpace scope() {
+        return NameSpaceFromGT.wrap(impl.scope());
     }
 
     @Override
@@ -89,37 +94,37 @@ class GenericName<S extends org.geotools.api.util.GenericName>
     }
 
     @Override
-    public List<? extends org.opengis.util.LocalName> getParsedNames() {
-        return wrap(impl.getParsedNames(), LocalName::wrap);
+    public List<LocalName> getParsedNames() {
+        return wrap(impl.getParsedNames(), LocalNameFromGT::wrap);
     }
 
     @Override
-    public org.opengis.util.LocalName head() {
-        return LocalName.wrap(impl.head());
+    public LocalName head() {
+        return LocalNameFromGT.wrap(impl.head());
     }
 
     @Override
-    public org.opengis.util.LocalName tip() {
-        return LocalName.wrap(impl.tip());
+    public LocalName tip() {
+        return LocalNameFromGT.wrap(impl.tip());
     }
 
     @Override
-    public org.opengis.util.GenericName toFullyQualifiedName() {
+    public GenericName toFullyQualifiedName() {
         return wrap(impl.toFullyQualifiedName());
     }
 
     @Override
-    public org.opengis.util.ScopedName push(org.opengis.util.GenericName gn) {
-        return ScopedName.wrap(impl.push(unwrap(gn)));
+    public ScopedName push(final GenericName gn) {
+        return ScopedNameFromGT.wrap(impl.push(unwrap(gn)));
     }
 
     @Override
-    public org.opengis.util.InternationalString toInternationalString() {
-        return InternationalString.wrap(impl.toInternationalString());
+    public InternationalString toInternationalString() {
+        return InternationalStringFromGT.wrap(impl.toInternationalString());
     }
 
     @Override
-    public int compareTo(org.opengis.util.GenericName o) {
+    public int compareTo(final GenericName o) {
         return impl.compareTo(unwrap(o));
     }
 }

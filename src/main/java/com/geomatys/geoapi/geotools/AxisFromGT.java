@@ -15,28 +15,29 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import java.net.URI;
-import org.opengis.metadata.citation.OnLineFunction;
+import javax.measure.Unit;
+import org.opengis.referencing.cs.AxisDirection;
+import org.opengis.referencing.cs.CoordinateSystemAxis;
+import org.opengis.referencing.cs.RangeMeaning;
 
 
 /**
  * GeoAPI wrapper for an object from the GeoTools API.
  *
+ * @param <S> the interface from the GeoTools API of the wrapped implementation.
+ *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class OnlineResource extends Wrapper implements org.opengis.metadata.citation.OnlineResource {
-    /**
-     * The GeoTools implementation on which to delegate all methods.
-     */
-    private final org.geotools.api.metadata.citation.OnLineResource impl;
-
+final class AxisFromGT extends IdentifiedObjectFromGT<org.geotools.api.referencing.cs.CoordinateSystemAxis>
+        implements CoordinateSystemAxis
+{
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    private OnlineResource(final org.geotools.api.metadata.citation.OnLineResource impl) {
-        this.impl = impl;
+    AxisFromGT(final org.geotools.api.referencing.cs.CoordinateSystemAxis impl) {
+        super(impl);
     }
 
     /**
@@ -46,45 +47,37 @@ final class OnlineResource extends Wrapper implements org.opengis.metadata.citat
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static org.opengis.metadata.citation.OnlineResource wrap(final org.geotools.api.metadata.citation.OnLineResource impl) {
-        return (impl == null) ? null : new OnlineResource(impl);
-    }
-
-    /**
-     * {@return the GeoTools implementation on which this wrapper delegates all operations}.
-     */
-    @Override
-    final Object implementation() {
-        return impl;
+    static CoordinateSystemAxis wrap(final org.geotools.api.referencing.cs.CoordinateSystemAxis impl) {
+        return (impl == null) ? null : new AxisFromGT(impl);
     }
 
     @Override
-    public URI getLinkage() {
-        return impl.getLinkage();
+    public String getAbbreviation() {
+        return impl.getAbbreviation();
     }
 
     @Override
-    public String getProtocol() {
-        return impl.getProtocol();
+    public AxisDirection getDirection() {
+        return wrap(impl.getDirection(), AxisDirection::valueOf);
     }
 
     @Override
-    public String getApplicationProfile() {
-        return impl.getApplicationProfile();
+    public double getMinimumValue() {
+        return impl.getMinimumValue();
     }
 
     @Override
-    public String getName() {
-        return impl.getName();
+    public double getMaximumValue() {
+        return impl.getMaximumValue();
     }
 
     @Override
-    public org.opengis.util.InternationalString getDescription() {
-        return InternationalString.wrap(impl.getDescription());
+    public RangeMeaning getRangeMeaning() {
+        return wrap(impl.getRangeMeaning(), RangeMeaning::valueOf);
     }
 
     @Override
-    public OnLineFunction getFunction() {
-        return wrap(impl.getFunction(), OnLineFunction::valueOf);
+    public Unit<?> getUnit() {
+        return impl.getUnit();
     }
 }

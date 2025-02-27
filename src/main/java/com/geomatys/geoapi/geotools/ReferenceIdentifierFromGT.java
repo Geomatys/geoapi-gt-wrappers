@@ -15,27 +15,23 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import javax.measure.Unit;
-import org.opengis.referencing.cs.AxisDirection;
-import org.opengis.referencing.cs.RangeMeaning;
+import org.opengis.referencing.ReferenceIdentifier;
 
 
 /**
  * GeoAPI wrapper for an object from the GeoTools API.
  *
- * @param <S> the interface from the GeoTools API of the wrapped implementation.
- *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class Axis extends IdentifiedObject<org.geotools.api.referencing.cs.CoordinateSystemAxis>
-        implements org.opengis.referencing.cs.CoordinateSystemAxis
+final class ReferenceIdentifierFromGT extends IdentifierFromGT<org.geotools.api.referencing.ReferenceIdentifier>
+        implements ReferenceIdentifier
 {
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    Axis(final org.geotools.api.referencing.cs.CoordinateSystemAxis impl) {
+    ReferenceIdentifierFromGT(final org.geotools.api.referencing.ReferenceIdentifier impl) {
         super(impl);
     }
 
@@ -46,37 +42,17 @@ final class Axis extends IdentifiedObject<org.geotools.api.referencing.cs.Coordi
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static org.opengis.referencing.cs.CoordinateSystemAxis wrap(final org.geotools.api.referencing.cs.CoordinateSystemAxis impl) {
-        return (impl == null) ? null : new Axis(impl);
+    static ReferenceIdentifier wrap(final org.geotools.api.referencing.ReferenceIdentifier impl) {
+        return (impl == null) ? null : new ReferenceIdentifierFromGT(impl);
     }
 
     @Override
-    public String getAbbreviation() {
-        return impl.getAbbreviation();
+    public String getCodeSpace() {
+        return impl.getCodeSpace();
     }
 
     @Override
-    public AxisDirection getDirection() {
-        return wrap(impl.getDirection(), AxisDirection::valueOf);
-    }
-
-    @Override
-    public double getMinimumValue() {
-        return impl.getMinimumValue();
-    }
-
-    @Override
-    public double getMaximumValue() {
-        return impl.getMaximumValue();
-    }
-
-    @Override
-    public RangeMeaning getRangeMeaning() {
-        return wrap(impl.getRangeMeaning(), RangeMeaning::valueOf);
-    }
-
-    @Override
-    public Unit<?> getUnit() {
-        return impl.getUnit();
+    public String getVersion() {
+        return impl.getVersion();
     }
 }

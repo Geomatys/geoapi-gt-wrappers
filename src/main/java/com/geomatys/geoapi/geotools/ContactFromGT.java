@@ -15,7 +15,11 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import java.util.Collection;
+import org.opengis.metadata.citation.Address;
+import org.opengis.metadata.citation.Contact;
+import org.opengis.metadata.citation.OnlineResource;
+import org.opengis.metadata.citation.Telephone;
+import org.opengis.util.InternationalString;
 
 
 /**
@@ -23,18 +27,18 @@ import java.util.Collection;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class Telephone extends Wrapper implements org.opengis.metadata.citation.Telephone {
+final class ContactFromGT extends WrapperFromGT implements Contact {
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.metadata.citation.Telephone impl;
+    private final org.geotools.api.metadata.citation.Contact impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    private Telephone(final org.geotools.api.metadata.citation.Telephone impl) {
+    private ContactFromGT(final org.geotools.api.metadata.citation.Contact impl) {
         this.impl = impl;
     }
 
@@ -45,8 +49,8 @@ final class Telephone extends Wrapper implements org.opengis.metadata.citation.T
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static org.opengis.metadata.citation.Telephone wrap(final org.geotools.api.metadata.citation.Telephone impl) {
-        return (impl == null) ? null : new Telephone(impl);
+    static Contact wrap(final org.geotools.api.metadata.citation.Contact impl) {
+        return (impl == null) ? null : new ContactFromGT(impl);
     }
 
     /**
@@ -58,12 +62,27 @@ final class Telephone extends Wrapper implements org.opengis.metadata.citation.T
     }
 
     @Override
-    public Collection<String> getVoices() {
-        return impl.getVoices();
+    public Telephone getPhone() {
+        return TelephoneFromGT.wrap(impl.getPhone());
     }
 
     @Override
-    public Collection<String> getFacsimiles() {
-        return impl.getFacsimiles();
+    public Address getAddress() {
+        return AddressFromGT.wrap(impl.getAddress());
+    }
+
+    @Override
+    public OnlineResource getOnlineResource() {
+        return OnlineResourceFromGT.wrap(impl.getOnLineResource());
+    }
+
+    @Override
+    public InternationalString getHoursOfService() {
+        return InternationalStringFromGT.wrap(impl.getHoursOfService());
+    }
+
+    @Override
+    public InternationalString getContactInstructions() {
+        return InternationalStringFromGT.wrap(impl.getContactInstructions());
     }
 }

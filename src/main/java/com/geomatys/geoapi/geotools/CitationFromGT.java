@@ -18,7 +18,13 @@ package com.geomatys.geoapi.geotools;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import org.opengis.metadata.Identifier;
+import org.opengis.metadata.citation.Citation;
+import org.opengis.metadata.citation.CitationDate;
 import org.opengis.metadata.citation.PresentationForm;
+import org.opengis.metadata.citation.ResponsibleParty;
+import org.opengis.metadata.citation.Series;
+import org.opengis.util.InternationalString;
 
 
 /**
@@ -26,7 +32,7 @@ import org.opengis.metadata.citation.PresentationForm;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class Citation extends Wrapper implements org.opengis.metadata.citation.Citation {
+final class CitationFromGT extends WrapperFromGT implements Citation {
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
@@ -37,7 +43,7 @@ final class Citation extends Wrapper implements org.opengis.metadata.citation.Ci
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    private Citation(final org.geotools.api.metadata.citation.Citation impl) {
+    private CitationFromGT(final org.geotools.api.metadata.citation.Citation impl) {
         this.impl = impl;
     }
 
@@ -48,8 +54,8 @@ final class Citation extends Wrapper implements org.opengis.metadata.citation.Ci
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static org.opengis.metadata.citation.Citation wrap(final org.geotools.api.metadata.citation.Citation impl) {
-        return (impl == null) ? null : new Citation(impl);
+    static Citation wrap(final org.geotools.api.metadata.citation.Citation impl) {
+        return (impl == null) ? null : new CitationFromGT(impl);
     }
 
     /**
@@ -61,23 +67,23 @@ final class Citation extends Wrapper implements org.opengis.metadata.citation.Ci
     }
 
     @Override
-    public org.opengis.util.InternationalString getTitle() {
-        return InternationalString.wrap(impl.getTitle());
+    public InternationalString getTitle() {
+        return InternationalStringFromGT.wrap(impl.getTitle());
     }
 
     @Override
-    public Collection<org.opengis.util.InternationalString> getAlternateTitles() {
-        return wrap(impl.getAlternateTitles(), InternationalString::wrap);
+    public Collection<InternationalString> getAlternateTitles() {
+        return wrap(impl.getAlternateTitles(), InternationalStringFromGT::wrap);
     }
 
     @Override
-    public Collection<org.opengis.metadata.citation.CitationDate> getDates() {
+    public Collection<CitationDate> getDates() {
         return List.of();
     }
 
     @Override
-    public org.opengis.util.InternationalString getEdition() {
-        return InternationalString.wrap(impl.getEdition());
+    public InternationalString getEdition() {
+        return InternationalStringFromGT.wrap(impl.getEdition());
     }
 
     @Override
@@ -86,13 +92,13 @@ final class Citation extends Wrapper implements org.opengis.metadata.citation.Ci
     }
 
     @Override
-    public Collection<org.opengis.metadata.Identifier> getIdentifiers() {
-        return wrap(impl.getIdentifiers(), Identifier::wrap);
+    public Collection<Identifier> getIdentifiers() {
+        return wrap(impl.getIdentifiers(), IdentifierFromGT::wrap);
     }
 
     @Override
-    public Collection<? extends org.opengis.metadata.citation.ResponsibleParty> getCitedResponsibleParties() {
-        return wrap(impl.getCitedResponsibleParties(), ResponsibleParty::wrap);
+    public Collection<ResponsibleParty> getCitedResponsibleParties() {
+        return wrap(impl.getCitedResponsibleParties(), ResponsiblePartyFromGT::wrap);
     }
 
     @Override
@@ -101,18 +107,18 @@ final class Citation extends Wrapper implements org.opengis.metadata.citation.Ci
     }
 
     @Override
-    public org.opengis.metadata.citation.Series getSeries() {
+    public Series getSeries() {
         return null;
     }
 
     @Override
-    public org.opengis.util.InternationalString getOtherCitationDetails() {
-        return InternationalString.wrap(impl.getOtherCitationDetails());
+    public InternationalString getOtherCitationDetails() {
+        return InternationalStringFromGT.wrap(impl.getOtherCitationDetails());
     }
 
     @Override
-    public org.opengis.util.InternationalString getCollectiveTitle() {
-        return InternationalString.wrap(impl.getCollectiveTitle());
+    public InternationalString getCollectiveTitle() {
+        return InternationalStringFromGT.wrap(impl.getCollectiveTitle());
     }
 
     @Override

@@ -15,24 +15,28 @@
  */
 package com.geomatys.geoapi.geotools;
 
+import java.util.Collection;
+import org.opengis.metadata.citation.Address;
+import org.opengis.util.InternationalString;
+
 
 /**
  * GeoAPI wrapper for an object from the GeoTools API.
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class Contact extends Wrapper implements org.opengis.metadata.citation.Contact {
+final class AddressFromGT extends WrapperFromGT implements Address {
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.metadata.citation.Contact impl;
+    private final org.geotools.api.metadata.citation.Address impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    private Contact(final org.geotools.api.metadata.citation.Contact impl) {
+    private AddressFromGT(final org.geotools.api.metadata.citation.Address impl) {
         this.impl = impl;
     }
 
@@ -43,8 +47,8 @@ final class Contact extends Wrapper implements org.opengis.metadata.citation.Con
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static org.opengis.metadata.citation.Contact wrap(final org.geotools.api.metadata.citation.Contact impl) {
-        return (impl == null) ? null : new Contact(impl);
+    static Address wrap(final org.geotools.api.metadata.citation.Address impl) {
+        return (impl == null) ? null : new AddressFromGT(impl);
     }
 
     /**
@@ -56,27 +60,32 @@ final class Contact extends Wrapper implements org.opengis.metadata.citation.Con
     }
 
     @Override
-    public org.opengis.metadata.citation.Telephone getPhone() {
-        return Telephone.wrap(impl.getPhone());
+    public Collection<String> getDeliveryPoints() {
+        return impl.getDeliveryPoints();
     }
 
     @Override
-    public org.opengis.metadata.citation.Address getAddress() {
-        return Address.wrap(impl.getAddress());
+    public InternationalString getCity() {
+        return InternationalStringFromGT.wrap(impl.getCity());
     }
 
     @Override
-    public org.opengis.metadata.citation.OnlineResource getOnlineResource() {
-        return OnlineResource.wrap(impl.getOnLineResource());
+    public InternationalString getAdministrativeArea() {
+        return InternationalStringFromGT.wrap(impl.getAdministrativeArea());
     }
 
     @Override
-    public org.opengis.util.InternationalString getHoursOfService() {
-        return InternationalString.wrap(impl.getHoursOfService());
+    public String getPostalCode() {
+        return impl.getPostalCode();
     }
 
     @Override
-    public org.opengis.util.InternationalString getContactInstructions() {
-        return InternationalString.wrap(impl.getContactInstructions());
+    public InternationalString getCountry() {
+        return InternationalStringFromGT.wrap(impl.getCountry());
+    }
+
+    @Override
+    public Collection<String> getElectronicMailAddresses() {
+        return impl.getElectronicMailAddresses();
     }
 }

@@ -15,22 +15,28 @@
  */
 package com.geomatys.geoapi.geotools;
 
+import java.util.Collection;
+import org.opengis.metadata.citation.Telephone;
+
 
 /**
  * GeoAPI wrapper for an object from the GeoTools API.
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-class LocalName<S extends org.geotools.api.util.LocalName>
-        extends GenericName<S> implements org.opengis.util.LocalName
-{
+final class TelephoneFromGT extends WrapperFromGT implements Telephone {
+    /**
+     * The GeoTools implementation on which to delegate all methods.
+     */
+    private final org.geotools.api.metadata.citation.Telephone impl;
+
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    LocalName(final S impl) {
-        super(impl);
+    private TelephoneFromGT(final org.geotools.api.metadata.citation.Telephone impl) {
+        this.impl = impl;
     }
 
     /**
@@ -40,12 +46,25 @@ class LocalName<S extends org.geotools.api.util.LocalName>
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static org.opengis.util.LocalName wrap(final org.geotools.api.util.LocalName impl) {
-        switch (impl) {
-            case null: return null;
-            case org.geotools.api.util.TypeName   c: return new TypeName  (c);
-            case org.geotools.api.util.MemberName c: return new MemberName(c);
-            default: return new LocalName<>(impl);
-        }
+    static Telephone wrap(final org.geotools.api.metadata.citation.Telephone impl) {
+        return (impl == null) ? null : new TelephoneFromGT(impl);
+    }
+
+    /**
+     * {@return the GeoTools implementation on which this wrapper delegates all operations}.
+     */
+    @Override
+    final Object implementation() {
+        return impl;
+    }
+
+    @Override
+    public Collection<String> getVoices() {
+        return impl.getVoices();
+    }
+
+    @Override
+    public Collection<String> getFacsimiles() {
+        return impl.getFacsimiles();
     }
 }

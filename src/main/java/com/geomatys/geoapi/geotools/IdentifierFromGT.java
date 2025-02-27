@@ -15,8 +15,8 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import java.util.Collection;
-import java.util.Set;
+import org.opengis.metadata.Identifier;
+import org.opengis.metadata.citation.Citation;
 
 
 /**
@@ -26,8 +26,8 @@ import java.util.Set;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-class IdentifiedObject<S extends org.geotools.api.referencing.IdentifiedObject>
-        extends Wrapper implements org.opengis.referencing.IdentifiedObject
+class IdentifierFromGT<S extends org.geotools.api.metadata.Identifier>
+        extends WrapperFromGT implements Identifier
 {
     /**
      * The GeoTools implementation on which to delegate all methods.
@@ -39,7 +39,7 @@ class IdentifiedObject<S extends org.geotools.api.referencing.IdentifiedObject>
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    IdentifiedObject(final S impl) {
+    IdentifierFromGT(final S impl) {
         this.impl = impl;
     }
 
@@ -50,44 +50,26 @@ class IdentifiedObject<S extends org.geotools.api.referencing.IdentifiedObject>
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static org.opengis.referencing.IdentifiedObject wrap(final org.geotools.api.referencing.IdentifiedObject impl) {
+    static Identifier wrap(final org.geotools.api.metadata.Identifier impl) {
         switch (impl) {
             case null: return null;
-            case org.geotools.api.referencing.cs.CoordinateSystemAxis c: return new Axis(c);
-            default: return new IdentifiedObject<>(impl);
+            case org.geotools.api.referencing.ReferenceIdentifier c: return new ReferenceIdentifierFromGT(c);
+            default: return new IdentifierFromGT<>(impl);
         }
     }
 
-    /**
-     * {@return the GeoTools implementation on which this wrapper delegates all operations}.
-     */
     @Override
     final Object implementation() {
         return impl;
     }
 
     @Override
-    public org.opengis.referencing.ReferenceIdentifier getName() {
-        return ReferenceIdentifier.wrap(impl.getName());
+    public String getCode() {
+        return impl.getCode();
     }
 
     @Override
-    public Collection<org.opengis.util.GenericName> getAlias() {
-        return wrap(impl.getAlias(), GenericName::wrap);
-    }
-
-    @Override
-    public Set<org.opengis.referencing.ReferenceIdentifier> getIdentifiers() {
-        return toSet(wrap(impl.getIdentifiers(), ReferenceIdentifier::wrap));
-    }
-
-    @Override
-    public org.opengis.util.InternationalString getRemarks() {
-        return InternationalString.wrap(impl.getRemarks());
-    }
-
-    @Override
-    public String toWKT() throws UnsupportedOperationException {
-        return impl.toWKT();
+    public Citation getAuthority() {
+        return CitationFromGT.wrap(impl.getAuthority());
     }
 }

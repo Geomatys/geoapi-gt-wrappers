@@ -27,11 +27,11 @@ import org.opengis.util.CodeList;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-abstract class Wrapper {
+abstract class WrapperFromGT {
     /**
      * Creates a new wrapper.
      */
-    Wrapper() {
+    WrapperFromGT() {
     }
 
     /**
@@ -109,7 +109,7 @@ abstract class Wrapper {
      */
     @Override
     public final boolean equals(final Object obj) {
-        return (obj != null) && obj.getClass() == getClass() && implementation().equals(((Wrapper) obj).implementation());
+        return (obj != null) && obj.getClass() == getClass() && implementation().equals(((WrapperFromGT) obj).implementation());
     }
 
     /**
