@@ -15,8 +15,7 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.opengis.util.Type;
-import org.opengis.util.TypeName;
+import org.opengis.referencing.cs.AffineCS;
 
 
 /**
@@ -24,13 +23,13 @@ import org.opengis.util.TypeName;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class TypeNameFromGT extends LocalNameFromGT<org.geotools.api.util.TypeName> implements TypeName, Type {
+class AffineCSFromGT extends CoordinateSystemFromGT implements AffineCS {
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    TypeNameFromGT(final org.geotools.api.util.TypeName impl) {
+    AffineCSFromGT(final org.geotools.api.referencing.cs.AffineCS impl) {
         super(impl);
     }
 
@@ -41,25 +40,12 @@ final class TypeNameFromGT extends LocalNameFromGT<org.geotools.api.util.TypeNam
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static TypeNameFromGT wrap(final org.geotools.api.util.TypeName impl) {     // Need to return the wrapper class.
-        return (impl == null) ? null : new TypeNameFromGT(impl);
-    }
-
-    /**
-     * {@return the GeoTools implementation behind the given wrapper}.
-     *
-     * @param wrapper the wrapper from which to get the GeoTools implementation.
-     * @throws ClassCastException if the given value is not a wrapper for GeoTools.
-     */
-    static org.geotools.api.util.TypeName unwrap(final TypeName wrapper) {
-        switch (wrapper) {
+    static AffineCS wrap(final org.geotools.api.referencing.cs.AffineCS impl) {
+        switch (impl) {
             case null: return null;
-            default: return ((TypeNameFromGT) wrapper).impl;
+            case AffineCS c: return c;
+            case org.geotools.api.referencing.cs.CartesianCS c: return new CartesianCSFromGT(c);
+            default: return new AffineCSFromGT(impl);
         }
-    }
-
-    @Override
-    public TypeName getTypeName() {
-        return this;
     }
 }

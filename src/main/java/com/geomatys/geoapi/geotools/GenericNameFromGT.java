@@ -57,10 +57,8 @@ class GenericNameFromGT<S extends org.geotools.api.util.GenericName>
     static GenericName wrap(final org.geotools.api.util.GenericName impl) {
         switch (impl) {
             case null: return null;
-            case org.geotools.api.util.TypeName   c: return new TypeNameFromGT   (c);
-            case org.geotools.api.util.MemberName c: return new MemberNameFromGT (c);
-            case org.geotools.api.util.LocalName  c: return new LocalNameFromGT<>(c);
-            case org.geotools.api.util.ScopedName c: return new ScopedNameFromGT (c);
+            case org.geotools.api.util.LocalName  c: return LocalNameFromGT.wrap(c);
+            case org.geotools.api.util.ScopedName c: return new ScopedNameFromGT(c);
             default: return new GenericNameFromGT<>(impl);
         }
     }
@@ -72,7 +70,10 @@ class GenericNameFromGT<S extends org.geotools.api.util.GenericName>
      * @throws ClassCastException if the given value is not a wrapper for GeoTools.
      */
     static org.geotools.api.util.GenericName unwrap(final GenericName wrapper) {
-        return (wrapper == null) ? null : ((GenericNameFromGT) wrapper).impl;
+        switch (wrapper) {
+            case null: return null;
+            default: return ((GenericNameFromGT) wrapper).impl;
+        }
     }
 
     /**
@@ -114,8 +115,8 @@ class GenericNameFromGT<S extends org.geotools.api.util.GenericName>
     }
 
     @Override
-    public ScopedName push(final GenericName gn) {
-        return ScopedNameFromGT.wrap(impl.push(unwrap(gn)));
+    public ScopedName push(final GenericName scope) {
+        return ScopedNameFromGT.wrap(impl.push(unwrap(scope)));
     }
 
     @Override
@@ -124,7 +125,7 @@ class GenericNameFromGT<S extends org.geotools.api.util.GenericName>
     }
 
     @Override
-    public int compareTo(final GenericName o) {
-        return impl.compareTo(unwrap(o));
+    public int compareTo(final GenericName other) {
+        return impl.compareTo(unwrap(other));
     }
 }

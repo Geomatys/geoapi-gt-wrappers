@@ -15,30 +15,29 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import java.net.URI;
-import org.opengis.metadata.citation.OnLineFunction;
-import org.opengis.metadata.citation.OnlineResource;
+import java.util.Date;
+import org.opengis.metadata.extent.Extent;
+import org.opengis.referencing.datum.Datum;
 import org.opengis.util.InternationalString;
 
 
 /**
  * GeoAPI wrapper for an object from the GeoTools API.
  *
+ * @param <S> the interface from the GeoTools API of the wrapped implementation.
+ *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource {
-    /**
-     * The GeoTools implementation on which to delegate all methods.
-     */
-    private final org.geotools.api.metadata.citation.OnLineResource impl;
-
+class DatumFromGT<S extends org.geotools.api.referencing.datum.Datum>
+        extends IdentifiedObjectFromGT<S> implements Datum
+{
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    private OnlineResourceFromGT(final org.geotools.api.metadata.citation.OnLineResource impl) {
-        this.impl = impl;
+    DatumFromGT(final S impl) {
+        super(impl);
     }
 
     /**
@@ -48,49 +47,36 @@ final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static OnlineResource wrap(final org.geotools.api.metadata.citation.OnLineResource impl) {
+    static Datum wrap(final org.geotools.api.referencing.datum.Datum impl) {
         switch (impl) {
             case null: return null;
-            case OnlineResource c: return c;
-            default: return new OnlineResourceFromGT(impl);
+            case Datum c: return c;
+            case org.geotools.api.referencing.datum.GeodeticDatum    c: return new GeodeticDatumFromGT(c);
+            case org.geotools.api.referencing.datum.VerticalDatum    c: return new VerticalDatumFromGT(c);
+            case org.geotools.api.referencing.datum.TemporalDatum    c: return new TemporalDatumFromGT(c);
+            case org.geotools.api.referencing.datum.EngineeringDatum c: return new EngineeringDatumFromGT(c);
+            case org.geotools.api.referencing.datum.ImageDatum       c: return new ImageDatumFromGT(c);
+            default: return new DatumFromGT<>(impl);
         }
     }
 
-    /**
-     * {@return the GeoTools implementation on which this wrapper delegates all operations}.
-     */
     @Override
-    final Object implementation() {
-        return impl;
+    public InternationalString getAnchorPoint() {
+        return InternationalStringFromGT.wrap(impl.getAnchorPoint());
     }
 
     @Override
-    public URI getLinkage() {
-        return impl.getLinkage();
+    public Date getRealizationEpoch() {
+        return impl.getRealizationEpoch();
     }
 
     @Override
-    public String getProtocol() {
-        return impl.getProtocol();
+    public Extent getDomainOfValidity() {
+        return ExtentFromGT.wrap(impl.getDomainOfValidity());
     }
 
     @Override
-    public String getApplicationProfile() {
-        return impl.getApplicationProfile();
-    }
-
-    @Override
-    public String getName() {
-        return impl.getName();
-    }
-
-    @Override
-    public InternationalString getDescription() {
-        return InternationalStringFromGT.wrap(impl.getDescription());
-    }
-
-    @Override
-    public OnLineFunction getFunction() {
-        return wrap(impl.getFunction(), OnLineFunction::valueOf);
+    public InternationalString getScope() {
+        return InternationalStringFromGT.wrap(impl.getScope());
     }
 }

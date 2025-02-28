@@ -55,7 +55,11 @@ final class CitationFromGT extends WrapperFromGT implements Citation {
      * @return wrapper for the given implementation
      */
     static Citation wrap(final org.geotools.api.metadata.citation.Citation impl) {
-        return (impl == null) ? null : new CitationFromGT(impl);
+        switch (impl) {
+            case null: return null;
+            case Citation c: return c;
+            default: return new CitationFromGT(impl);
+        }
     }
 
     /**

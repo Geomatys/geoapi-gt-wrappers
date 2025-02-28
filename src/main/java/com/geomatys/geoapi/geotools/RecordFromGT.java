@@ -15,10 +15,11 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import java.net.URI;
-import org.opengis.metadata.citation.OnLineFunction;
-import org.opengis.metadata.citation.OnlineResource;
-import org.opengis.util.InternationalString;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import org.opengis.util.MemberName;
+import org.opengis.util.Record;
+import org.opengis.util.RecordType;
 
 
 /**
@@ -26,18 +27,18 @@ import org.opengis.util.InternationalString;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource {
+final class RecordFromGT extends WrapperFromGT implements Record {
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.metadata.citation.OnLineResource impl;
+    private final org.geotools.api.util.Record impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    private OnlineResourceFromGT(final org.geotools.api.metadata.citation.OnLineResource impl) {
+    private RecordFromGT(final org.geotools.api.util.Record impl) {
         this.impl = impl;
     }
 
@@ -48,11 +49,24 @@ final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static OnlineResource wrap(final org.geotools.api.metadata.citation.OnLineResource impl) {
+    static Record wrap(final org.geotools.api.util.Record impl) {
         switch (impl) {
             case null: return null;
-            case OnlineResource c: return c;
-            default: return new OnlineResourceFromGT(impl);
+            case Record c: return c;
+            default: return new RecordFromGT(impl);
+        }
+    }
+
+    /**
+     * {@return the GeoTools implementation behind the given wrapper}.
+     *
+     * @param wrapper the wrapper from which to get the GeoTools implementation.
+     * @throws ClassCastException if the given value is not a wrapper for GeoTools.
+     */
+    static org.geotools.api.util.Record unwrap(final Record wrapper) {
+        switch (wrapper) {
+            case null: return null;
+            default: return ((RecordFromGT) wrapper).impl;
         }
     }
 
@@ -65,32 +79,26 @@ final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource
     }
 
     @Override
-    public URI getLinkage() {
-        return impl.getLinkage();
+    public RecordType getRecordType() {
+        return RecordTypeFromGT.wrap(impl.getRecordType());
     }
 
     @Override
-    public String getProtocol() {
-        return impl.getProtocol();
+    public Map<MemberName, Object> getAttributes() {
+        final var map = new LinkedHashMap<MemberName, Object>();
+        for (final var entry : impl.getAttributes().entrySet()) {
+            map.put(MemberNameFromGT.wrap(entry.getKey()), entry.getValue());
+        }
+        return map;
     }
 
     @Override
-    public String getApplicationProfile() {
-        return impl.getApplicationProfile();
+    public Object locate(MemberName name) {
+        return impl.locate(MemberNameFromGT.unwrap(name));
     }
 
     @Override
-    public String getName() {
-        return impl.getName();
-    }
-
-    @Override
-    public InternationalString getDescription() {
-        return InternationalStringFromGT.wrap(impl.getDescription());
-    }
-
-    @Override
-    public OnLineFunction getFunction() {
-        return wrap(impl.getFunction(), OnLineFunction::valueOf);
+    public void set(MemberName name, Object value) {
+        impl.set(MemberNameFromGT.unwrap(name), value);
     }
 }

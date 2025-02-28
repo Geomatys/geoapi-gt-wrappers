@@ -50,7 +50,11 @@ final class ContactFromGT extends WrapperFromGT implements Contact {
      * @return wrapper for the given implementation
      */
     static Contact wrap(final org.geotools.api.metadata.citation.Contact impl) {
-        return (impl == null) ? null : new ContactFromGT(impl);
+        switch (impl) {
+            case null: return null;
+            case Contact c: return c;
+            default: return new ContactFromGT(impl);
+        }
     }
 
     /**

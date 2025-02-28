@@ -15,28 +15,24 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import javax.measure.Unit;
-import org.opengis.referencing.cs.AxisDirection;
-import org.opengis.referencing.cs.CoordinateSystemAxis;
-import org.opengis.referencing.cs.RangeMeaning;
+import java.util.Date;
+import org.opengis.referencing.datum.TemporalDatum;
 
 
 /**
  * GeoAPI wrapper for an object from the GeoTools API.
  *
- * @param <S> the interface from the GeoTools API of the wrapped implementation.
- *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class AxisFromGT extends IdentifiedObjectFromGT<org.geotools.api.referencing.cs.CoordinateSystemAxis>
-        implements CoordinateSystemAxis
+final class TemporalDatumFromGT extends DatumFromGT<org.geotools.api.referencing.datum.TemporalDatum>
+        implements TemporalDatum
 {
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    AxisFromGT(final org.geotools.api.referencing.cs.CoordinateSystemAxis impl) {
+    TemporalDatumFromGT(final org.geotools.api.referencing.datum.TemporalDatum impl) {
         super(impl);
     }
 
@@ -47,37 +43,16 @@ final class AxisFromGT extends IdentifiedObjectFromGT<org.geotools.api.referenci
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static CoordinateSystemAxis wrap(final org.geotools.api.referencing.cs.CoordinateSystemAxis impl) {
-        return (impl == null) ? null : new AxisFromGT(impl);
+    static TemporalDatum wrap(final org.geotools.api.referencing.datum.TemporalDatum impl) {
+        switch (impl) {
+            case null: return null;
+            case TemporalDatum c: return c;
+            default: return new TemporalDatumFromGT(impl);
+        }
     }
 
     @Override
-    public String getAbbreviation() {
-        return impl.getAbbreviation();
-    }
-
-    @Override
-    public AxisDirection getDirection() {
-        return wrap(impl.getDirection(), AxisDirection::valueOf);
-    }
-
-    @Override
-    public double getMinimumValue() {
-        return impl.getMinimumValue();
-    }
-
-    @Override
-    public double getMaximumValue() {
-        return impl.getMaximumValue();
-    }
-
-    @Override
-    public RangeMeaning getRangeMeaning() {
-        return wrap(impl.getRangeMeaning(), RangeMeaning::valueOf);
-    }
-
-    @Override
-    public Unit<?> getUnit() {
-        return impl.getUnit();
+    public Date getOrigin() {
+        return impl.getOrigin();
     }
 }

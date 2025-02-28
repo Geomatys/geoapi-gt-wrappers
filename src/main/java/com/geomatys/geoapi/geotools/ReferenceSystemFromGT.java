@@ -15,30 +15,28 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import java.net.URI;
-import org.opengis.metadata.citation.OnLineFunction;
-import org.opengis.metadata.citation.OnlineResource;
+import org.opengis.metadata.extent.Extent;
+import org.opengis.referencing.ReferenceSystem;
 import org.opengis.util.InternationalString;
 
 
 /**
  * GeoAPI wrapper for an object from the GeoTools API.
  *
+ * @param <S> the interface from the GeoTools API of the wrapped implementation.
+ *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource {
-    /**
-     * The GeoTools implementation on which to delegate all methods.
-     */
-    private final org.geotools.api.metadata.citation.OnLineResource impl;
-
+class ReferenceSystemFromGT<S extends org.geotools.api.referencing.ReferenceSystem> extends IdentifiedObjectFromGT<S>
+        implements ReferenceSystem
+{
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    private OnlineResourceFromGT(final org.geotools.api.metadata.citation.OnLineResource impl) {
-        this.impl = impl;
+    ReferenceSystemFromGT(final S impl) {
+        super(impl);
     }
 
     /**
@@ -48,49 +46,22 @@ final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static OnlineResource wrap(final org.geotools.api.metadata.citation.OnLineResource impl) {
+    static ReferenceSystem wrap(final org.geotools.api.referencing.ReferenceSystem impl) {
         switch (impl) {
             case null: return null;
-            case OnlineResource c: return c;
-            default: return new OnlineResourceFromGT(impl);
+            case ReferenceSystem c: return c;
+            case org.geotools.api.referencing.crs.CoordinateReferenceSystem c: return CoordinateReferenceSystemFromGT.wrap(c);
+            default: return new ReferenceSystemFromGT<>(impl);
         }
     }
 
-    /**
-     * {@return the GeoTools implementation on which this wrapper delegates all operations}.
-     */
     @Override
-    final Object implementation() {
-        return impl;
+    public Extent getDomainOfValidity() {
+        return ExtentFromGT.wrap(impl.getDomainOfValidity());
     }
 
     @Override
-    public URI getLinkage() {
-        return impl.getLinkage();
-    }
-
-    @Override
-    public String getProtocol() {
-        return impl.getProtocol();
-    }
-
-    @Override
-    public String getApplicationProfile() {
-        return impl.getApplicationProfile();
-    }
-
-    @Override
-    public String getName() {
-        return impl.getName();
-    }
-
-    @Override
-    public InternationalString getDescription() {
-        return InternationalStringFromGT.wrap(impl.getDescription());
-    }
-
-    @Override
-    public OnLineFunction getFunction() {
-        return wrap(impl.getFunction(), OnLineFunction::valueOf);
+    public InternationalString getScope() {
+        return InternationalStringFromGT.wrap(impl.getScope());
     }
 }

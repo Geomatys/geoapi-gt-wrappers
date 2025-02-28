@@ -15,10 +15,9 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import java.net.URI;
-import org.opengis.metadata.citation.OnLineFunction;
-import org.opengis.metadata.citation.OnlineResource;
-import org.opengis.util.InternationalString;
+import javax.measure.Unit;
+import javax.measure.quantity.Length;
+import org.opengis.referencing.datum.Ellipsoid;
 
 
 /**
@@ -26,19 +25,16 @@ import org.opengis.util.InternationalString;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource {
-    /**
-     * The GeoTools implementation on which to delegate all methods.
-     */
-    private final org.geotools.api.metadata.citation.OnLineResource impl;
-
+final class EllipsoidFromGT extends IdentifiedObjectFromGT<org.geotools.api.referencing.datum.Ellipsoid>
+        implements Ellipsoid
+{
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    private OnlineResourceFromGT(final org.geotools.api.metadata.citation.OnLineResource impl) {
-        this.impl = impl;
+    EllipsoidFromGT(final org.geotools.api.referencing.datum.Ellipsoid impl) {
+        super(impl);
     }
 
     /**
@@ -48,49 +44,41 @@ final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static OnlineResource wrap(final org.geotools.api.metadata.citation.OnLineResource impl) {
+    static Ellipsoid wrap(final org.geotools.api.referencing.datum.Ellipsoid impl) {
         switch (impl) {
             case null: return null;
-            case OnlineResource c: return c;
-            default: return new OnlineResourceFromGT(impl);
+            case Ellipsoid c: return c;
+            default: return new EllipsoidFromGT(impl);
         }
     }
 
-    /**
-     * {@return the GeoTools implementation on which this wrapper delegates all operations}.
-     */
     @Override
-    final Object implementation() {
-        return impl;
+    public Unit<Length> getAxisUnit() {
+        return impl.getAxisUnit();
     }
 
     @Override
-    public URI getLinkage() {
-        return impl.getLinkage();
+    public double getSemiMajorAxis() {
+        return impl.getSemiMajorAxis();
     }
 
     @Override
-    public String getProtocol() {
-        return impl.getProtocol();
+    public double getSemiMinorAxis() {
+        return impl.getSemiMinorAxis();
     }
 
     @Override
-    public String getApplicationProfile() {
-        return impl.getApplicationProfile();
+    public double getInverseFlattening() {
+        return impl.getInverseFlattening();
     }
 
     @Override
-    public String getName() {
-        return impl.getName();
+    public boolean isIvfDefinitive() {
+        return impl.isIvfDefinitive();
     }
 
     @Override
-    public InternationalString getDescription() {
-        return InternationalStringFromGT.wrap(impl.getDescription());
-    }
-
-    @Override
-    public OnLineFunction getFunction() {
-        return wrap(impl.getFunction(), OnLineFunction::valueOf);
+    public boolean isSphere() {
+        return impl.isSphere();
     }
 }

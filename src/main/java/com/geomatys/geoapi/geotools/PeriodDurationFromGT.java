@@ -15,10 +15,7 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import java.net.URI;
-import org.opengis.metadata.citation.OnLineFunction;
-import org.opengis.metadata.citation.OnlineResource;
-import org.opengis.util.InternationalString;
+import org.opengis.temporal.PeriodDuration;
 
 
 /**
@@ -26,18 +23,18 @@ import org.opengis.util.InternationalString;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource {
+final class PeriodDurationFromGT extends WrapperFromGT implements PeriodDuration {
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.metadata.citation.OnLineResource impl;
+    private final org.geotools.api.temporal.PeriodDuration impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    private OnlineResourceFromGT(final org.geotools.api.metadata.citation.OnLineResource impl) {
+    private PeriodDurationFromGT(final org.geotools.api.temporal.PeriodDuration impl) {
         this.impl = impl;
     }
 
@@ -48,11 +45,11 @@ final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static OnlineResource wrap(final org.geotools.api.metadata.citation.OnLineResource impl) {
+    static PeriodDuration wrap(final org.geotools.api.temporal.PeriodDuration impl) {
         switch (impl) {
             case null: return null;
-            case OnlineResource c: return c;
-            default: return new OnlineResourceFromGT(impl);
+            case PeriodDuration c: return c;
+            default: return new PeriodDurationFromGT(impl);
         }
     }
 
@@ -62,35 +59,5 @@ final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource
     @Override
     final Object implementation() {
         return impl;
-    }
-
-    @Override
-    public URI getLinkage() {
-        return impl.getLinkage();
-    }
-
-    @Override
-    public String getProtocol() {
-        return impl.getProtocol();
-    }
-
-    @Override
-    public String getApplicationProfile() {
-        return impl.getApplicationProfile();
-    }
-
-    @Override
-    public String getName() {
-        return impl.getName();
-    }
-
-    @Override
-    public InternationalString getDescription() {
-        return InternationalStringFromGT.wrap(impl.getDescription());
-    }
-
-    @Override
-    public OnLineFunction getFunction() {
-        return wrap(impl.getFunction(), OnLineFunction::valueOf);
     }
 }

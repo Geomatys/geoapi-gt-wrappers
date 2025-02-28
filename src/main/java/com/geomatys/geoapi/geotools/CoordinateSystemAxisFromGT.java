@@ -15,10 +15,10 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import java.net.URI;
-import org.opengis.metadata.citation.OnLineFunction;
-import org.opengis.metadata.citation.OnlineResource;
-import org.opengis.util.InternationalString;
+import javax.measure.Unit;
+import org.opengis.referencing.cs.AxisDirection;
+import org.opengis.referencing.cs.CoordinateSystemAxis;
+import org.opengis.referencing.cs.RangeMeaning;
 
 
 /**
@@ -26,19 +26,16 @@ import org.opengis.util.InternationalString;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource {
-    /**
-     * The GeoTools implementation on which to delegate all methods.
-     */
-    private final org.geotools.api.metadata.citation.OnLineResource impl;
-
+final class CoordinateSystemAxisFromGT extends IdentifiedObjectFromGT<org.geotools.api.referencing.cs.CoordinateSystemAxis>
+        implements CoordinateSystemAxis
+{
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    private OnlineResourceFromGT(final org.geotools.api.metadata.citation.OnLineResource impl) {
-        this.impl = impl;
+    CoordinateSystemAxisFromGT(final org.geotools.api.referencing.cs.CoordinateSystemAxis impl) {
+        super(impl);
     }
 
     /**
@@ -48,49 +45,41 @@ final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static OnlineResource wrap(final org.geotools.api.metadata.citation.OnLineResource impl) {
+    static CoordinateSystemAxis wrap(final org.geotools.api.referencing.cs.CoordinateSystemAxis impl) {
         switch (impl) {
             case null: return null;
-            case OnlineResource c: return c;
-            default: return new OnlineResourceFromGT(impl);
+            case CoordinateSystemAxis c: return c;
+            default: return new CoordinateSystemAxisFromGT(impl);
         }
     }
 
-    /**
-     * {@return the GeoTools implementation on which this wrapper delegates all operations}.
-     */
     @Override
-    final Object implementation() {
-        return impl;
+    public String getAbbreviation() {
+        return impl.getAbbreviation();
     }
 
     @Override
-    public URI getLinkage() {
-        return impl.getLinkage();
+    public AxisDirection getDirection() {
+        return wrap(impl.getDirection(), AxisDirection::valueOf);
     }
 
     @Override
-    public String getProtocol() {
-        return impl.getProtocol();
+    public double getMinimumValue() {
+        return impl.getMinimumValue();
     }
 
     @Override
-    public String getApplicationProfile() {
-        return impl.getApplicationProfile();
+    public double getMaximumValue() {
+        return impl.getMaximumValue();
     }
 
     @Override
-    public String getName() {
-        return impl.getName();
+    public RangeMeaning getRangeMeaning() {
+        return wrap(impl.getRangeMeaning(), RangeMeaning::valueOf);
     }
 
     @Override
-    public InternationalString getDescription() {
-        return InternationalStringFromGT.wrap(impl.getDescription());
-    }
-
-    @Override
-    public OnLineFunction getFunction() {
-        return wrap(impl.getFunction(), OnLineFunction::valueOf);
+    public Unit<?> getUnit() {
+        return impl.getUnit();
     }
 }

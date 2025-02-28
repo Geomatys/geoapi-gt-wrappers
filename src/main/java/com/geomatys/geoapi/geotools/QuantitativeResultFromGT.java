@@ -15,10 +15,12 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import java.net.URI;
-import org.opengis.metadata.citation.OnLineFunction;
-import org.opengis.metadata.citation.OnlineResource;
+import java.util.Collection;
+import javax.measure.Unit;
+import org.opengis.metadata.quality.QuantitativeResult;
 import org.opengis.util.InternationalString;
+import org.opengis.util.Record;
+import org.opengis.util.RecordType;
 
 
 /**
@@ -26,19 +28,16 @@ import org.opengis.util.InternationalString;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource {
-    /**
-     * The GeoTools implementation on which to delegate all methods.
-     */
-    private final org.geotools.api.metadata.citation.OnLineResource impl;
-
+final class QuantitativeResultFromGT extends QualityResultFromGT<org.geotools.api.metadata.quality.QuantitativeResult>
+        implements QuantitativeResult
+{
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    private OnlineResourceFromGT(final org.geotools.api.metadata.citation.OnLineResource impl) {
-        this.impl = impl;
+    QuantitativeResultFromGT(final org.geotools.api.metadata.quality.QuantitativeResult impl) {
+        super(impl);
     }
 
     /**
@@ -48,49 +47,31 @@ final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static OnlineResource wrap(final org.geotools.api.metadata.citation.OnLineResource impl) {
+    static QuantitativeResult wrap(final org.geotools.api.metadata.quality.QuantitativeResult impl) {
         switch (impl) {
             case null: return null;
-            case OnlineResource c: return c;
-            default: return new OnlineResourceFromGT(impl);
+            case QuantitativeResult c: return c;
+            default: return new QuantitativeResultFromGT(impl);
         }
     }
 
-    /**
-     * {@return the GeoTools implementation on which this wrapper delegates all operations}.
-     */
     @Override
-    final Object implementation() {
-        return impl;
+    public Collection<Record> getValues() {
+        return wrap(impl.getValues(), RecordFromGT::wrap);
     }
 
     @Override
-    public URI getLinkage() {
-        return impl.getLinkage();
+    public RecordType getValueType() {
+        return RecordTypeFromGT.wrap(impl.getValueType());
     }
 
     @Override
-    public String getProtocol() {
-        return impl.getProtocol();
+    public Unit<?> getValueUnit() {
+        return impl.getValueUnit();
     }
 
     @Override
-    public String getApplicationProfile() {
-        return impl.getApplicationProfile();
-    }
-
-    @Override
-    public String getName() {
-        return impl.getName();
-    }
-
-    @Override
-    public InternationalString getDescription() {
-        return InternationalStringFromGT.wrap(impl.getDescription());
-    }
-
-    @Override
-    public OnLineFunction getFunction() {
-        return wrap(impl.getFunction(), OnLineFunction::valueOf);
+    public InternationalString getErrorStatistic() {
+        return InternationalStringFromGT.wrap(impl.getErrorStatistic());
     }
 }

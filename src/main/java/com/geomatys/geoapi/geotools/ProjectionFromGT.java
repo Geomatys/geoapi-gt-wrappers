@@ -15,8 +15,7 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.opengis.util.Type;
-import org.opengis.util.TypeName;
+import org.opengis.referencing.operation.Projection;
 
 
 /**
@@ -24,13 +23,13 @@ import org.opengis.util.TypeName;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class TypeNameFromGT extends LocalNameFromGT<org.geotools.api.util.TypeName> implements TypeName, Type {
+class ProjectionFromGT extends ConversionFromGT implements Projection {
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    TypeNameFromGT(final org.geotools.api.util.TypeName impl) {
+    ProjectionFromGT(final org.geotools.api.referencing.operation.Projection impl) {
         super(impl);
     }
 
@@ -41,25 +40,14 @@ final class TypeNameFromGT extends LocalNameFromGT<org.geotools.api.util.TypeNam
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static TypeNameFromGT wrap(final org.geotools.api.util.TypeName impl) {     // Need to return the wrapper class.
-        return (impl == null) ? null : new TypeNameFromGT(impl);
-    }
-
-    /**
-     * {@return the GeoTools implementation behind the given wrapper}.
-     *
-     * @param wrapper the wrapper from which to get the GeoTools implementation.
-     * @throws ClassCastException if the given value is not a wrapper for GeoTools.
-     */
-    static org.geotools.api.util.TypeName unwrap(final TypeName wrapper) {
-        switch (wrapper) {
+    static Projection wrap(final org.geotools.api.referencing.operation.Projection impl) {
+        switch (impl) {
             case null: return null;
-            default: return ((TypeNameFromGT) wrapper).impl;
+            case Projection c: return c;
+            case org.geotools.api.referencing.operation.ConicProjection c:       return new ConicProjectionFromGT(c);
+            case org.geotools.api.referencing.operation.PlanarProjection c:      return new PlanarProjectionFromGT(c);
+            case org.geotools.api.referencing.operation.CylindricalProjection c: return new CylindricalProjectionFromGT(c);
+            default: return new ProjectionFromGT(impl);
         }
-    }
-
-    @Override
-    public TypeName getTypeName() {
-        return this;
     }
 }

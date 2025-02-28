@@ -57,7 +57,15 @@ class IdentifiedObjectFromGT<S extends org.geotools.api.referencing.IdentifiedOb
     static IdentifiedObject wrap(final org.geotools.api.referencing.IdentifiedObject impl) {
         switch (impl) {
             case null: return null;
-            case org.geotools.api.referencing.cs.CoordinateSystemAxis c: return new AxisFromGT(c);
+            case IdentifiedObject c: return c;
+            case org.geotools.api.referencing.operation.CoordinateOperation c: return CoordinateOperationFromGT.wrap(c);
+            case org.geotools.api.referencing.crs.CoordinateReferenceSystem c: return CoordinateReferenceSystemFromGT.wrap(c);
+            case org.geotools.api.referencing.ReferenceSystem c: return new ReferenceSystemFromGT<>(c);
+            case org.geotools.api.referencing.cs.CoordinateSystem c: return CoordinateSystemFromGT.wrap(c);
+            case org.geotools.api.referencing.cs.CoordinateSystemAxis c: return new CoordinateSystemAxisFromGT(c);
+            case org.geotools.api.referencing.datum.Datum c: return DatumFromGT.wrap(c);
+            case org.geotools.api.referencing.datum.Ellipsoid c: return new EllipsoidFromGT(c);
+            case org.geotools.api.referencing.datum.PrimeMeridian c: return new PrimeMeridianFromGT(c);
             default: return new IdentifiedObjectFromGT<>(impl);
         }
     }

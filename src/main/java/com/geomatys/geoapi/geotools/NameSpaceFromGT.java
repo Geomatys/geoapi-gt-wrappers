@@ -47,7 +47,11 @@ final class NameSpaceFromGT extends WrapperFromGT implements NameSpace {
      * @return wrapper for the given implementation
      */
     static NameSpace wrap(final org.geotools.api.util.NameSpace impl) {
-        return (impl == null) ? null : new NameSpaceFromGT(impl);
+        switch (impl) {
+            case null: return null;
+            case NameSpace c: return c;
+            default: return new NameSpaceFromGT(impl);
+        }
     }
 
     /**

@@ -15,22 +15,26 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.opengis.util.Type;
-import org.opengis.util.TypeName;
+import org.opengis.referencing.crs.GeodeticCRS;
+import org.opengis.referencing.datum.GeodeticDatum;
 
 
 /**
  * GeoAPI wrapper for an object from the GeoTools API.
  *
+ * @param <S> the interface from the GeoTools API of the wrapped implementation.
+ *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class TypeNameFromGT extends LocalNameFromGT<org.geotools.api.util.TypeName> implements TypeName, Type {
+class GeodeticCRSFromGT<S extends org.geotools.api.referencing.crs.GeodeticCRS>
+        extends SingleCRSFromGT<S> implements GeodeticCRS
+{
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    TypeNameFromGT(final org.geotools.api.util.TypeName impl) {
+    GeodeticCRSFromGT(final S impl) {
         super(impl);
     }
 
@@ -41,25 +45,18 @@ final class TypeNameFromGT extends LocalNameFromGT<org.geotools.api.util.TypeNam
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static TypeNameFromGT wrap(final org.geotools.api.util.TypeName impl) {     // Need to return the wrapper class.
-        return (impl == null) ? null : new TypeNameFromGT(impl);
-    }
-
-    /**
-     * {@return the GeoTools implementation behind the given wrapper}.
-     *
-     * @param wrapper the wrapper from which to get the GeoTools implementation.
-     * @throws ClassCastException if the given value is not a wrapper for GeoTools.
-     */
-    static org.geotools.api.util.TypeName unwrap(final TypeName wrapper) {
-        switch (wrapper) {
+    static GeodeticCRS wrap(final org.geotools.api.referencing.crs.GeodeticCRS impl) {
+        switch (impl) {
             case null: return null;
-            default: return ((TypeNameFromGT) wrapper).impl;
+            case GeodeticCRS c: return c;
+            case org.geotools.api.referencing.crs.GeographicCRS c: return new GeographicCRSFromGT(c);
+            case org.geotools.api.referencing.crs.GeocentricCRS c: return new GeocentricCRSFromGT(c);
+            default: return new GeodeticCRSFromGT<>(impl);
         }
     }
 
     @Override
-    public TypeName getTypeName() {
-        return this;
+    public GeodeticDatum getDatum() {
+        return GeodeticDatumFromGT.wrap(impl.getDatum());
     }
 }

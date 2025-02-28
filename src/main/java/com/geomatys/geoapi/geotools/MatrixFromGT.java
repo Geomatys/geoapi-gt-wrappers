@@ -15,10 +15,7 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import java.net.URI;
-import org.opengis.metadata.citation.OnLineFunction;
-import org.opengis.metadata.citation.OnlineResource;
-import org.opengis.util.InternationalString;
+import org.opengis.referencing.operation.Matrix;
 
 
 /**
@@ -26,18 +23,18 @@ import org.opengis.util.InternationalString;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource {
+final class MatrixFromGT extends WrapperFromGT implements Matrix {
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.metadata.citation.OnLineResource impl;
+    private final org.geotools.api.referencing.operation.Matrix impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    private OnlineResourceFromGT(final org.geotools.api.metadata.citation.OnLineResource impl) {
+    private MatrixFromGT(final org.geotools.api.referencing.operation.Matrix impl) {
         this.impl = impl;
     }
 
@@ -48,11 +45,11 @@ final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static OnlineResource wrap(final org.geotools.api.metadata.citation.OnLineResource impl) {
+    static Matrix wrap(final org.geotools.api.referencing.operation.Matrix impl) {
         switch (impl) {
             case null: return null;
-            case OnlineResource c: return c;
-            default: return new OnlineResourceFromGT(impl);
+            case Matrix c: return c;
+            default: return new MatrixFromGT(impl);
         }
     }
 
@@ -65,32 +62,33 @@ final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource
     }
 
     @Override
-    public URI getLinkage() {
-        return impl.getLinkage();
+    public int getNumRow() {
+        return impl.getNumRow();
     }
 
     @Override
-    public String getProtocol() {
-        return impl.getProtocol();
+    public int getNumCol() {
+        return impl.getNumCol();
     }
 
     @Override
-    public String getApplicationProfile() {
-        return impl.getApplicationProfile();
+    public double getElement(int row, int column) {
+        return impl.getElement(row, column);
     }
 
     @Override
-    public String getName() {
-        return impl.getName();
+    public void setElement(int row, int column, double value) {
+        impl.setElement(row, column, value);
     }
 
     @Override
-    public InternationalString getDescription() {
-        return InternationalStringFromGT.wrap(impl.getDescription());
+    public boolean isIdentity() {
+        return impl.isIdentity();
     }
 
     @Override
-    public OnLineFunction getFunction() {
-        return wrap(impl.getFunction(), OnLineFunction::valueOf);
+    @SuppressWarnings("CloneDoesntCallSuperClone")
+    public Matrix clone() {
+        return wrap(impl.clone());
     }
 }

@@ -15,9 +15,13 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import java.net.URI;
-import org.opengis.metadata.citation.OnLineFunction;
-import org.opengis.metadata.citation.OnlineResource;
+import java.util.Collection;
+import java.util.Date;
+import org.opengis.metadata.Identifier;
+import org.opengis.metadata.citation.Citation;
+import org.opengis.metadata.quality.Element;
+import org.opengis.metadata.quality.EvaluationMethodType;
+import org.opengis.metadata.quality.Result;
 import org.opengis.util.InternationalString;
 
 
@@ -26,18 +30,18 @@ import org.opengis.util.InternationalString;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource {
+class QualityElementFromGT extends WrapperFromGT implements Element {
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.metadata.citation.OnLineResource impl;
+    private final org.geotools.api.metadata.quality.Element impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    private OnlineResourceFromGT(final org.geotools.api.metadata.citation.OnLineResource impl) {
+    QualityElementFromGT(final org.geotools.api.metadata.quality.Element impl) {
         this.impl = impl;
     }
 
@@ -48,11 +52,12 @@ final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static OnlineResource wrap(final org.geotools.api.metadata.citation.OnLineResource impl) {
+    static Element wrap(final org.geotools.api.metadata.quality.Element impl) {
         switch (impl) {
             case null: return null;
-            case OnlineResource c: return c;
-            default: return new OnlineResourceFromGT(impl);
+            case Element c: return c;
+            case org.geotools.api.metadata.quality.PositionalAccuracy c: return PositionalAccuracyFromGT.wrap(c);
+            default: return new QualityElementFromGT(impl);
         }
     }
 
@@ -65,32 +70,42 @@ final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource
     }
 
     @Override
-    public URI getLinkage() {
-        return impl.getLinkage();
+    public Collection<InternationalString> getNamesOfMeasure() {
+        return wrap(impl.getNamesOfMeasure(), InternationalStringFromGT::wrap);
     }
 
     @Override
-    public String getProtocol() {
-        return impl.getProtocol();
+    public Identifier getMeasureIdentification() {
+        return IdentifierFromGT.wrap(impl.getMeasureIdentification());
     }
 
     @Override
-    public String getApplicationProfile() {
-        return impl.getApplicationProfile();
+    public InternationalString getMeasureDescription() {
+        return InternationalStringFromGT.wrap(impl.getMeasureDescription());
     }
 
     @Override
-    public String getName() {
-        return impl.getName();
+    public EvaluationMethodType getEvaluationMethodType() {
+        return wrap(impl.getEvaluationMethodType(), EvaluationMethodType::valueOf);
     }
 
     @Override
-    public InternationalString getDescription() {
-        return InternationalStringFromGT.wrap(impl.getDescription());
+    public InternationalString getEvaluationMethodDescription() {
+        return InternationalStringFromGT.wrap(impl.getEvaluationMethodDescription());
     }
 
     @Override
-    public OnLineFunction getFunction() {
-        return wrap(impl.getFunction(), OnLineFunction::valueOf);
+    public Citation getEvaluationProcedure() {
+        return CitationFromGT.wrap(impl.getEvaluationProcedure());
+    }
+
+    @Override
+    public Collection<? extends Date> getDates() {
+        return impl.getDates();
+    }
+
+    @Override
+    public Collection<Result> getResults() {
+        return wrap(impl.getResults(), QualityResultFromGT::wrap);
     }
 }

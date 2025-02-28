@@ -15,10 +15,15 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import java.net.URI;
-import org.opengis.metadata.citation.OnLineFunction;
-import org.opengis.metadata.citation.OnlineResource;
-import org.opengis.util.InternationalString;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import org.opengis.util.MemberName;
+import org.opengis.util.Record;
+import org.opengis.util.RecordSchema;
+import org.opengis.util.RecordType;
+import org.opengis.util.Type;
+import org.opengis.util.TypeName;
 
 
 /**
@@ -26,18 +31,18 @@ import org.opengis.util.InternationalString;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource {
+final class RecordTypeFromGT extends WrapperFromGT implements RecordType {
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.metadata.citation.OnLineResource impl;
+    private final org.geotools.api.util.RecordType impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    private OnlineResourceFromGT(final org.geotools.api.metadata.citation.OnLineResource impl) {
+    private RecordTypeFromGT(final org.geotools.api.util.RecordType impl) {
         this.impl = impl;
     }
 
@@ -48,11 +53,11 @@ final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static OnlineResource wrap(final org.geotools.api.metadata.citation.OnLineResource impl) {
+    static RecordType wrap(final org.geotools.api.util.RecordType impl) {
         switch (impl) {
             case null: return null;
-            case OnlineResource c: return c;
-            default: return new OnlineResourceFromGT(impl);
+            case RecordType c: return c;
+            default: return new RecordTypeFromGT(impl);
         }
     }
 
@@ -65,32 +70,36 @@ final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource
     }
 
     @Override
-    public URI getLinkage() {
-        return impl.getLinkage();
+    public TypeName getTypeName() {
+        return TypeNameFromGT.wrap(impl.getTypeName());
     }
 
     @Override
-    public String getProtocol() {
-        return impl.getProtocol();
+    public RecordSchema getContainer() {
+        return RecordSchemaFromGT.wrap(impl.getContainer());
     }
 
     @Override
-    public String getApplicationProfile() {
-        return impl.getApplicationProfile();
+    public Map<MemberName, Type> getMemberTypes() {
+        final var map = new LinkedHashMap<MemberName, Type>();
+        for (final var entry : impl.getAttributeTypes().entrySet()) {
+            map.put(MemberNameFromGT.wrap(entry.getKey()), TypeNameFromGT.wrap(entry.getValue()));
+        }
+        return map;
     }
 
     @Override
-    public String getName() {
-        return impl.getName();
+    public Set<MemberName> getMembers() {
+        return toSet(wrap(impl.getMembers(), MemberNameFromGT::wrap));
     }
 
     @Override
-    public InternationalString getDescription() {
-        return InternationalStringFromGT.wrap(impl.getDescription());
+    public TypeName locate(MemberName name) {
+        return TypeNameFromGT.wrap(impl.locate(MemberNameFromGT.unwrap(name)));
     }
 
     @Override
-    public OnLineFunction getFunction() {
-        return wrap(impl.getFunction(), OnLineFunction::valueOf);
+    public boolean isInstance(Record record) {
+        return impl.isInstance(RecordFromGT.unwrap(record));
     }
 }

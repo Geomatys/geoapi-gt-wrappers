@@ -15,22 +15,26 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.opengis.util.Type;
-import org.opengis.util.TypeName;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.cs.CoordinateSystem;
 
 
 /**
  * GeoAPI wrapper for an object from the GeoTools API.
  *
+ * @param <S> the interface from the GeoTools API of the wrapped implementation.
+ *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class TypeNameFromGT extends LocalNameFromGT<org.geotools.api.util.TypeName> implements TypeName, Type {
+class CoordinateReferenceSystemFromGT<S extends org.geotools.api.referencing.crs.CoordinateReferenceSystem>
+        extends ReferenceSystemFromGT<S> implements CoordinateReferenceSystem
+{
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    TypeNameFromGT(final org.geotools.api.util.TypeName impl) {
+    CoordinateReferenceSystemFromGT(final S impl) {
         super(impl);
     }
 
@@ -41,8 +45,14 @@ final class TypeNameFromGT extends LocalNameFromGT<org.geotools.api.util.TypeNam
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static TypeNameFromGT wrap(final org.geotools.api.util.TypeName impl) {     // Need to return the wrapper class.
-        return (impl == null) ? null : new TypeNameFromGT(impl);
+    static CoordinateReferenceSystem wrap(final org.geotools.api.referencing.crs.CoordinateReferenceSystem impl) {
+        switch (impl) {
+            case null: return null;
+            case CoordinateReferenceSystem c: return c;
+            case org.geotools.api.referencing.crs.SingleCRS c: return SingleCRSFromGT.wrap(c);
+            case org.geotools.api.referencing.crs.CompoundCRS c: return new CompoundCRSFromGT(c);
+            default: return new CoordinateReferenceSystemFromGT<>(impl);
+        }
     }
 
     /**
@@ -51,15 +61,15 @@ final class TypeNameFromGT extends LocalNameFromGT<org.geotools.api.util.TypeNam
      * @param wrapper the wrapper from which to get the GeoTools implementation.
      * @throws ClassCastException if the given value is not a wrapper for GeoTools.
      */
-    static org.geotools.api.util.TypeName unwrap(final TypeName wrapper) {
+    static org.geotools.api.referencing.crs.CoordinateReferenceSystem unwrap(CoordinateReferenceSystem wrapper) {
         switch (wrapper) {
             case null: return null;
-            default: return ((TypeNameFromGT) wrapper).impl;
+            default: return ((CoordinateReferenceSystemFromGT<?>) wrapper).impl;
         }
     }
 
     @Override
-    public TypeName getTypeName() {
-        return this;
+    public CoordinateSystem getCoordinateSystem() {
+        return CoordinateSystemFromGT.wrap(impl.getCoordinateSystem());
     }
 }

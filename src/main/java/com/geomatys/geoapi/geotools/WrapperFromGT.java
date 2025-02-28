@@ -23,7 +23,7 @@ import org.opengis.util.CodeList;
 
 
 /**
- * Base class of all wrappers defined in this package.
+ * Base class of all wrappers from GeoTools to GeoAPI.
  *
  * @author Martin Desruisseaux (Geomatys)
  */
@@ -103,7 +103,7 @@ abstract class WrapperFromGT {
 
     /**
      * {@return whether this wrapper is equal to the given object}.
-     * Two wrappers are considered equal if they are of the same class and wrap the equal implementations.
+     * Two wrappers are considered equal if they are of the same class and the wrapped implementations are equal.
      *
      * @param obj the object to compare, or {@code null}
      */

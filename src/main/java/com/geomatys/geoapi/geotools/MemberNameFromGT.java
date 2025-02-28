@@ -34,6 +34,30 @@ final class MemberNameFromGT extends LocalNameFromGT<org.geotools.api.util.Membe
         super(impl);
     }
 
+    /**
+     * Creates a new wrapper of the most appropriate type for the given instance.
+     * If the given implementation is {@code null}, then this method returns {@code null}.
+     *
+     * @param impl the GeoTools implementation on which to delegate all methods
+     * @return wrapper for the given implementation
+     */
+    static MemberName wrap(final org.geotools.api.util.MemberName impl) {
+        return (impl == null) ? null : new MemberNameFromGT(impl);
+    }
+
+    /**
+     * {@return the GeoTools implementation behind the given wrapper}.
+     *
+     * @param wrapper the wrapper from which to get the GeoTools implementation.
+     * @throws ClassCastException if the given value is not a wrapper for GeoTools.
+     */
+    static org.geotools.api.util.MemberName unwrap(final MemberName wrapper) {
+        switch (wrapper) {
+            case null: return null;
+            default: return ((MemberNameFromGT) wrapper).impl;
+        }
+    }
+
     @Override
     public TypeName getAttributeType() {
         return TypeNameFromGT.wrap(impl.getAttributeType());

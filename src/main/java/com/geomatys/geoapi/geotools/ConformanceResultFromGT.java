@@ -15,9 +15,8 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import java.net.URI;
-import org.opengis.metadata.citation.OnLineFunction;
-import org.opengis.metadata.citation.OnlineResource;
+import org.opengis.metadata.citation.Citation;
+import org.opengis.metadata.quality.ConformanceResult;
 import org.opengis.util.InternationalString;
 
 
@@ -26,19 +25,16 @@ import org.opengis.util.InternationalString;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource {
-    /**
-     * The GeoTools implementation on which to delegate all methods.
-     */
-    private final org.geotools.api.metadata.citation.OnLineResource impl;
-
+final class ConformanceResultFromGT extends QualityResultFromGT<org.geotools.api.metadata.quality.ConformanceResult>
+        implements ConformanceResult
+{
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    private OnlineResourceFromGT(final org.geotools.api.metadata.citation.OnLineResource impl) {
-        this.impl = impl;
+    ConformanceResultFromGT(final org.geotools.api.metadata.quality.ConformanceResult impl) {
+        super(impl);
     }
 
     /**
@@ -48,49 +44,26 @@ final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static OnlineResource wrap(final org.geotools.api.metadata.citation.OnLineResource impl) {
+    static ConformanceResult wrap(final org.geotools.api.metadata.quality.ConformanceResult impl) {
         switch (impl) {
             case null: return null;
-            case OnlineResource c: return c;
-            default: return new OnlineResourceFromGT(impl);
+            case ConformanceResult c: return c;
+            default: return new ConformanceResultFromGT(impl);
         }
     }
 
-    /**
-     * {@return the GeoTools implementation on which this wrapper delegates all operations}.
-     */
     @Override
-    final Object implementation() {
-        return impl;
+    public Citation getSpecification() {
+        return CitationFromGT.wrap(impl.getSpecification());
     }
 
     @Override
-    public URI getLinkage() {
-        return impl.getLinkage();
+    public InternationalString getExplanation() {
+        return InternationalStringFromGT.wrap(impl.getExplanation());
     }
 
     @Override
-    public String getProtocol() {
-        return impl.getProtocol();
-    }
-
-    @Override
-    public String getApplicationProfile() {
-        return impl.getApplicationProfile();
-    }
-
-    @Override
-    public String getName() {
-        return impl.getName();
-    }
-
-    @Override
-    public InternationalString getDescription() {
-        return InternationalStringFromGT.wrap(impl.getDescription());
-    }
-
-    @Override
-    public OnLineFunction getFunction() {
-        return wrap(impl.getFunction(), OnLineFunction::valueOf);
+    public Boolean pass() {
+        return impl.pass();
     }
 }

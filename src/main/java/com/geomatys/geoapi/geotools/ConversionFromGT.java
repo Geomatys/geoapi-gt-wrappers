@@ -15,8 +15,7 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.opengis.util.Type;
-import org.opengis.util.TypeName;
+import org.opengis.referencing.operation.Conversion;
 
 
 /**
@@ -24,13 +23,13 @@ import org.opengis.util.TypeName;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class TypeNameFromGT extends LocalNameFromGT<org.geotools.api.util.TypeName> implements TypeName, Type {
+class ConversionFromGT extends SingleOperationFromGT implements Conversion {
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    TypeNameFromGT(final org.geotools.api.util.TypeName impl) {
+    ConversionFromGT(final org.geotools.api.referencing.operation.Conversion impl) {
         super(impl);
     }
 
@@ -41,25 +40,12 @@ final class TypeNameFromGT extends LocalNameFromGT<org.geotools.api.util.TypeNam
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static TypeNameFromGT wrap(final org.geotools.api.util.TypeName impl) {     // Need to return the wrapper class.
-        return (impl == null) ? null : new TypeNameFromGT(impl);
-    }
-
-    /**
-     * {@return the GeoTools implementation behind the given wrapper}.
-     *
-     * @param wrapper the wrapper from which to get the GeoTools implementation.
-     * @throws ClassCastException if the given value is not a wrapper for GeoTools.
-     */
-    static org.geotools.api.util.TypeName unwrap(final TypeName wrapper) {
-        switch (wrapper) {
+    static Conversion wrap(final org.geotools.api.referencing.operation.Conversion impl) {
+        switch (impl) {
             case null: return null;
-            default: return ((TypeNameFromGT) wrapper).impl;
+            case Conversion c: return c;
+            case org.geotools.api.referencing.operation.Projection c: return ProjectionFromGT.wrap(c);
+            default: return new ConversionFromGT(impl);
         }
-    }
-
-    @Override
-    public TypeName getTypeName() {
-        return this;
     }
 }

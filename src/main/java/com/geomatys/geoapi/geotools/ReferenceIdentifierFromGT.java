@@ -43,7 +43,11 @@ final class ReferenceIdentifierFromGT extends IdentifierFromGT<org.geotools.api.
      * @return wrapper for the given implementation
      */
     static ReferenceIdentifier wrap(final org.geotools.api.referencing.ReferenceIdentifier impl) {
-        return (impl == null) ? null : new ReferenceIdentifierFromGT(impl);
+        switch (impl) {
+            case null: return null;
+            case ReferenceIdentifier c: return c;
+            default: return new ReferenceIdentifierFromGT(impl);
+        }
     }
 
     @Override

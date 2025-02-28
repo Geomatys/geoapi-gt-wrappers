@@ -15,29 +15,30 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import java.net.URI;
-import org.opengis.metadata.citation.OnLineFunction;
-import org.opengis.metadata.citation.OnlineResource;
-import org.opengis.util.InternationalString;
+import org.opengis.metadata.extent.GeographicExtent;
 
 
 /**
  * GeoAPI wrapper for an object from the GeoTools API.
  *
+ * @param <S> the interface from the GeoTools API of the wrapped implementation.
+ *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource {
+class GeographicExtentFromGT<S extends org.geotools.api.metadata.extent.GeographicExtent>
+        extends WrapperFromGT implements GeographicExtent
+{
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.metadata.citation.OnLineResource impl;
+    final S impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    private OnlineResourceFromGT(final org.geotools.api.metadata.citation.OnLineResource impl) {
+    GeographicExtentFromGT(final S impl) {
         this.impl = impl;
     }
 
@@ -48,11 +49,12 @@ final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static OnlineResource wrap(final org.geotools.api.metadata.citation.OnLineResource impl) {
+    static GeographicExtent wrap(final org.geotools.api.metadata.extent.GeographicExtent impl) {
         switch (impl) {
             case null: return null;
-            case OnlineResource c: return c;
-            default: return new OnlineResourceFromGT(impl);
+            case GeographicExtent c: return c;
+            case org.geotools.api.metadata.extent.GeographicBoundingBox c: return new GeographicBoundingBoxFromGT(c);
+            default: return new GeographicExtentFromGT<>(impl);
         }
     }
 
@@ -65,32 +67,7 @@ final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource
     }
 
     @Override
-    public URI getLinkage() {
-        return impl.getLinkage();
-    }
-
-    @Override
-    public String getProtocol() {
-        return impl.getProtocol();
-    }
-
-    @Override
-    public String getApplicationProfile() {
-        return impl.getApplicationProfile();
-    }
-
-    @Override
-    public String getName() {
-        return impl.getName();
-    }
-
-    @Override
-    public InternationalString getDescription() {
-        return InternationalStringFromGT.wrap(impl.getDescription());
-    }
-
-    @Override
-    public OnLineFunction getFunction() {
-        return wrap(impl.getFunction(), OnLineFunction::valueOf);
+    public Boolean getInclusion() {
+        return impl.getInclusion();
     }
 }
