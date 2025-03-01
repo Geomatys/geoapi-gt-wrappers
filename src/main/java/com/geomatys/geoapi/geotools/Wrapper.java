@@ -26,6 +26,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 
 /**
@@ -127,6 +128,7 @@ abstract class Wrapper {
                 @Override public boolean remove(Object o)   {return source.remove(unwrap(o));}
                 @Override public boolean contains(Object o) {return source.contains(unwrap(o));}
                 @Override public Iterator<T> iterator()     {return wrap(source.iterator(), wrapper);}
+                @Override public   Stream<T> stream()       {return source.stream().map(wrapper);}
             };
         }
     }
@@ -152,6 +154,7 @@ abstract class Wrapper {
             @Override public boolean remove(Object o)   {return source.remove(unwrap(o));}
             @Override public boolean contains(Object o) {return source.contains(unwrap(o));}
             @Override public Iterator<T> iterator()     {return wrap(source.iterator(), wrapper);}
+            @Override public   Stream<T> stream()       {return source.stream().map(wrapper);}
         };
     }
 
@@ -178,7 +181,8 @@ abstract class Wrapper {
             @Override public int     indexOf(Object o)     {return source.indexOf(unwrap(o));}
             @Override public int     lastIndexOf(Object o) {return source.lastIndexOf(unwrap(o));}
             @Override public T       get(int index)        {return wrapper.apply(source.get(index));}
-            @Override public Iterator<T> iterator()        {return wrap(source.iterator(), wrapper);}
+            @Override public Stream<T>       stream()      {return source.stream().map(wrapper);}
+            @Override public Iterator<T>     iterator()    {return wrap(source.iterator(), wrapper);}
             @Override public ListIterator<T> listIterator(final int index) {
                 return wrap(source.listIterator(index), wrapper);
             }

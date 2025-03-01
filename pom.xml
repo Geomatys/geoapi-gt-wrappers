@@ -108,4 +108,27 @@
       </snapshots>
     </repository>
   </repositories>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.11.2</version>
+        <configuration>
+          <encoding>${project.build.sourceEncoding}</encoding>
+          <docencoding>${project.build.sourceEncoding}</docencoding>
+          <charset>${project.build.sourceEncoding}</charset>
+          <source>${maven.compiler.release}</source>
+          <locale>en</locale>
+          <noqualifier>all</noqualifier>
+          <quiet>true</quiet>
+          <breakiterator>true</breakiterator>
+          <links>
+            <link>https://www.geoapi.org/3.0/javadoc/</link>
+          </links>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

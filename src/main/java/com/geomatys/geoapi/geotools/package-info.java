@@ -22,6 +22,12 @@
  * possible to run the <a href="https://github.com/IOGP-GIGS/GIGSGeoAPI">GIGS tests</a>
  * against GeoTools.
  *
+ * <p>In the metadata and referencing packages, there is an almost one-to-one relationship from the
+ * GeoTools <abbr>API</abbr> to GeoAPI 3.0 (but not the converse, as GeoAPI has more metadata types).
+ * In the majority of cases, using GeoAPI 3.0 instead of GeoTools <abbr>API</abbr> for metadata and
+ * coordinate operations can be done by replacing {@code geotools.api} by {@code opengis} in import statements,
+ * and using the static methods in the {@link Wrappers} class for viewing GeoTools objects as GeoAPI objects.</p>
+ *
  * @author Martin Desruisseaux (Geomatys)
  *
  * @see <a href="https://www.geoapi.org/">GeoAPI web site</a>
