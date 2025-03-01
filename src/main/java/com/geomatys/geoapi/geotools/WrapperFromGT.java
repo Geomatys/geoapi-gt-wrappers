@@ -15,8 +15,6 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import java.util.Set;
-import java.util.List;
 import java.util.Collection;
 import java.util.function.Function;
 import org.opengis.util.CodeList;
@@ -27,35 +25,11 @@ import org.opengis.util.CodeList;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-abstract class WrapperFromGT {
+abstract class WrapperFromGT extends Wrapper {
     /**
      * Creates a new wrapper.
      */
     WrapperFromGT() {
-    }
-
-    /**
-     * Returns the {@code org.geotools.api} instances used an the implementation.
-     *
-     * @return the backing {@code org.geotools.api} instance
-     */
-    abstract Object implementation();
-
-    /**
-     * Returns a collection with all elements of the given collection wrapped behind GeoAPI interface.
-     * If the given collection is {@code null}, then this method returns {@code null}.
-     *
-     * @param <S>     the GeoTools type.
-     * @param <T>     the GeoAPI interface.
-     * @param impl    the collection of GeoTools objects.
-     * @param wrapper the {@code wrap(…)} function to invoke for wrapping each element of the given list.
-     * @return a list of wrappers around the GeoTools object.
-     */
-    static <S,T> List<T> wrap(
-            final Collection<S> impl,
-            final Function<S,T> wrapper)
-    {
-        return (impl == null) ? null : impl.stream().map(wrapper).toList();
     }
 
     /**
@@ -88,43 +62,5 @@ abstract class WrapperFromGT {
             final Function<String,T> wrapper)
     {
         return wrap(impl, wrapper.compose(org.geotools.api.util.CodeList::name));
-    }
-
-    /**
-     * Converts a list to a set.
-     *
-     * @param <T> type of elements in the collections.
-     * @param elements the elements of the list to copy.
-     * @return the given list as a set.
-     */
-    static <T> Set<T> toSet(final Collection<T> elements) {
-        return (elements == null) ? null : Set.copyOf(elements);
-    }
-
-    /**
-     * {@return whether this wrapper is equal to the given object}.
-     * Two wrappers are considered equal if they are of the same class and the wrapped implementations are equal.
-     *
-     * @param obj the object to compare, or {@code null}
-     */
-    @Override
-    public final boolean equals(final Object obj) {
-        return (obj != null) && obj.getClass() == getClass() && implementation().equals(((WrapperFromGT) obj).implementation());
-    }
-
-    /**
-     * {@return a hash code value for this wrapper}.
-     */
-    @Override
-    public final int hashCode() {
-        return implementation().hashCode() ^ getClass().hashCode();
-    }
-
-    /**
-     * {@return the string representation of the implementation}.
-     */
-    @Override
-    public final String toString() {
-        return implementation().toString();
     }
 }

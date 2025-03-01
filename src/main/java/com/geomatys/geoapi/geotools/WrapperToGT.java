@@ -21,44 +21,10 @@ package com.geomatys.geoapi.geotools;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-abstract class WrapperToGT {
+abstract class WrapperToGT extends Wrapper {
     /**
      * Creates a new wrapper.
      */
     WrapperToGT() {
-    }
-
-    /**
-     * Returns the {@code org.opengis} instances on which to delegate the operations.
-     *
-     * @return the backing {@code org.opengisi} instance
-     */
-    abstract Object implementation();
-
-    /**
-     * {@return whether this wrapper is equal to the given object}.
-     * Two wrappers are considered equal if they are of the same class and the wrapped GeoAPI instances are equal.
-     *
-     * @param obj the object to compare, or {@code null}
-     */
-    @Override
-    public final boolean equals(final Object obj) {
-        return (obj != null) && obj.getClass() == getClass() && implementation().equals(((WrapperToGT) obj).implementation());
-    }
-
-    /**
-     * {@return a hash code value for this wrapper}.
-     */
-    @Override
-    public final int hashCode() {
-        return implementation().hashCode() ^ getClass().hashCode();
-    }
-
-    /**
-     * {@return the string representation of the GeoAPI instance}.
-     */
-    @Override
-    public final String toString() {
-        return implementation().toString();
     }
 }

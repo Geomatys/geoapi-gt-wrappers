@@ -15,7 +15,6 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import org.opengis.util.LocalName;
 import org.opengis.util.RecordSchema;
@@ -73,11 +72,7 @@ final class RecordSchemaFromGT extends WrapperFromGT implements RecordSchema {
 
     @Override
     public Map<TypeName, RecordType> getDescription() {
-        final var map = new LinkedHashMap<TypeName, RecordType>();
-        for (final var entry : impl.getDescription().entrySet()) {
-            map.put(TypeNameFromGT.wrap(entry.getKey()), RecordTypeFromGT.wrap(entry.getValue()));
-        }
-        return map;
+        return wrap(impl.getDescription(), TypeNameFromGT::wrap, RecordTypeFromGT::wrap);
     }
 
     @Override

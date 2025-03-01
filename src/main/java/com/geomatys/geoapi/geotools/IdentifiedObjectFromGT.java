@@ -90,7 +90,7 @@ class IdentifiedObjectFromGT<S extends org.geotools.api.referencing.IdentifiedOb
 
     @Override
     public Set<ReferenceIdentifier> getIdentifiers() {
-        return toSet(wrap(impl.getIdentifiers(), ReferenceIdentifierFromGT::wrap));
+        return wrap(impl.getIdentifiers(), ReferenceIdentifierFromGT::wrap);
     }
 
     @Override

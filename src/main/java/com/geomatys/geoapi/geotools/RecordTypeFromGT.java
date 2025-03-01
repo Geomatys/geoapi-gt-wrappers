@@ -15,7 +15,6 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import org.opengis.util.MemberName;
@@ -81,16 +80,12 @@ final class RecordTypeFromGT extends WrapperFromGT implements RecordType {
 
     @Override
     public Map<MemberName, Type> getMemberTypes() {
-        final var map = new LinkedHashMap<MemberName, Type>();
-        for (final var entry : impl.getAttributeTypes().entrySet()) {
-            map.put(MemberNameFromGT.wrap(entry.getKey()), TypeNameFromGT.wrap(entry.getValue()));
-        }
-        return map;
+        return wrap(impl.getAttributeTypes(), MemberNameFromGT::wrap, TypeNameFromGT::wrap);
     }
 
     @Override
     public Set<MemberName> getMembers() {
-        return toSet(wrap(impl.getMembers(), MemberNameFromGT::wrap));
+        return wrap(impl.getMembers(), MemberNameFromGT::wrap);
     }
 
     @Override
