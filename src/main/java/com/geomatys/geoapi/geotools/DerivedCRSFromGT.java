@@ -16,16 +16,26 @@
 package com.geomatys.geoapi.geotools;
 
 import org.opengis.referencing.crs.DerivedCRS;
+import org.opengis.referencing.crs.EngineeringCRS;
+import org.opengis.referencing.crs.GeodeticCRS;
+import org.opengis.referencing.crs.GeographicCRS;
+import org.opengis.referencing.crs.TemporalCRS;
+import org.opengis.referencing.crs.VerticalCRS;
+import org.opengis.referencing.cs.EllipsoidalCS;
+import org.opengis.referencing.cs.TimeCS;
+import org.opengis.referencing.cs.VerticalCS;
+import org.opengis.referencing.datum.EngineeringDatum;
+import org.opengis.referencing.datum.GeodeticDatum;
+import org.opengis.referencing.datum.TemporalDatum;
+import org.opengis.referencing.datum.VerticalDatum;
 
 
 /**
  * GeoAPI wrapper for an object from the GeoTools API.
  *
  * @author Martin Desruisseaux (Geomatys)
- *
- * @todo Implement double inheritance.
  */
-final class DerivedCRSFromGT extends GeneralDerivedCRSFromGT<org.geotools.api.referencing.crs.DerivedCRS>
+class DerivedCRSFromGT extends GeneralDerivedCRSFromGT<org.geotools.api.referencing.crs.DerivedCRS>
         implements DerivedCRS
 {
     /**
@@ -33,7 +43,7 @@ final class DerivedCRSFromGT extends GeneralDerivedCRSFromGT<org.geotools.api.re
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    private DerivedCRSFromGT(final org.geotools.api.referencing.crs.DerivedCRS impl) {
+    DerivedCRSFromGT(final org.geotools.api.referencing.crs.DerivedCRS impl) {
         super(impl);
     }
 
@@ -48,7 +58,92 @@ final class DerivedCRSFromGT extends GeneralDerivedCRSFromGT<org.geotools.api.re
         switch (impl) {
             case null: return null;
             case DerivedCRS c: return c;
+            case org.geotools.api.referencing.crs.GeographicCRS  c: return new Geographic (impl);
+            case org.geotools.api.referencing.crs.GeodeticCRS    c: return new Geodetic   (impl);
+            case org.geotools.api.referencing.crs.VerticalCRS    c: return new Vertical   (impl);
+            case org.geotools.api.referencing.crs.TemporalCRS    c: return new Temporal   (impl);
+            case org.geotools.api.referencing.crs.EngineeringCRS c: return new Engineering(impl);
             default: return new DerivedCRSFromGT(impl);
+        }
+    }
+
+    /**
+     * The derived geodetic <abbr>CRS</abbr> case.
+     */
+    private static class Geodetic extends DerivedCRSFromGT implements GeodeticCRS {
+        Geodetic(final org.geotools.api.referencing.crs.DerivedCRS impl) {
+            super(impl);
+        }
+
+        @Override
+        public GeodeticDatum getDatum() {
+            return GeodeticDatumFromGT.wrap(((org.geotools.api.referencing.crs.GeographicCRS) impl).getDatum());
+        }
+    }
+
+    /**
+     * The derived geographic <abbr>CRS</abbr> case.
+     */
+    private static final class Geographic extends Geodetic implements GeographicCRS {
+        Geographic(final org.geotools.api.referencing.crs.DerivedCRS impl) {
+            super(impl);
+        }
+
+        @Override
+        public EllipsoidalCS getCoordinateSystem() {
+            return EllipsoidalCSFromGT.wrap(((org.geotools.api.referencing.crs.GeographicCRS) impl).getCoordinateSystem());
+        }
+    }
+
+    /**
+     * The derived vertical <abbr>CRS</abbr> case.
+     */
+    private static final class Vertical extends DerivedCRSFromGT implements VerticalCRS {
+        Vertical(final org.geotools.api.referencing.crs.DerivedCRS impl) {
+            super(impl);
+        }
+
+        @Override
+        public VerticalCS getCoordinateSystem() {
+            return VerticalCSFromGT.wrap(((org.geotools.api.referencing.crs.VerticalCRS) impl).getCoordinateSystem());
+        }
+
+        @Override
+        public VerticalDatum getDatum() {
+            return VerticalDatumFromGT.wrap(((org.geotools.api.referencing.crs.VerticalCRS) impl).getDatum());
+        }
+    }
+
+    /**
+     * The derived temporal <abbr>CRS</abbr> case.
+     */
+    private static final class Temporal extends DerivedCRSFromGT implements TemporalCRS {
+        Temporal(final org.geotools.api.referencing.crs.DerivedCRS impl) {
+            super(impl);
+        }
+
+        @Override
+        public TimeCS getCoordinateSystem() {
+            return TimeCSFromGT.wrap(((org.geotools.api.referencing.crs.TemporalCRS) impl).getCoordinateSystem());
+        }
+
+        @Override
+        public TemporalDatum getDatum() {
+            return TemporalDatumFromGT.wrap(((org.geotools.api.referencing.crs.TemporalCRS) impl).getDatum());
+        }
+    }
+
+    /**
+     * The derived engineering <abbr>CRS</abbr> case.
+     */
+    private static final class Engineering extends DerivedCRSFromGT implements EngineeringCRS {
+        Engineering(final org.geotools.api.referencing.crs.DerivedCRS impl) {
+            super(impl);
+        }
+
+        @Override
+        public EngineeringDatum getDatum() {
+            return EngineeringDatumFromGT.wrap(((org.geotools.api.referencing.crs.EngineeringCRS) impl).getDatum());
         }
     }
 }
