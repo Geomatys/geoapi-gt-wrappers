@@ -66,6 +66,8 @@ class IdentifiedObjectFromGT<S extends org.geotools.api.referencing.IdentifiedOb
             case org.geotools.api.referencing.datum.Datum c: return DatumFromGT.wrap(c);
             case org.geotools.api.referencing.datum.Ellipsoid c: return new EllipsoidFromGT(c);
             case org.geotools.api.referencing.datum.PrimeMeridian c: return new PrimeMeridianFromGT(c);
+            case org.geotools.api.referencing.operation.OperationMethod c: return new OperationMethodFromGT(c);
+            case org.geotools.api.parameter.GeneralParameterDescriptor c: return GeneralParameterDescriptorFromGT.wrap(c);
             default: return new IdentifiedObjectFromGT<>(impl);
         }
     }

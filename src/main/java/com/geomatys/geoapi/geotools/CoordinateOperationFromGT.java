@@ -54,7 +54,9 @@ class CoordinateOperationFromGT<S extends org.geotools.api.referencing.operation
         switch (impl) {
             case null: return null;
             case CoordinateOperation c: return c;
-            case org.geotools.api.referencing.operation.SingleOperation c: return SingleOperationFromGT.wrap(c);
+            // The following case intentionally excludes the GeoTools `SingleOperation` interface.
+            case org.geotools.api.referencing.operation.Operation c: return SingleOperationFromGT.wrap(c);
+            case org.geotools.api.referencing.operation.ConcatenatedOperation c: return new ConcatenatedOperationFromGT(c);
             default: return new CoordinateOperationFromGT<>(impl);
         }
     }

@@ -18,12 +18,11 @@ package com.geomatys.geoapi.geotools;
 import org.opengis.parameter.ParameterValueGroup;
 import org.opengis.referencing.operation.OperationMethod;
 import org.opengis.referencing.operation.SingleOperation;
+import org.geotools.api.referencing.operation.Operation;    // Specific to GeoTools API.
 
 
 /**
  * GeoAPI wrapper for an object from the GeoTools API.
- *
- * @param <S> the interface from the GeoTools API of the wrapped implementation.
  *
  * @author Martin Desruisseaux (Geomatys)
  */
@@ -32,6 +31,7 @@ class SingleOperationFromGT extends CoordinateOperationFromGT<org.geotools.api.r
 {
     /**
      * Creates a new wrapper for the given GeoTools implementation.
+     * This given object <em>should</em> implement {@link Operation}.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
@@ -42,6 +42,11 @@ class SingleOperationFromGT extends CoordinateOperationFromGT<org.geotools.api.r
     /**
      * Creates a new wrapper of the most appropriate type for the given instance.
      * If the given implementation is {@code null}, then this method returns {@code null}.
+     *
+     * <h4>GeoTools API particularity</h4>
+     * While this method accepts {@code SingleOperation} for compatibility with
+     * {@code ConcatenatedOperation.getOperations()}, the given object <em>should</em>
+     * be restricted to instances of the {@link Operation} subtype when possible.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
@@ -56,13 +61,19 @@ class SingleOperationFromGT extends CoordinateOperationFromGT<org.geotools.api.r
         }
     }
 
+    /**
+     * If the GeoTools object implements {@link Operation}, returns a wrapper for the operation method.
+     * Otherwise returns {@code null}. The latter case is illegal in <abbr>ISO</abbr> 19111 because this
+     * property is mandatory. However, GeoTools API introduces the concept of {@code SingleOperation}
+     * without parameters, which does not exist in <abbr>ISO</abbr> 19111.
+     */
     @Override
     public OperationMethod getMethod() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return (impl instanceof Operation op) ? OperationMethodFromGT.wrap(op.getMethod()) : null;
     }
 
     @Override
     public ParameterValueGroup getParameterValues() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return (impl instanceof Operation op) ? ParameterValueGroupFromGT.wrap(op.getParameterValues()) : null;
     }
 }
