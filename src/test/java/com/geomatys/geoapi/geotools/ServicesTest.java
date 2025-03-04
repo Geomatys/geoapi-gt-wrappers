@@ -15,9 +15,12 @@
  */
 package com.geomatys.geoapi.geotools;
 
+import java.util.ServiceLoader;
 import org.opengis.util.FactoryException;
+import org.opengis.referencing.crs.CRSAuthorityFactory;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
@@ -41,6 +44,20 @@ public class ServicesTest {
     @Test
     public void testProvider() throws FactoryException {
         assertNotNull(Services.provider());
+    }
+
+    /**
+     * Tests {@link Services#provider()} fetched through {@link ServiceLoader}.
+     *
+     * @throws FactoryException if an error occurred while testing the creation of a <abbr>CRS</abbr>.
+     */
+    @Test
+    public void testServiceProvider() throws FactoryException {
+        var it = ServiceLoader.load(CRSAuthorityFactory.class).iterator();
+        assertTrue(it.hasNext());
+        CRSAuthorityFactory factory = it.next();
+        assertNotNull(factory.createGeographicCRS("EPSG:4326"));
+        assertFalse(it.hasNext());
     }
 
     /**
