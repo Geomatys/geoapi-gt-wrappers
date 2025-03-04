@@ -32,6 +32,9 @@ import java.util.regex.Pattern;
 
 /**
  * Generates the main body of the {@link Wrappers} class.
+ * Note that the generated code does not include the copyright header, the class documentation and the class constructor.
+ * After executing this class, the changes in {@code Wrappers} need to be partially reverted for reintroducing above-cited
+ * documentation.
  *
  * @author Martin Desruisseaux (Geomatys)
  */

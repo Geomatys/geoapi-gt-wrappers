@@ -107,6 +107,24 @@ abstract class Wrapper {
     }
 
     /**
+     * Returns a view of the given iterable with all elements replaced on-the-fly.
+     * If the given iterable is {@code null}, then this method returns {@code null}.
+     *
+     * @param <S>     the type of elements in the source iterable.
+     * @param <T>     the type of elements in the target iterable (the view).
+     * @param source  the source iterable for which to provide a view.
+     * @param wrapper the {@code wrap(…)} function to invoke for wrapping each element of the given iterable.
+     * @return an iterable of wrappers around the elements of the source iterable.
+     */
+    static <S,T> Iterable<T> wrap(final Iterable<S> source, final Function<S,T> wrapper) {
+        switch (source) {
+            case null: return null;
+            case Collection<S> c: return wrap(c, wrapper);
+            default: return () -> wrap(source.iterator(), wrapper);
+        }
+    }
+
+    /**
      * Returns a view of the given collection with all elements replaced on-the-fly.
      * If the given collection is {@code null}, then this method returns {@code null}.
      *
