@@ -28,6 +28,7 @@ import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.opengis.util.CodeList;
 
 
 /**
@@ -67,9 +68,33 @@ public final class WrappersGenerator implements Consumer<Path> {
             "Result",  "QualityResult");
 
     /**
+     * Code lists for which to generate wrapper methods.
+     */
+    private static final Set<Class<? extends CodeList<?>>> CODE_LISTS = Set.of(
+            org.opengis.metadata.citation.OnLineFunction.class,
+            org.opengis.metadata.citation.PresentationForm.class,
+            org.opengis.metadata.citation.Role.class,
+            org.opengis.metadata.quality.EvaluationMethodType.class,
+            org.opengis.referencing.datum.PixelInCell.class,
+            org.opengis.referencing.datum.VerticalDatumType.class,
+            org.opengis.referencing.cs.AxisDirection.class,
+            org.opengis.referencing.cs.RangeMeaning.class);
+
+    /**
+     * A suffix to append to the method signature for code lists.
+     * Used as a sentinel values for handling code lists differently than main objects.
+     */
+    private static final String CODE_LIST_SUFFIX = " // CodeList";
+
+    /**
+     * The <abbr>API</abbr> to wrap (source) or resulting from the wrap (target).
+     */
+    private final String sourceAPI, targetAPI;
+
+    /**
      * The suffix of the implementation to parse.
      */
-    private final String suffix;
+    private final String wrapperSuffix;
 
     /**
      * Name of the class to generate.
@@ -96,7 +121,9 @@ public final class WrappersGenerator implements Consumer<Path> {
      * Creates a new generator.
      */
     private WrappersGenerator() {
-        suffix = "FromGT";
+        sourceAPI = "geotools";
+        targetAPI = "geoapi";
+        wrapperSuffix = "FromGT";
         outputClassName = "Wrappers";
         wrapMethods = new TreeMap<>();
         finalClasses = new HashSet<>();
@@ -115,6 +142,7 @@ public final class WrappersGenerator implements Consumer<Path> {
         } catch (UncheckedIOException e) {
             throw e.getCause();
         }
+        CODE_LISTS.forEach(this::addCodeList);
         try (final var out = Files.newBufferedWriter(directory.resolve(outputClassName + ".java"))) {
             out.write("package com.geomatys.geoapi.geotools;");
             out.newLine();
@@ -144,8 +172,8 @@ public final class WrappersGenerator implements Consumer<Path> {
     public void accept(final Path file) {
         String name = file.getFileName().toString();
         name = name.substring(0, name.lastIndexOf('.'));
-        if (!name.startsWith("Wrapper") && name.endsWith(suffix)) try {
-            name = name.substring(0, name.length() - suffix.length());
+        if (!name.startsWith("Wrapper") && name.endsWith(wrapperSuffix)) try {
+            name = name.substring(0, name.length() - wrapperSuffix.length());
             final Matcher matcher = wrapMethodPattern.matcher("");
             for (String line : Files.readAllLines(file)) {
                 if (line.startsWith("final class ")) {
@@ -156,8 +184,8 @@ public final class WrappersGenerator implements Consumer<Path> {
                     if (type.endsWith("Exception")) {
                         continue;
                     }
-                    if (type.endsWith(suffix)) {
-                        line = line.replace(type, type = type.substring(0, type.length() - suffix.length()));
+                    if (type.endsWith(wrapperSuffix)) {
+                        line = line.replace(type, type = type.substring(0, type.length() - wrapperSuffix.length()));
                     }
                     if (wrapMethods.put(type, line) != null) {
                         throw new RuntimeException("Collision for type " + type);
@@ -170,37 +198,67 @@ public final class WrappersGenerator implements Consumer<Path> {
     }
 
     /**
+     * Generates entries for code lists. Contrarily to the main classes handled by {@link #accept(Path)},
+     * there is no Java source file dedicated to code list adapters.
+     *
+     * @param codeList the code list for which to generate an entry.
+     */
+    private void addCodeList(final Class<? extends CodeList<?>> codeList) {
+        String sourceClass = codeList.getCanonicalName();
+        sourceClass = sourceClass.replace("opengis", "geotools.api");
+        String type = codeList.getSimpleName();
+        String decl = type + ' ' + targetAPI + '(' + sourceClass + ' ' + sourceAPI + ") {" + CODE_LIST_SUFFIX;
+        if (wrapMethods.put(type, decl) != null) {
+            throw new RuntimeException("Collision for type " + type);
+        }
+    }
+
+    /**
      * Writes the {@code wrap} method for the given GeoAPI interface.
      *
      * @param out   where to write.
      * @param type  the GeoAPI interface.
-     * @param line  the method signature, without the {@code public} keyword.
+     * @param decl  the method declaration (signature), without the {@code public} keyword.
      * @throws IOException if an error occurred while writing the method.
      */
-    private void appendWrapMethod(final BufferedWriter out, String type, String line) throws IOException {
-        line = line.replace(" wrap(final ", " geoapi(")     // Change method name.
-                   .replace(" wrap(",       " geoapi(")     // In case a parameter did not have the `final` keyword.
-                   .replace(" impl)", " geotools)");        // Change parameter name.
-        out.newLine(); out.append("    /**");
-        out.newLine(); out.append("     * Views the given GeoTools object as a GeoAPI {@code ").append(type).append("}.");
-        out.newLine(); out.append("     * This method returns the first of the following choices which is applicable:");
-        out.newLine(); out.append("     * <ol>");
-        out.newLine(); out.append("     *   <li>If the given object is null, returns {@code null}.</li>");
-        out.newLine(); out.append("     *   <li>If the given object already implements the GeoAPI {@code ").append(type).append('}');
-        out.newLine(); out.append("     *       interface, returns that {@code impl} instance directly.</li>");
-        if (!finalClasses.contains(type)) {
-            out.newLine(); out.append("     *   <li>If the given object implements a more specific GeoTools interface, behaves as if {@code impl}");
-            out.newLine(); out.append("     *       was cast to the most specific supported type before to invoke {@code wrap(…)}.</li>");
+    private void appendWrapMethod(final BufferedWriter out, String type, String decl) throws IOException {
+        final boolean isCodeList = decl.endsWith(CODE_LIST_SUFFIX);
+        if (isCodeList) {
+            decl = decl.substring(0, decl.length() - CODE_LIST_SUFFIX.length());
+        } else {
+            decl = decl.replace(" wrap(final ", " wrap(")           // Uniformize the policy regarging `final`.
+                       .replace(" wrap(", ' ' + targetAPI + '(')    // Change method name.
+                       .replace(" impl)", ' ' + sourceAPI + ')');   // Change parameter name.
         }
-        out.newLine(); out.append("     *   <li>Otherwise, wraps {@code impl} in a {@code ").append(type).append('}');
-        out.newLine(); out.append("     *       which will forward all methods to {@code impl}.</li>");
-        out.newLine(); out.append("     * </ol>");
+        out.newLine(); out.append("    /**");
+        if (isCodeList) {
+            out.newLine(); out.append("     * Returns the given GeoTools code list value as a GeoAPI {@code ").append(type).append("}.");
+        } else {
+            out.newLine(); out.append("     * Views the given GeoTools object as a GeoAPI {@code ").append(type).append("}.");
+            out.newLine(); out.append("     * This method returns the first of the following choices which is applicable:");
+            out.newLine(); out.append("     * <ol>");
+            out.newLine(); out.append("     *   <li>If the given object is null, returns {@code null}.</li>");
+            out.newLine(); out.append("     *   <li>If the given object already implements the GeoAPI {@code ").append(type).append('}');
+            out.newLine(); out.append("     *       interface, returns that {@code impl} instance directly.</li>");
+            if (!finalClasses.contains(type)) {
+                out.newLine(); out.append("     *   <li>If the given object implements a more specific GeoTools interface, behaves as if {@code impl}");
+                out.newLine(); out.append("     *       was cast to the most specific supported type before to invoke {@code wrap(…)}.</li>");
+            }
+            out.newLine(); out.append("     *   <li>Otherwise, wraps {@code impl} in a {@code ").append(type).append('}');
+            out.newLine(); out.append("     *       which will forward all methods to {@code impl}.</li>");
+            out.newLine(); out.append("     * </ol>");
+        }
         out.newLine(); out.append("     *");
-        out.newLine(); out.append("     * @param geotools the GeoTools object to view as a GeoAPI object, or {@code null}.");
+        out.newLine(); out.append("     * @param ").append(sourceAPI).append(" the GeoTools object to view as a GeoAPI object, or {@code null}.");
         out.newLine(); out.append("     * @return the given implementation viewed as a GeoAPI object, or {@code null} if the given object was null.");
         out.newLine(); out.append("     */");
-        out.newLine(); out.append("    public ").append(line.strip());
-        out.newLine(); out.append("        return ").append(GEOAPI_TO_WRAPPER.getOrDefault(type, type)).append(suffix).append(".wrap(geotools);");
+        out.newLine(); out.append("    public ").append(decl.strip());
+        out.newLine(); out.append("        return ");
+        if (isCodeList) {
+            out.append("WrapperFromGT.wrap(geotools, ").append(type).append("::valueOf);");
+        } else {
+            out.append(GEOAPI_TO_WRAPPER.getOrDefault(type, type)).append(wrapperSuffix).append(".wrap(").append(sourceAPI).append(");");
+        }
         out.newLine(); out.append("    }");
         out.newLine();
     }

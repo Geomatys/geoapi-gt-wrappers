@@ -110,6 +110,16 @@ public final class Wrappers {
     }
 
     /**
+     * Returns the given GeoTools code list value as a GeoAPI {@code AxisDirection}.
+     *
+     * @param geotools the GeoTools object to view as a GeoAPI object, or {@code null}.
+     * @return the given implementation viewed as a GeoAPI object, or {@code null} if the given object was null.
+     */
+    public AxisDirection geoapi(org.geotools.api.referencing.cs.AxisDirection geotools) {
+        return WrapperFromGT.wrap(geotools, AxisDirection::valueOf);
+    }
+
+    /**
      * Views the given GeoTools object as a GeoAPI {@code CRSAuthorityFactory}.
      * This method returns the first of the following choices which is applicable:
      * <ol>
@@ -553,6 +563,16 @@ public final class Wrappers {
      */
     public static EngineeringDatum geoapi(org.geotools.api.referencing.datum.EngineeringDatum geotools) {
         return EngineeringDatumFromGT.wrap(geotools);
+    }
+
+    /**
+     * Returns the given GeoTools code list value as a GeoAPI {@code EvaluationMethodType}.
+     *
+     * @param geotools the GeoTools object to view as a GeoAPI object, or {@code null}.
+     * @return the given implementation viewed as a GeoAPI object, or {@code null} if the given object was null.
+     */
+    public EvaluationMethodType geoapi(org.geotools.api.metadata.quality.EvaluationMethodType geotools) {
+        return WrapperFromGT.wrap(geotools, EvaluationMethodType::valueOf);
     }
 
     /**
@@ -1008,6 +1028,16 @@ public final class Wrappers {
     }
 
     /**
+     * Returns the given GeoTools code list value as a GeoAPI {@code OnLineFunction}.
+     *
+     * @param geotools the GeoTools object to view as a GeoAPI object, or {@code null}.
+     * @return the given implementation viewed as a GeoAPI object, or {@code null} if the given object was null.
+     */
+    public OnLineFunction geoapi(org.geotools.api.metadata.citation.OnLineFunction geotools) {
+        return WrapperFromGT.wrap(geotools, OnLineFunction::valueOf);
+    }
+
+    /**
      * Views the given GeoTools object as a GeoAPI {@code OnlineResource}.
      * This method returns the first of the following choices which is applicable:
      * <ol>
@@ -1062,6 +1092,16 @@ public final class Wrappers {
     }
 
     /**
+     * Returns the given GeoTools code list value as a GeoAPI {@code PixelInCell}.
+     *
+     * @param geotools the GeoTools object to view as a GeoAPI object, or {@code null}.
+     * @return the given implementation viewed as a GeoAPI object, or {@code null} if the given object was null.
+     */
+    public PixelInCell geoapi(org.geotools.api.referencing.datum.PixelInCell geotools) {
+        return WrapperFromGT.wrap(geotools, PixelInCell::valueOf);
+    }
+
+    /**
      * Views the given GeoTools object as a GeoAPI {@code PolarCS}.
      * This method returns the first of the following choices which is applicable:
      * <ol>
@@ -1097,6 +1137,16 @@ public final class Wrappers {
      */
     public static PositionalAccuracy geoapi(org.geotools.api.metadata.quality.PositionalAccuracy geotools) {
         return PositionalAccuracyFromGT.wrap(geotools);
+    }
+
+    /**
+     * Returns the given GeoTools code list value as a GeoAPI {@code PresentationForm}.
+     *
+     * @param geotools the GeoTools object to view as a GeoAPI object, or {@code null}.
+     * @return the given implementation viewed as a GeoAPI object, or {@code null} if the given object was null.
+     */
+    public PresentationForm geoapi(org.geotools.api.metadata.citation.PresentationForm geotools) {
+        return WrapperFromGT.wrap(geotools, PresentationForm::valueOf);
     }
 
     /**
@@ -1171,6 +1221,16 @@ public final class Wrappers {
      */
     public static QuantitativeResult geoapi(org.geotools.api.metadata.quality.QuantitativeResult geotools) {
         return QuantitativeResultFromGT.wrap(geotools);
+    }
+
+    /**
+     * Returns the given GeoTools code list value as a GeoAPI {@code RangeMeaning}.
+     *
+     * @param geotools the GeoTools object to view as a GeoAPI object, or {@code null}.
+     * @return the given implementation viewed as a GeoAPI object, or {@code null} if the given object was null.
+     */
+    public RangeMeaning geoapi(org.geotools.api.referencing.cs.RangeMeaning geotools) {
+        return WrapperFromGT.wrap(geotools, RangeMeaning::valueOf);
     }
 
     /**
@@ -1301,6 +1361,16 @@ public final class Wrappers {
      */
     public static Result geoapi(org.geotools.api.metadata.quality.Result geotools) {
         return QualityResultFromGT.wrap(geotools);
+    }
+
+    /**
+     * Returns the given GeoTools code list value as a GeoAPI {@code Role}.
+     *
+     * @param geotools the GeoTools object to view as a GeoAPI object, or {@code null}.
+     * @return the given implementation viewed as a GeoAPI object, or {@code null} if the given object was null.
+     */
+    public Role geoapi(org.geotools.api.metadata.citation.Role geotools) {
+        return WrapperFromGT.wrap(geotools, Role::valueOf);
     }
 
     /**
@@ -1593,6 +1663,16 @@ public final class Wrappers {
      */
     public static VerticalDatum geoapi(org.geotools.api.referencing.datum.VerticalDatum geotools) {
         return VerticalDatumFromGT.wrap(geotools);
+    }
+
+    /**
+     * Returns the given GeoTools code list value as a GeoAPI {@code VerticalDatumType}.
+     *
+     * @param geotools the GeoTools object to view as a GeoAPI object, or {@code null}.
+     * @return the given implementation viewed as a GeoAPI object, or {@code null} if the given object was null.
+     */
+    public VerticalDatumType geoapi(org.geotools.api.referencing.datum.VerticalDatumType geotools) {
+        return WrapperFromGT.wrap(geotools, VerticalDatumType::valueOf);
     }
 
     /**
