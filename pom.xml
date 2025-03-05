@@ -29,6 +29,7 @@
   <packaging>jar</packaging>
 
   <name>GeoAPI wrapper for GeoTools</name>
+  <url>https://github.com/Geomatys/geoapi-gt-wrappers</url>
   <description>
     Implementation of GeoAPI 3.0 interfaces as wrappers around the GeoTools library.
     Projects using GeoAPI interfaces for their metadata and referencing services have

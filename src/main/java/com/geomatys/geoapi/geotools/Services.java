@@ -36,17 +36,29 @@ public final class Services {
     }
 
     /**
+     * {@return the default factory as provided by the GeoTools <code>CRS</code> class}.
+     *
+     * @todo {@code CoordinateOperationFactory} is not yet available.
+     *
+     * @param  method    {@code "getAuthorityFactory"} or {@code "getCoordinateOperationFactory"}.
+     * @param  argument  the {@code longitudeFirst} or {@code lenient} argument, for CRS and operation factory respectively.
+     * @throws FactoryException if the GeoTools {@link org.geotools.referencing.CRS} class has not been found.
+     */
+    private static Object provider(final String method, final boolean argument) throws FactoryException {
+        try {
+            return Class.forName("org.geotools.referencing.CRS").getMethod(method, Boolean.TYPE).invoke(null, argument);
+        } catch (ReflectiveOperationException e) {
+            throw new FactoryException(e);
+        }
+    }
+
+    /**
      * {@return the default <abbr>CRS</abbr> authority factory with axis order as specified by the authority}.
      *
      * @throws FactoryException if the GeoTools {@link org.geotools.referencing.CRS} class has not been found.
      */
     public static CRSAuthorityFactory provider() throws FactoryException {
-        final Object factory;
-        try {
-            factory = Class.forName("org.geotools.referencing.CRS").getMethod("getAuthorityFactory", Boolean.TYPE).invoke(null, Boolean.FALSE);
-        } catch (ReflectiveOperationException e) {
-            throw new FactoryException(e);
-        }
+        final Object factory = provider("getAuthorityFactory", false);
         return CRSAuthorityFactoryFromGT.wrap((org.geotools.api.referencing.crs.CRSAuthorityFactory) factory);
     }
 

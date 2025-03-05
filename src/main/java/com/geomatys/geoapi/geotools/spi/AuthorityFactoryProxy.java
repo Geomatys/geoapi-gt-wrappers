@@ -35,7 +35,7 @@ import com.geomatys.geoapi.geotools.Services;
 
 
 /**
- * <abbr>CRS</abbr> authority factory that delegate its work to GeoTools.
+ * <abbr>CRS</abbr> authority factory that delegates its work to GeoTools.
  * This is a temporary class for compatibility with applications that put their dependencies on the class-path.
  * This class may be removed in a future version if only module-path is supported (in that latter case,
  * {@link java.util.ServiceLoader} would invoke {@link Services#provider()} directly).
