@@ -50,6 +50,7 @@ final class ParameterValueGroupFromGT extends GeneralParameterValueFromGT<org.ge
     static <V> ParameterValueGroup wrap(final org.geotools.api.parameter.ParameterValueGroup impl) {
         switch (impl) {
             case null: return null;
+            case ParameterValueGroupToGT c: return c.impl;
             default: return new ParameterValueGroupFromGT(impl);
         }
     }

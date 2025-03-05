@@ -42,19 +42,10 @@ final class MemberNameToGT extends LocalNameToGT<org.opengis.util.MemberName> im
      * @return wrapper for the given implementation
      */
     static MemberName wrap(final org.opengis.util.MemberName impl) {
-        return (impl == null) ? null : new MemberNameToGT(impl);
-    }
-
-    /**
-     * {@return the GeoAPI implementation behind the given wrapper}.
-     *
-     * @param wrapper the wrapper from which to get the GeoAPI implementation.
-     * @throws ClassCastException if the given value is not a wrapper for GeoAPI.
-     */
-    static org.opengis.util.MemberName unwrap(final MemberName wrapper) {
-        switch (wrapper) {
+        switch (impl) {
             case null: return null;
-            default: return ((MemberNameToGT) wrapper).impl;
+            case MemberNameFromGT c: return c.impl;
+            default: return new MemberNameToGT(impl);
         }
     }
 

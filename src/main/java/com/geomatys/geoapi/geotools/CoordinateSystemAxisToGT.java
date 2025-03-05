@@ -49,6 +49,7 @@ final class CoordinateSystemAxisToGT extends IdentifiedObjectToGT<org.opengis.re
         switch (impl) {
             case null: return null;
             case CoordinateSystemAxis c: return c;
+            case CoordinateSystemAxisFromGT c: return c.impl;
             default: return new CoordinateSystemAxisToGT(impl);
         }
     }

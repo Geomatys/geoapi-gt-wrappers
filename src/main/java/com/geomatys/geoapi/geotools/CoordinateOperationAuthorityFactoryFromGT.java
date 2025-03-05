@@ -31,7 +31,7 @@ final class CoordinateOperationAuthorityFactoryFromGT extends AuthorityFactoryFr
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.referencing.operation.CoordinateOperationAuthorityFactory impl;
+    final org.geotools.api.referencing.operation.CoordinateOperationAuthorityFactory impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -53,6 +53,7 @@ final class CoordinateOperationAuthorityFactoryFromGT extends AuthorityFactoryFr
         switch (impl) {
             case null: return null;
             case CoordinateOperationAuthorityFactory c: return c;
+            case CoordinateOperationAuthorityFactoryToGT c: return c.impl;
             default: return new CoordinateOperationAuthorityFactoryFromGT(impl);
         }
     }

@@ -38,7 +38,7 @@ final class CSAuthorityFactoryToGT extends AuthorityFactoryToGT implements CSAut
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    private final org.opengis.referencing.cs.CSAuthorityFactory impl;
+    final org.opengis.referencing.cs.CSAuthorityFactory impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -60,6 +60,7 @@ final class CSAuthorityFactoryToGT extends AuthorityFactoryToGT implements CSAut
         switch (impl) {
             case null: return null;
             case CSAuthorityFactory c: return c;
+            case CSAuthorityFactoryFromGT c: return c.impl;
             default: return new CSAuthorityFactoryToGT(impl);
         }
     }

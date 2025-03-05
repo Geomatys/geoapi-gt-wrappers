@@ -30,7 +30,7 @@ final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.metadata.citation.OnLineResource impl;
+    final org.geotools.api.metadata.citation.OnLineResource impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -52,6 +52,7 @@ final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource
         switch (impl) {
             case null: return null;
             case OnlineResource c: return c;
+            case OnlineResourceToGT c: return c.impl;
             default: return new OnlineResourceFromGT(impl);
         }
     }

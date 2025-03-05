@@ -50,6 +50,7 @@ class ReferenceSystemFromGT<S extends org.geotools.api.referencing.ReferenceSyst
         switch (impl) {
             case null: return null;
             case ReferenceSystem c: return c;
+            case ReferenceSystemToGT<?> c: return c.impl;
             case org.geotools.api.referencing.crs.CoordinateReferenceSystem c: return CoordinateReferenceSystemFromGT.wrap(c);
             default: return new ReferenceSystemFromGT<>(impl);
         }

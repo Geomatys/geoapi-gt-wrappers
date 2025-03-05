@@ -47,6 +47,7 @@ final class GeographicCRSToGT extends GeodeticCRSToGT<org.opengis.referencing.cr
         switch (impl) {
             case null: return null;
             case GeographicCRS c: return c;
+            case GeographicCRSFromGT c: return c.impl;
             default: return new GeographicCRSToGT(impl);
         }
     }

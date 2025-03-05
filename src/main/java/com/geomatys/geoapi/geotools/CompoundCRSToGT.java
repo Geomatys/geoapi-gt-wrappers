@@ -48,6 +48,7 @@ final class CompoundCRSToGT extends CoordinateReferenceSystemToGT<org.opengis.re
         switch (impl) {
             case null: return null;
             case CompoundCRS c: return c;
+            case CompoundCRSFromGT c: return c.impl;
             default: return new CompoundCRSToGT(impl);
         }
     }

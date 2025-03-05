@@ -32,7 +32,7 @@ final class ExtentToGT extends WrapperToGT implements Extent {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    private final org.opengis.metadata.extent.Extent impl;
+    final org.opengis.metadata.extent.Extent impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -54,6 +54,7 @@ final class ExtentToGT extends WrapperToGT implements Extent {
         switch (impl) {
             case null: return null;
             case Extent c: return c;
+            case ExtentFromGT c: return c.impl;
             default: return new ExtentToGT(impl);
         }
     }

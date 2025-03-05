@@ -51,6 +51,7 @@ final class QuantitativeResultToGT extends QualityResultToGT<org.opengis.metadat
         switch (impl) {
             case null: return null;
             case QuantitativeResult c: return c;
+            case QuantitativeResultFromGT c: return c.impl;
             default: return new QuantitativeResultToGT(impl);
         }
     }

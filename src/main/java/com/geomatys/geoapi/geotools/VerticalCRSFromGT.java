@@ -48,6 +48,7 @@ final class VerticalCRSFromGT extends CoordinateReferenceSystemFromGT<org.geotoo
         switch (impl) {
             case null: return null;
             case VerticalCRS c: return c;
+            case VerticalCRSToGT c: return c.impl;
             default: return new VerticalCRSFromGT(impl);
         }
     }

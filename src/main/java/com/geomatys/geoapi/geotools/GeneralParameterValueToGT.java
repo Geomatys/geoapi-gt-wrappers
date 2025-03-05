@@ -54,6 +54,7 @@ class GeneralParameterValueToGT<S extends org.opengis.parameter.GeneralParameter
         switch (impl) {
             case null: return null;
             case GeneralParameterValue c: return c;
+            case GeneralParameterValueFromGT<?> c: return c.impl;
             case org.opengis.parameter.ParameterValue<?> c: return new ParameterValueToGT<>(c);
             case org.opengis.parameter.ParameterValueGroup c: return new ParameterValueGroupToGT(c);
             default: return new GeneralParameterValueToGT<>(impl);

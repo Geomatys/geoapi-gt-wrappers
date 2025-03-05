@@ -28,7 +28,7 @@ final class NameSpaceFromGT extends WrapperFromGT implements NameSpace {
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.util.NameSpace impl;
+    final org.geotools.api.util.NameSpace impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -50,6 +50,7 @@ final class NameSpaceFromGT extends WrapperFromGT implements NameSpace {
         switch (impl) {
             case null: return null;
             case NameSpace c: return c;
+            case NameSpaceToGT c: return c.impl;
             default: return new NameSpaceFromGT(impl);
         }
     }

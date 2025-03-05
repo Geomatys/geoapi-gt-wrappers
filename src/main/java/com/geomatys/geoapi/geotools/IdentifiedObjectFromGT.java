@@ -58,6 +58,7 @@ class IdentifiedObjectFromGT<S extends org.geotools.api.referencing.IdentifiedOb
         switch (impl) {
             case null: return null;
             case IdentifiedObject c: return c;
+            case IdentifiedObjectToGT<?> c: return c.impl;
             case org.geotools.api.referencing.operation.CoordinateOperation c: return CoordinateOperationFromGT.wrap(c);
             case org.geotools.api.referencing.crs.CoordinateReferenceSystem c: return CoordinateReferenceSystemFromGT.wrap(c);
             case org.geotools.api.referencing.ReferenceSystem c: return new ReferenceSystemFromGT<>(c);

@@ -28,7 +28,7 @@ final class VerticalExtentFromGT extends WrapperFromGT implements VerticalExtent
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.metadata.extent.VerticalExtent impl;
+    final org.geotools.api.metadata.extent.VerticalExtent impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -50,6 +50,7 @@ final class VerticalExtentFromGT extends WrapperFromGT implements VerticalExtent
         switch (impl) {
             case null: return null;
             case VerticalExtent c: return c;
+            case VerticalExtentToGT c: return c.impl;
             default: return new VerticalExtentFromGT(impl);
         }
     }

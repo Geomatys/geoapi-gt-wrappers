@@ -47,6 +47,7 @@ class CoordinateSystemFromGT extends IdentifiedObjectFromGT<org.geotools.api.ref
         switch (impl) {
             case null: return null;
             case CoordinateSystem c: return c;
+            case CoordinateSystemToGT c: return c.impl;
             case org.geotools.api.referencing.cs.EllipsoidalCS c: return new EllipsoidalCSFromGT(c);
             case org.geotools.api.referencing.cs.SphericalCS   c: return new SphericalCSFromGT  (c);
             case org.geotools.api.referencing.cs.CartesianCS   c: return new CartesianCSFromGT  (c);

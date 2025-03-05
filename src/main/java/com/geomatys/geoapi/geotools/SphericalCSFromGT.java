@@ -44,6 +44,7 @@ final class SphericalCSFromGT extends CoordinateSystemFromGT implements Spherica
         switch (impl) {
             case null: return null;
             case SphericalCS c: return c;
+            case SphericalCSToGT c: return (SphericalCS) c.impl;
             default: return new SphericalCSFromGT(impl);
         }
     }

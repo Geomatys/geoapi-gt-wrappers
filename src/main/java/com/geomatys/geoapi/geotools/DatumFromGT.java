@@ -51,6 +51,7 @@ class DatumFromGT<S extends org.geotools.api.referencing.datum.Datum>
         switch (impl) {
             case null: return null;
             case Datum c: return c;
+            case DatumToGT<?> c: return c.impl;
             case org.geotools.api.referencing.datum.GeodeticDatum    c: return new GeodeticDatumFromGT(c);
             case org.geotools.api.referencing.datum.VerticalDatum    c: return new VerticalDatumFromGT(c);
             case org.geotools.api.referencing.datum.TemporalDatum    c: return new TemporalDatumFromGT(c);

@@ -58,6 +58,7 @@ class IdentifiedObjectToGT<S extends org.opengis.referencing.IdentifiedObject>
         switch (impl) {
             case null: return null;
             case IdentifiedObject c: return c;
+            case IdentifiedObjectFromGT<?> c: return c.impl;
             case org.opengis.referencing.operation.CoordinateOperation c: return CoordinateOperationToGT.wrap(c);
             case org.opengis.referencing.crs.CoordinateReferenceSystem c: return CoordinateReferenceSystemToGT.wrap(c);
             case org.opengis.referencing.ReferenceSystem c: return new ReferenceSystemToGT<>(c);

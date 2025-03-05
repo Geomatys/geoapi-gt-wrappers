@@ -54,10 +54,12 @@ class DerivedCRSFromGT extends GeneralDerivedCRSFromGT<org.geotools.api.referenc
      * @param impl the GeoTools implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
+    @SuppressWarnings("unused")
     static DerivedCRS wrap(final org.geotools.api.referencing.crs.DerivedCRS impl) {
         switch (impl) {
             case null: return null;
             case DerivedCRS c: return c;
+            case DerivedCRSToGT c: return c.impl;
             case org.geotools.api.referencing.crs.GeographicCRS  c: return new Geographic (impl);
             case org.geotools.api.referencing.crs.GeodeticCRS    c: return new Geodetic   (impl);
             case org.geotools.api.referencing.crs.VerticalCRS    c: return new Vertical   (impl);

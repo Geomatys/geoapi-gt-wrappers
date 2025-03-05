@@ -48,6 +48,7 @@ final class PrimeMeridianToGT extends IdentifiedObjectToGT<org.opengis.referenci
         switch (impl) {
             case null: return null;
             case PrimeMeridian c: return c;
+            case PrimeMeridianFromGT c: return c.impl;
             default: return new PrimeMeridianToGT(impl);
         }
     }

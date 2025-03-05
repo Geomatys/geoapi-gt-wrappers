@@ -46,6 +46,7 @@ final class ReferenceIdentifierToGT extends IdentifierToGT<org.opengis.referenci
         switch (impl) {
             case null: return null;
             case ReferenceIdentifier c: return c;
+            case ReferenceIdentifierFromGT c: return c.impl;
             default: return new ReferenceIdentifierToGT(impl);
         }
     }

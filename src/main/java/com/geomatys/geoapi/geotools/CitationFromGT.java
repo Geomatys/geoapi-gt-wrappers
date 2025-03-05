@@ -36,7 +36,7 @@ final class CitationFromGT extends WrapperFromGT implements Citation {
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.metadata.citation.Citation impl;
+    final org.geotools.api.metadata.citation.Citation impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -58,6 +58,7 @@ final class CitationFromGT extends WrapperFromGT implements Citation {
         switch (impl) {
             case null: return null;
             case Citation c: return c;
+            case CitationToGT c: return c.impl;
             default: return new CitationFromGT(impl);
         }
     }

@@ -31,7 +31,7 @@ final class ContactToGT extends WrapperToGT implements Contact {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    private final org.opengis.metadata.citation.Contact impl;
+    final org.opengis.metadata.citation.Contact impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -53,6 +53,7 @@ final class ContactToGT extends WrapperToGT implements Contact {
         switch (impl) {
             case null: return null;
             case Contact c: return c;
+            case ContactFromGT c: return c.impl;
             default: return new ContactToGT(impl);
         }
     }

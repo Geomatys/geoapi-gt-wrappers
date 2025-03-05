@@ -28,7 +28,7 @@ final class TemporalExtentToGT extends WrapperToGT implements TemporalExtent {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    private final org.opengis.metadata.extent.TemporalExtent impl;
+    final org.opengis.metadata.extent.TemporalExtent impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -50,6 +50,7 @@ final class TemporalExtentToGT extends WrapperToGT implements TemporalExtent {
         switch (impl) {
             case null: return null;
             case TemporalExtent c: return c;
+            case TemporalExtentFromGT c: return c.impl;
             default: return new TemporalExtentToGT(impl);
         }
     }

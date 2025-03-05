@@ -49,6 +49,7 @@ final class CoordinateSystemAxisFromGT extends IdentifiedObjectFromGT<org.geotoo
         switch (impl) {
             case null: return null;
             case CoordinateSystemAxis c: return c;
+            case CoordinateSystemAxisToGT c: return c.impl;
             default: return new CoordinateSystemAxisFromGT(impl);
         }
     }

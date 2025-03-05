@@ -51,6 +51,7 @@ class QualityResultFromGT<S extends org.geotools.api.metadata.quality.Result> ex
         switch (impl) {
             case null: return null;
             case Result c: return c;
+            case QualityResultToGT<?> c: return c.impl;
             case org.geotools.api.metadata.quality.ConformanceResult  c: return new ConformanceResultFromGT (c);
             case org.geotools.api.metadata.quality.QuantitativeResult c: return new QuantitativeResultFromGT(c);
             default: return new QualityResultFromGT<>(impl);

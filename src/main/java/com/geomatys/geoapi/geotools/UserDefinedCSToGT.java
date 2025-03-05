@@ -44,6 +44,7 @@ final class UserDefinedCSToGT extends CoordinateSystemToGT implements UserDefine
         switch (impl) {
             case null: return null;
             case UserDefinedCS c: return c;
+            case UserDefinedCSFromGT c: return (UserDefinedCS) c.impl;
             default: return new UserDefinedCSToGT(impl);
         }
     }

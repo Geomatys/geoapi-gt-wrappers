@@ -53,6 +53,7 @@ class GeographicExtentToGT<S extends org.opengis.metadata.extent.GeographicExten
         switch (impl) {
             case null: return null;
             case GeographicExtent c: return c;
+            case GeographicExtentFromGT<?> c: return c.impl;
             case org.opengis.metadata.extent.GeographicBoundingBox c: return new GeographicBoundingBoxToGT(c);
             default: return new GeographicExtentToGT<>(impl);
         }

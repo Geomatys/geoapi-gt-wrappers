@@ -48,6 +48,7 @@ final class TemporalCRSToGT extends CoordinateReferenceSystemToGT<org.opengis.re
         switch (impl) {
             case null: return null;
             case TemporalCRS c: return c;
+            case TemporalCRSFromGT c: return c.impl;
             default: return new TemporalCRSToGT(impl);
         }
     }

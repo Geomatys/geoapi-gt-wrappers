@@ -49,6 +49,7 @@ class GeodeticCRSFromGT<S extends org.geotools.api.referencing.crs.GeodeticCRS>
         switch (impl) {
             case null: return null;
             case GeodeticCRS c: return c;
+            case GeodeticCRSToGT<?> c: return c.impl;
             case org.geotools.api.referencing.crs.GeographicCRS c: return new GeographicCRSFromGT(c);
             case org.geotools.api.referencing.crs.GeocentricCRS c: return new GeocentricCRSFromGT(c);
             default: return new GeodeticCRSFromGT<>(impl);

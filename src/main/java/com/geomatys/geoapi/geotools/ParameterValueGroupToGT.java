@@ -50,6 +50,7 @@ final class ParameterValueGroupToGT extends GeneralParameterValueToGT<org.opengi
     static <V> ParameterValueGroup wrap(final org.opengis.parameter.ParameterValueGroup impl) {
         switch (impl) {
             case null: return null;
+            case ParameterValueGroupFromGT c: return c.impl;
             default: return new ParameterValueGroupToGT(impl);
         }
     }

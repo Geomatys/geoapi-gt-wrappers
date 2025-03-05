@@ -27,7 +27,7 @@ final class PeriodDurationFromGT extends WrapperFromGT implements PeriodDuration
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.temporal.PeriodDuration impl;
+    final org.geotools.api.temporal.PeriodDuration impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -49,6 +49,7 @@ final class PeriodDurationFromGT extends WrapperFromGT implements PeriodDuration
         switch (impl) {
             case null: return null;
             case PeriodDuration c: return c;
+            case PeriodDurationToGT c: return c.impl;
             default: return new PeriodDurationFromGT(impl);
         }
     }

@@ -66,7 +66,7 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
 
     @Override
     public CoordinateReferenceSystem getCoordinateReferenceSystem() {
-        return CoordinateReferenceSystemFromGT.unwrap(impl.getCoordinateReferenceSystem());
+        return CoordinateReferenceSystemToGT.wrap(impl.getCoordinateReferenceSystem());
     }
 
     @Override

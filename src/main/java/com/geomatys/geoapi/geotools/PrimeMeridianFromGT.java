@@ -48,6 +48,7 @@ final class PrimeMeridianFromGT extends IdentifiedObjectFromGT<org.geotools.api.
         switch (impl) {
             case null: return null;
             case PrimeMeridian c: return c;
+            case PrimeMeridianToGT c: return c.impl;
             default: return new PrimeMeridianFromGT(impl);
         }
     }

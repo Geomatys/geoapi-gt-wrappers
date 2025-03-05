@@ -44,6 +44,7 @@ final class LinearCSFromGT extends CoordinateSystemFromGT implements LinearCS {
         switch (impl) {
             case null: return null;
             case LinearCS c: return c;
+            case LinearCSToGT c: return (LinearCS) c.impl;
             default: return new LinearCSFromGT(impl);
         }
     }

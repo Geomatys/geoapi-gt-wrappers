@@ -48,6 +48,7 @@ final class CompoundCRSFromGT extends CoordinateReferenceSystemFromGT<org.geotoo
         switch (impl) {
             case null: return null;
             case CompoundCRS c: return c;
+            case CompoundCRSToGT c: return c.impl;
             default: return new CompoundCRSFromGT(impl);
         }
     }

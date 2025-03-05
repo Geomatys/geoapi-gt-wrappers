@@ -49,6 +49,7 @@ final class ParameterDescriptorGroupToGT extends GeneralParameterDescriptorToGT<
     static <V> ParameterDescriptorGroup wrap(final org.opengis.parameter.ParameterDescriptorGroup impl) {
         switch (impl) {
             case null: return null;
+            case ParameterDescriptorGroupFromGT c: return c.impl;
             default: return new ParameterDescriptorGroupToGT(impl);
         }
     }

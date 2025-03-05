@@ -53,6 +53,7 @@ class GeographicExtentFromGT<S extends org.geotools.api.metadata.extent.Geograph
         switch (impl) {
             case null: return null;
             case GeographicExtent c: return c;
+            case GeographicExtentToGT<?> c: return c.impl;
             case org.geotools.api.metadata.extent.GeographicBoundingBox c: return new GeographicBoundingBoxFromGT(c);
             default: return new GeographicExtentFromGT<>(impl);
         }

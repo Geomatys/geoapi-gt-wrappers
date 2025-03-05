@@ -48,6 +48,7 @@ final class EllipsoidToGT extends IdentifiedObjectToGT<org.opengis.referencing.d
         switch (impl) {
             case null: return null;
             case Ellipsoid c: return c;
+            case EllipsoidFromGT c: return c.impl;
             default: return new EllipsoidToGT(impl);
         }
     }

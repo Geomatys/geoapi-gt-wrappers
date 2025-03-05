@@ -44,6 +44,7 @@ class AffineCSToGT extends CoordinateSystemToGT implements AffineCS {
         switch (impl) {
             case null: return null;
             case AffineCS c: return c;
+            case AffineCSFromGT c: return (AffineCS) c.impl;
             case org.opengis.referencing.cs.CartesianCS c: return new CartesianCSToGT(c);
             default: return new AffineCSToGT(impl);
         }

@@ -48,6 +48,7 @@ final class ConformanceResultToGT extends QualityResultToGT<org.opengis.metadata
         switch (impl) {
             case null: return null;
             case ConformanceResult c: return c;
+            case ConformanceResultFromGT c: return c.impl;
             default: return new ConformanceResultToGT(impl);
         }
     }

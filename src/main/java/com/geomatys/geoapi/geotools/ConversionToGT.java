@@ -44,6 +44,7 @@ class ConversionToGT extends SingleOperationToGT implements Conversion {
         switch (impl) {
             case null: return null;
             case Conversion c: return c;
+            case ConversionFromGT c: return (Conversion) c.impl;
             case org.opengis.referencing.operation.Projection c: return ProjectionToGT.wrap(c);
             default: return new ConversionToGT(impl);
         }

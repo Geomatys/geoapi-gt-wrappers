@@ -44,6 +44,7 @@ final class AbsoluteExternalPositionalAccuracyFromGT extends PositionalAccuracyF
         switch (impl) {
             case null: return null;
             case AbsoluteExternalPositionalAccuracy c: return c;
+            case AbsoluteExternalPositionalAccuracyToGT c: return (AbsoluteExternalPositionalAccuracy) c.impl;
             default: return new AbsoluteExternalPositionalAccuracyFromGT(impl);
         }
     }

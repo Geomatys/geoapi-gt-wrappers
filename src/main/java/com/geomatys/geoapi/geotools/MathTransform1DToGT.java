@@ -48,6 +48,7 @@ final class MathTransform1DToGT extends MathTransformToGT<org.opengis.referencin
         switch (impl) {
             case null: return null;
             case MathTransform1D c: return c;
+            case MathTransform1DFromGT c: return c.impl;
             default: return new MathTransform1DToGT(impl);
         }
     }

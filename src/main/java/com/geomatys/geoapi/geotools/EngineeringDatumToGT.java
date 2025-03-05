@@ -46,6 +46,7 @@ final class EngineeringDatumToGT extends DatumToGT<org.opengis.referencing.datum
         switch (impl) {
             case null: return null;
             case EngineeringDatum c: return c;
+            case EngineeringDatumFromGT c: return c.impl;
             default: return new EngineeringDatumToGT(impl);
         }
     }

@@ -47,6 +47,7 @@ class CoordinateSystemToGT extends IdentifiedObjectToGT<org.opengis.referencing.
         switch (impl) {
             case null: return null;
             case CoordinateSystem c: return c;
+            case CoordinateSystemFromGT c: return c.impl;
             case org.opengis.referencing.cs.EllipsoidalCS c: return new EllipsoidalCSToGT(c);
             case org.opengis.referencing.cs.SphericalCS   c: return new SphericalCSToGT  (c);
             case org.opengis.referencing.cs.CartesianCS   c: return new CartesianCSToGT  (c);

@@ -28,7 +28,7 @@ final class TemporalExtentFromGT extends WrapperFromGT implements TemporalExtent
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.metadata.extent.TemporalExtent impl;
+    final org.geotools.api.metadata.extent.TemporalExtent impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -50,6 +50,7 @@ final class TemporalExtentFromGT extends WrapperFromGT implements TemporalExtent
         switch (impl) {
             case null: return null;
             case TemporalExtent c: return c;
+            case TemporalExtentToGT c: return c.impl;
             default: return new TemporalExtentFromGT(impl);
         }
     }

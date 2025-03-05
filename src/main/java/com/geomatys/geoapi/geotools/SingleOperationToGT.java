@@ -51,6 +51,11 @@ class SingleOperationToGT extends CoordinateOperationToGT<org.opengis.referencin
      * @return wrapper for the given implementation
      */
     static Operation wrap(final org.opengis.referencing.operation.SingleOperation impl) {
+        if (impl instanceof SingleOperationFromGT c) {
+            if (c.impl instanceof Operation op) {
+                return op;
+            }
+        }
         switch (impl) {
             case null: return null;
             case Operation c: return c;

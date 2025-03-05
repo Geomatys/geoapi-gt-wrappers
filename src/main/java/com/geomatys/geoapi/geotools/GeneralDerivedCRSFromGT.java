@@ -50,6 +50,7 @@ class GeneralDerivedCRSFromGT<S extends org.geotools.api.referencing.crs.General
         switch (impl) {
             case null: return null;
             case GeneralDerivedCRS c: return c;
+            case GeneralDerivedCRSToGT<?> c: return c.impl;
             case org.geotools.api.referencing.crs.DerivedCRS c: return DerivedCRSFromGT.wrap(c);
             default: return new GeneralDerivedCRSFromGT<>(impl);
         }

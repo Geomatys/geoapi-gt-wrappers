@@ -34,7 +34,7 @@ class QualityElementToGT extends WrapperToGT implements Element {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    private final org.opengis.metadata.quality.Element impl;
+    final org.opengis.metadata.quality.Element impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -56,6 +56,7 @@ class QualityElementToGT extends WrapperToGT implements Element {
         switch (impl) {
             case null: return null;
             case Element c: return c;
+            case QualityElementFromGT c: return c.impl;
             case org.opengis.metadata.quality.PositionalAccuracy c: return PositionalAccuracyToGT.wrap(c);
             default: return new QualityElementToGT(impl);
         }

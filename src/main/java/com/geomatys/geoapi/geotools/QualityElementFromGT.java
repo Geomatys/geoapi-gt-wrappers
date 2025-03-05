@@ -34,7 +34,7 @@ class QualityElementFromGT extends WrapperFromGT implements Element {
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.metadata.quality.Element impl;
+    final org.geotools.api.metadata.quality.Element impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -56,6 +56,7 @@ class QualityElementFromGT extends WrapperFromGT implements Element {
         switch (impl) {
             case null: return null;
             case Element c: return c;
+            case QualityElementToGT c: return c.impl;
             case org.geotools.api.metadata.quality.PositionalAccuracy c: return PositionalAccuracyFromGT.wrap(c);
             default: return new QualityElementFromGT(impl);
         }

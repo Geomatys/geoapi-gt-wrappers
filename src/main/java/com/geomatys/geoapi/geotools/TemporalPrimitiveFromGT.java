@@ -27,7 +27,7 @@ final class TemporalPrimitiveFromGT extends WrapperFromGT implements TemporalPri
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.temporal.TemporalPrimitive impl;
+    final org.geotools.api.temporal.TemporalPrimitive impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -49,6 +49,7 @@ final class TemporalPrimitiveFromGT extends WrapperFromGT implements TemporalPri
         switch (impl) {
             case null: return null;
             case TemporalPrimitive c: return c;
+            case TemporalPrimitiveToGT c: return c.impl;
             default: return new TemporalPrimitiveFromGT(impl);
         }
     }

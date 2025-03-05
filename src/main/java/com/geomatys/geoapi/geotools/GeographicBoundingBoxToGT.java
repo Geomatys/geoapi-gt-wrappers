@@ -46,6 +46,7 @@ final class GeographicBoundingBoxToGT extends GeographicExtentToGT<org.opengis.m
         switch (impl) {
             case null: return null;
             case GeographicBoundingBox c: return c;
+            case GeographicBoundingBoxFromGT c: return c.impl;
             default: return new GeographicBoundingBoxToGT(impl);
         }
     }

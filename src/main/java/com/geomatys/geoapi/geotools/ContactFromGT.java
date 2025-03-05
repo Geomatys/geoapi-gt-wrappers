@@ -31,7 +31,7 @@ final class ContactFromGT extends WrapperFromGT implements Contact {
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.metadata.citation.Contact impl;
+    final org.geotools.api.metadata.citation.Contact impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -53,6 +53,7 @@ final class ContactFromGT extends WrapperFromGT implements Contact {
         switch (impl) {
             case null: return null;
             case Contact c: return c;
+            case ContactToGT c: return c.impl;
             default: return new ContactFromGT(impl);
         }
     }

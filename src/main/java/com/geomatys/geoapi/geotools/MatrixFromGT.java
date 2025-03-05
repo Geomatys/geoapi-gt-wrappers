@@ -27,7 +27,7 @@ final class MatrixFromGT extends WrapperFromGT implements Matrix {
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.referencing.operation.Matrix impl;
+    final org.geotools.api.referencing.operation.Matrix impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -49,6 +49,7 @@ final class MatrixFromGT extends WrapperFromGT implements Matrix {
         switch (impl) {
             case null: return null;
             case Matrix c: return c;
+            case MatrixToGT c: return c.impl;
             default: return new MatrixFromGT(impl);
         }
     }

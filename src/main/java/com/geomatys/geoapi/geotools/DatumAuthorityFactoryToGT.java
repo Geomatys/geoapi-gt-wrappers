@@ -36,7 +36,7 @@ final class DatumAuthorityFactoryToGT extends AuthorityFactoryToGT implements Da
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    private final org.opengis.referencing.datum.DatumAuthorityFactory impl;
+    final org.opengis.referencing.datum.DatumAuthorityFactory impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -58,6 +58,7 @@ final class DatumAuthorityFactoryToGT extends AuthorityFactoryToGT implements Da
         switch (impl) {
             case null: return null;
             case DatumAuthorityFactory c: return c;
+            case DatumAuthorityFactoryFromGT c: return c.impl;
             default: return new DatumAuthorityFactoryToGT(impl);
         }
     }

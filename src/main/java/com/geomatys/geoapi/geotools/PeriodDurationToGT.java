@@ -28,7 +28,7 @@ final class PeriodDurationToGT extends WrapperToGT implements PeriodDuration {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    private final org.opengis.temporal.PeriodDuration impl;
+    final org.opengis.temporal.PeriodDuration impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -50,6 +50,7 @@ final class PeriodDurationToGT extends WrapperToGT implements PeriodDuration {
         switch (impl) {
             case null: return null;
             case PeriodDuration c: return c;
+            case PeriodDurationFromGT c: return c.impl;
             default: return new PeriodDurationToGT(impl);
         }
     }

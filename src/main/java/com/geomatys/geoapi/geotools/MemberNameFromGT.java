@@ -42,19 +42,10 @@ final class MemberNameFromGT extends LocalNameFromGT<org.geotools.api.util.Membe
      * @return wrapper for the given implementation
      */
     static MemberName wrap(final org.geotools.api.util.MemberName impl) {
-        return (impl == null) ? null : new MemberNameFromGT(impl);
-    }
-
-    /**
-     * {@return the GeoTools implementation behind the given wrapper}.
-     *
-     * @param wrapper the wrapper from which to get the GeoTools implementation.
-     * @throws ClassCastException if the given value is not a wrapper for GeoTools.
-     */
-    static org.geotools.api.util.MemberName unwrap(final MemberName wrapper) {
-        switch (wrapper) {
+        switch (impl) {
             case null: return null;
-            default: return ((MemberNameFromGT) wrapper).impl;
+            case MemberNameToGT c: return c.impl;
+            default: return new MemberNameFromGT(impl);
         }
     }
 

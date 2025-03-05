@@ -27,7 +27,7 @@ final class MatrixToGT extends WrapperToGT implements Matrix {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    private final org.opengis.referencing.operation.Matrix impl;
+    final org.opengis.referencing.operation.Matrix impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -49,6 +49,7 @@ final class MatrixToGT extends WrapperToGT implements Matrix {
         switch (impl) {
             case null: return null;
             case Matrix c: return c;
+            case MatrixFromGT c: return c.impl;
             default: return new MatrixToGT(impl);
         }
     }

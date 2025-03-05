@@ -28,7 +28,7 @@ final class VerticalExtentToGT extends WrapperToGT implements VerticalExtent {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    private final org.opengis.metadata.extent.VerticalExtent impl;
+    final org.opengis.metadata.extent.VerticalExtent impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -50,6 +50,7 @@ final class VerticalExtentToGT extends WrapperToGT implements VerticalExtent {
         switch (impl) {
             case null: return null;
             case VerticalExtent c: return c;
+            case VerticalExtentFromGT c: return c.impl;
             default: return new VerticalExtentToGT(impl);
         }
     }

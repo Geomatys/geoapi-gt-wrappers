@@ -49,6 +49,7 @@ class GeneralParameterDescriptorToGT<S extends org.opengis.parameter.GeneralPara
         switch (impl) {
             case null: return null;
             case GeneralParameterDescriptor c: return c;
+            case GeneralParameterDescriptorFromGT<?> c: return c.impl;
             case org.opengis.parameter.ParameterDescriptor<?> c: return new ParameterDescriptorToGT<>(c);
             case org.opengis.parameter.ParameterDescriptorGroup c: return new ParameterDescriptorGroupToGT(c);
             default: return new GeneralParameterDescriptorToGT<>(impl);

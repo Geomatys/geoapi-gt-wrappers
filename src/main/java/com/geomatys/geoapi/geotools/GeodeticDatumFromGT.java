@@ -48,6 +48,7 @@ final class GeodeticDatumFromGT extends DatumFromGT<org.geotools.api.referencing
         switch (impl) {
             case null: return null;
             case GeodeticDatum c: return c;
+            case GeodeticDatumToGT c: return c.impl;
             default: return new GeodeticDatumFromGT(impl);
         }
     }

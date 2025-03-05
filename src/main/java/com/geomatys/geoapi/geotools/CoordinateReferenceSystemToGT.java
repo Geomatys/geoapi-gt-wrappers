@@ -49,22 +49,10 @@ class CoordinateReferenceSystemToGT<S extends org.opengis.referencing.crs.Coordi
         switch (impl) {
             case null: return null;
             case CoordinateReferenceSystem c: return c;
+            case CoordinateReferenceSystemFromGT<?> c: return c.impl;
             case org.opengis.referencing.crs.SingleCRS c: return SingleCRSToGT.wrap(c);
             case org.opengis.referencing.crs.CompoundCRS c: return new CompoundCRSToGT(c);
             default: return new CoordinateReferenceSystemToGT<>(impl);
-        }
-    }
-
-    /**
-     * {@return the GeoAPI implementation behind the given wrapper}.
-     *
-     * @param wrapper the wrapper from which to get the GeoAPI implementation.
-     * @throws ClassCastException if the given value is not a wrapper for GeoAPI.
-     */
-    static org.opengis.referencing.crs.CoordinateReferenceSystem unwrap(CoordinateReferenceSystem wrapper) {
-        switch (wrapper) {
-            case null: return null;
-            default: return ((CoordinateReferenceSystemToGT<?>) wrapper).impl;
         }
     }
 

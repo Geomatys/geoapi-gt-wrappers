@@ -38,7 +38,7 @@ final class CSAuthorityFactoryFromGT extends AuthorityFactoryFromGT implements C
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.referencing.cs.CSAuthorityFactory impl;
+    final org.geotools.api.referencing.cs.CSAuthorityFactory impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -60,6 +60,7 @@ final class CSAuthorityFactoryFromGT extends AuthorityFactoryFromGT implements C
         switch (impl) {
             case null: return null;
             case CSAuthorityFactory c: return c;
+            case CSAuthorityFactoryToGT c: return c.impl;
             default: return new CSAuthorityFactoryFromGT(impl);
         }
     }

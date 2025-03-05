@@ -48,6 +48,7 @@ final class GeodeticDatumToGT extends DatumToGT<org.opengis.referencing.datum.Ge
         switch (impl) {
             case null: return null;
             case GeodeticDatum c: return c;
+            case GeodeticDatumFromGT c: return c.impl;
             default: return new GeodeticDatumToGT(impl);
         }
     }

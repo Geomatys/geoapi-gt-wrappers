@@ -29,7 +29,7 @@ final class InternationalStringFromGT extends WrapperFromGT implements Internati
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.util.InternationalString impl;
+    final org.geotools.api.util.InternationalString impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -48,7 +48,11 @@ final class InternationalStringFromGT extends WrapperFromGT implements Internati
      * @return wrapper for the given implementation
      */
     static InternationalString wrap(final org.geotools.api.util.InternationalString impl) {
-        return (impl == null) ? null : new InternationalStringFromGT(impl);
+        switch (impl) {
+            case null: return null;
+            case InternationalStringToGT c: return c.impl;
+            default: return new InternationalStringFromGT(impl);
+        }
     }
 
     /**

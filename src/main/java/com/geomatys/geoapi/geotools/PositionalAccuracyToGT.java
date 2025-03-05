@@ -44,6 +44,7 @@ class PositionalAccuracyToGT extends QualityElementToGT implements PositionalAcc
         switch (impl) {
             case null: return null;
             case PositionalAccuracy c: return c;
+            case PositionalAccuracyFromGT c: return (PositionalAccuracy) c.impl;
             case org.opengis.metadata.quality.AbsoluteExternalPositionalAccuracy c: return new AbsoluteExternalPositionalAccuracyToGT(c);
             default: return new PositionalAccuracyToGT(impl);
         }

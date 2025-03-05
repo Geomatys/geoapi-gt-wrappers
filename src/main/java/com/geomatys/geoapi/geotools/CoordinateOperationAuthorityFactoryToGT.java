@@ -30,7 +30,7 @@ final class CoordinateOperationAuthorityFactoryToGT extends AuthorityFactoryToGT
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    private final org.opengis.referencing.operation.CoordinateOperationAuthorityFactory impl;
+    final org.opengis.referencing.operation.CoordinateOperationAuthorityFactory impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -52,6 +52,7 @@ final class CoordinateOperationAuthorityFactoryToGT extends AuthorityFactoryToGT
         switch (impl) {
             case null: return null;
             case CoordinateOperationAuthorityFactory c: return c;
+            case CoordinateOperationAuthorityFactoryFromGT c: return c.impl;
             default: return new CoordinateOperationAuthorityFactoryToGT(impl);
         }
     }

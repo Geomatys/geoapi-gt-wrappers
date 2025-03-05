@@ -54,6 +54,7 @@ class IdentifierToGT<S extends org.opengis.metadata.Identifier>
         switch (impl) {
             case null: return null;
             case Identifier c: return c;
+            case IdentifierFromGT<?> c: return c.impl;
             case org.opengis.referencing.ReferenceIdentifier c: return new ReferenceIdentifierToGT(c);
             default: return new IdentifierToGT<>(impl);
         }

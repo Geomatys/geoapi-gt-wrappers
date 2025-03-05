@@ -29,7 +29,7 @@ final class AddressFromGT extends WrapperFromGT implements Address {
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.metadata.citation.Address impl;
+    final org.geotools.api.metadata.citation.Address impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -51,6 +51,7 @@ final class AddressFromGT extends WrapperFromGT implements Address {
         switch (impl) {
             case null: return null;
             case Address c: return c;
+            case AddressToGT c: return c.impl;
             default: return new AddressFromGT(impl);
         }
     }

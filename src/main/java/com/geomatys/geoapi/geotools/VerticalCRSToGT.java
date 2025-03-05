@@ -48,6 +48,7 @@ final class VerticalCRSToGT extends CoordinateReferenceSystemToGT<org.opengis.re
         switch (impl) {
             case null: return null;
             case VerticalCRS c: return c;
+            case VerticalCRSFromGT c: return c.impl;
             default: return new VerticalCRSToGT(impl);
         }
     }

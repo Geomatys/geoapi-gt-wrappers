@@ -44,6 +44,7 @@ final class TransformationFromGT extends SingleOperationFromGT implements Transf
         switch (impl) {
             case null: return null;
             case Transformation c: return c;
+            case TransformationToGT c: return (Transformation) c.impl;
             default: return new TransformationFromGT(impl);
         }
     }

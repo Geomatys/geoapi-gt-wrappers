@@ -44,6 +44,7 @@ class ProjectionToGT extends ConversionToGT implements Projection {
         switch (impl) {
             case null: return null;
             case Projection c: return c;
+            case ProjectionFromGT c: return (Projection) c.impl;
             case org.opengis.referencing.operation.ConicProjection c:       return new ConicProjectionToGT(c);
             case org.opengis.referencing.operation.PlanarProjection c:      return new PlanarProjectionToGT(c);
             case org.opengis.referencing.operation.CylindricalProjection c: return new CylindricalProjectionToGT(c);

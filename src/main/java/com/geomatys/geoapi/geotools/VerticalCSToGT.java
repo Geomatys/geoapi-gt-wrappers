@@ -44,6 +44,7 @@ final class VerticalCSToGT extends CoordinateSystemToGT implements VerticalCS {
         switch (impl) {
             case null: return null;
             case VerticalCS c: return c;
+            case VerticalCSFromGT c: return (VerticalCS) c.impl;
             default: return new VerticalCSToGT(impl);
         }
     }

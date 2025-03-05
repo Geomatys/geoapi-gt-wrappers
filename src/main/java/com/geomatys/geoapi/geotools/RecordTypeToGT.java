@@ -33,7 +33,7 @@ final class RecordTypeToGT extends WrapperToGT implements RecordType {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    private final org.opengis.util.RecordType impl;
+    final org.opengis.util.RecordType impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -55,6 +55,7 @@ final class RecordTypeToGT extends WrapperToGT implements RecordType {
         switch (impl) {
             case null: return null;
             case RecordType c: return c;
+            case RecordTypeFromGT c: return c.impl;
             default: return new RecordTypeToGT(impl);
         }
     }
@@ -89,11 +90,11 @@ final class RecordTypeToGT extends WrapperToGT implements RecordType {
 
     @Override
     public TypeName locate(MemberName name) {
-        return TypeNameToGT.wrap(impl.locate(MemberNameToGT.unwrap(name)));
+        return TypeNameToGT.wrap(impl.locate(MemberNameFromGT.wrap(name)));
     }
 
     @Override
     public boolean isInstance(Record record) {
-        return impl.isInstance(RecordToGT.unwrap(record));
+        return impl.isInstance(RecordFromGT.wrap(record));
     }
 }

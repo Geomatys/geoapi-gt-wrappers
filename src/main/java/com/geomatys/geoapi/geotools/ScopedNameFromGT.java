@@ -42,7 +42,11 @@ final class ScopedNameFromGT extends GenericNameFromGT<org.geotools.api.util.Sco
      * @return wrapper for the given implementation
      */
     static ScopedName wrap(final org.geotools.api.util.ScopedName impl) {
-        return (impl == null) ? null : new ScopedNameFromGT(impl);
+        switch (impl) {
+            case null: return null;
+            case ScopedNameToGT c: return c.impl;
+            default: return new ScopedNameFromGT(impl);
+        }
     }
 
     @Override

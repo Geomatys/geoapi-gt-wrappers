@@ -44,6 +44,7 @@ class ConversionFromGT extends SingleOperationFromGT implements Conversion {
         switch (impl) {
             case null: return null;
             case Conversion c: return c;
+            case ConversionToGT c: return (Conversion) c.impl;
             case org.geotools.api.referencing.operation.Projection c: return ProjectionFromGT.wrap(c);
             default: return new ConversionFromGT(impl);
         }

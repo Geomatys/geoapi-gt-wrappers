@@ -49,6 +49,7 @@ class SingleCRSFromGT<S extends org.geotools.api.referencing.crs.SingleCRS>
         switch (impl) {
             case null: return null;
             case SingleCRS c: return c;
+            case SingleCRSToGT<?> c: return c.impl;
             case org.geotools.api.referencing.crs.ProjectedCRS      c: return new ProjectedCRSFromGT(c);
             case org.geotools.api.referencing.crs.GeneralDerivedCRS c: return GeneralDerivedCRSFromGT.wrap(c);
             case org.geotools.api.referencing.crs.GeodeticCRS       c: return GeodeticCRSFromGT.wrap(c);

@@ -32,7 +32,7 @@ final class RecordSchemaToGT extends WrapperToGT implements RecordSchema {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    private final org.opengis.util.RecordSchema impl;
+    final org.opengis.util.RecordSchema impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -54,6 +54,7 @@ final class RecordSchemaToGT extends WrapperToGT implements RecordSchema {
         switch (impl) {
             case null: return null;
             case RecordSchema c: return c;
+            case RecordSchemaFromGT c: return c.impl;
             default: return new RecordSchemaToGT(impl);
         }
     }
@@ -83,6 +84,6 @@ final class RecordSchemaToGT extends WrapperToGT implements RecordSchema {
 
     @Override
     public RecordType locate(final TypeName name) {
-        return RecordTypeToGT.wrap(impl.locate(TypeNameToGT.unwrap(name)));
+        return RecordTypeToGT.wrap(impl.locate(TypeNameFromGT.wrap(name)));
     }
 }

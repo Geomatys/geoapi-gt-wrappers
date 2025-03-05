@@ -55,6 +55,7 @@ class SingleOperationFromGT extends CoordinateOperationFromGT<org.geotools.api.r
         switch (impl) {
             case null: return null;
             case SingleOperation c: return c;
+            case SingleOperationToGT c: return c.impl;
             case org.geotools.api.referencing.operation.Transformation c: return new TransformationFromGT(c);
             case org.geotools.api.referencing.operation.Conversion c: return ConversionFromGT.wrap(c);
             default: return new SingleOperationFromGT(impl);

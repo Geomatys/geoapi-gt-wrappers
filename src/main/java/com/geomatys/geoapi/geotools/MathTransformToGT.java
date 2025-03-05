@@ -58,6 +58,7 @@ class MathTransformToGT<S extends org.opengis.referencing.operation.MathTransfor
         switch (impl) {
             case null: return null;
             case MathTransform c: return c;
+            case MathTransformFromGT<?> c: return c.impl;
             case org.opengis.referencing.operation.MathTransform1D c: return new MathTransform1DToGT(c);
             case org.opengis.referencing.operation.MathTransform2D c: return new MathTransform2DToGT(c);
             default: return new MathTransformToGT<>(impl);

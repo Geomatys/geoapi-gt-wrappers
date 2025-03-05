@@ -44,6 +44,7 @@ final class PolarCSFromGT extends CoordinateSystemFromGT implements PolarCS {
         switch (impl) {
             case null: return null;
             case PolarCS c: return c;
+            case PolarCSToGT c: return (PolarCS) c.impl;
             default: return new PolarCSFromGT(impl);
         }
     }

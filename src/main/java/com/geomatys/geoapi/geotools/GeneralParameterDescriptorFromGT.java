@@ -49,6 +49,7 @@ class GeneralParameterDescriptorFromGT<S extends org.geotools.api.parameter.Gene
         switch (impl) {
             case null: return null;
             case GeneralParameterDescriptor c: return c;
+            case GeneralParameterDescriptorToGT<?> c: return c.impl;
             case org.geotools.api.parameter.ParameterDescriptor<?> c: return new ParameterDescriptorFromGT<>(c);
             case org.geotools.api.parameter.ParameterDescriptorGroup c: return new ParameterDescriptorGroupFromGT(c);
             default: return new GeneralParameterDescriptorFromGT<>(impl);

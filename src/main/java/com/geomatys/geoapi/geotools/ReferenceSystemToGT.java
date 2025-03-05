@@ -50,6 +50,7 @@ class ReferenceSystemToGT<S extends org.opengis.referencing.ReferenceSystem> ext
         switch (impl) {
             case null: return null;
             case ReferenceSystem c: return c;
+            case ReferenceSystemFromGT<?> c: return c.impl;
             case org.opengis.referencing.crs.CoordinateReferenceSystem c: return CoordinateReferenceSystemToGT.wrap(c);
             default: return new ReferenceSystemToGT<>(impl);
         }

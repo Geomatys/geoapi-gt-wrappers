@@ -28,7 +28,7 @@ final class TelephoneToGT extends WrapperToGT implements Telephone {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    private final org.opengis.metadata.citation.Telephone impl;
+    final org.opengis.metadata.citation.Telephone impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -50,6 +50,7 @@ final class TelephoneToGT extends WrapperToGT implements Telephone {
         switch (impl) {
             case null: return null;
             case Telephone c: return c;
+            case TelephoneFromGT c: return c.impl;
             default: return new TelephoneToGT(impl);
         }
     }

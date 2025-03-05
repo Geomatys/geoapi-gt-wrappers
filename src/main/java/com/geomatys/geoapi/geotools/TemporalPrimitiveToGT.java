@@ -28,7 +28,7 @@ final class TemporalPrimitiveToGT extends WrapperToGT implements TemporalPrimiti
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    private final org.opengis.temporal.TemporalPrimitive impl;
+    final org.opengis.temporal.TemporalPrimitive impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -50,6 +50,7 @@ final class TemporalPrimitiveToGT extends WrapperToGT implements TemporalPrimiti
         switch (impl) {
             case null: return null;
             case TemporalPrimitive c: return c;
+            case TemporalPrimitiveFromGT c: return c.impl;
             default: return new TemporalPrimitiveToGT(impl);
         }
     }

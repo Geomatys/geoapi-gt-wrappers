@@ -44,6 +44,7 @@ final class TimeCSToGT extends CoordinateSystemToGT implements TimeCS {
         switch (impl) {
             case null: return null;
             case TimeCS c: return c;
+            case TimeCSFromGT c: return (TimeCS) c.impl;
             default: return new TimeCSToGT(impl);
         }
     }

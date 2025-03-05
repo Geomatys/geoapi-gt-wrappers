@@ -36,7 +36,7 @@ final class DatumAuthorityFactoryFromGT extends AuthorityFactoryFromGT implement
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.referencing.datum.DatumAuthorityFactory impl;
+    final org.geotools.api.referencing.datum.DatumAuthorityFactory impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -58,6 +58,7 @@ final class DatumAuthorityFactoryFromGT extends AuthorityFactoryFromGT implement
         switch (impl) {
             case null: return null;
             case DatumAuthorityFactory c: return c;
+            case DatumAuthorityFactoryToGT c: return c.impl;
             default: return new DatumAuthorityFactoryFromGT(impl);
         }
     }

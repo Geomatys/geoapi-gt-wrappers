@@ -34,7 +34,7 @@ final class RecordTypeFromGT extends WrapperFromGT implements RecordType {
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.util.RecordType impl;
+    final org.geotools.api.util.RecordType impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -56,6 +56,7 @@ final class RecordTypeFromGT extends WrapperFromGT implements RecordType {
         switch (impl) {
             case null: return null;
             case RecordType c: return c;
+            case RecordTypeToGT c: return c.impl;
             default: return new RecordTypeFromGT(impl);
         }
     }
@@ -90,11 +91,11 @@ final class RecordTypeFromGT extends WrapperFromGT implements RecordType {
 
     @Override
     public TypeName locate(MemberName name) {
-        return TypeNameFromGT.wrap(impl.locate(MemberNameFromGT.unwrap(name)));
+        return TypeNameFromGT.wrap(impl.locate(MemberNameToGT.wrap(name)));
     }
 
     @Override
     public boolean isInstance(Record record) {
-        return impl.isInstance(RecordFromGT.unwrap(record));
+        return impl.isInstance(RecordToGT.wrap(record));
     }
 }

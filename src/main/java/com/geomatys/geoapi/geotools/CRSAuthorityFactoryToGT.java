@@ -38,7 +38,7 @@ final class CRSAuthorityFactoryToGT extends AuthorityFactoryToGT implements CRSA
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    private final org.opengis.referencing.crs.CRSAuthorityFactory impl;
+    final org.opengis.referencing.crs.CRSAuthorityFactory impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -60,6 +60,7 @@ final class CRSAuthorityFactoryToGT extends AuthorityFactoryToGT implements CRSA
         switch (impl) {
             case null: return null;
             case CRSAuthorityFactory c: return c;
+            case CRSAuthorityFactoryFromGT c: return c.impl;
             default: return new CRSAuthorityFactoryToGT(impl);
         }
     }

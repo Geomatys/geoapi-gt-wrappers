@@ -31,7 +31,7 @@ final class RecordToGT extends WrapperToGT implements Record {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    private final org.opengis.util.Record impl;
+    final org.opengis.util.Record impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -53,20 +53,8 @@ final class RecordToGT extends WrapperToGT implements Record {
         switch (impl) {
             case null: return null;
             case Record c: return c;
+            case RecordFromGT c: return c.impl;
             default: return new RecordToGT(impl);
-        }
-    }
-
-    /**
-     * {@return the GeoAPI implementation behind the given wrapper}.
-     *
-     * @param wrapper the wrapper from which to get the GeoAPI implementation.
-     * @throws ClassCastException if the given value is not a wrapper for GeoAPI.
-     */
-    static org.opengis.util.Record unwrap(final Record wrapper) {
-        switch (wrapper) {
-            case null: return null;
-            default: return ((RecordToGT) wrapper).impl;
         }
     }
 
@@ -90,11 +78,11 @@ final class RecordToGT extends WrapperToGT implements Record {
 
     @Override
     public Object locate(MemberName name) {
-        return impl.locate(MemberNameToGT.unwrap(name));
+        return impl.locate(MemberNameFromGT.wrap(name));
     }
 
     @Override
     public void set(MemberName name, Object value) {
-        impl.set(MemberNameToGT.unwrap(name), value);
+        impl.set(MemberNameFromGT.wrap(name), value);
     }
 }

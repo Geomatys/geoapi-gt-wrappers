@@ -33,7 +33,7 @@ final class CitationToGT extends WrapperToGT implements Citation {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    private final org.opengis.metadata.citation.Citation impl;
+    final org.opengis.metadata.citation.Citation impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -55,6 +55,7 @@ final class CitationToGT extends WrapperToGT implements Citation {
         switch (impl) {
             case null: return null;
             case Citation c: return c;
+            case CitationFromGT c: return c.impl;
             default: return new CitationToGT(impl);
         }
     }

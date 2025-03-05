@@ -54,6 +54,7 @@ class IdentifierFromGT<S extends org.geotools.api.metadata.Identifier>
         switch (impl) {
             case null: return null;
             case Identifier c: return c;
+            case IdentifierToGT<?> c: return c.impl;
             case org.geotools.api.referencing.ReferenceIdentifier c: return new ReferenceIdentifierFromGT(c);
             default: return new IdentifierFromGT<>(impl);
         }

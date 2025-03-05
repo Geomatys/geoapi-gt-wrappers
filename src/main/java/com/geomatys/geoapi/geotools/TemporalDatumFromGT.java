@@ -47,6 +47,7 @@ final class TemporalDatumFromGT extends DatumFromGT<org.geotools.api.referencing
         switch (impl) {
             case null: return null;
             case TemporalDatum c: return c;
+            case TemporalDatumToGT c: return c.impl;
             default: return new TemporalDatumFromGT(impl);
         }
     }

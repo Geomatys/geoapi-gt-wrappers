@@ -51,6 +51,7 @@ class DatumToGT<S extends org.opengis.referencing.datum.Datum>
         switch (impl) {
             case null: return null;
             case Datum c: return c;
+            case DatumFromGT<?> c: return c.impl;
             case org.opengis.referencing.datum.GeodeticDatum    c: return new GeodeticDatumToGT(c);
             case org.opengis.referencing.datum.VerticalDatum    c: return new VerticalDatumToGT(c);
             case org.opengis.referencing.datum.TemporalDatum    c: return new TemporalDatumToGT(c);

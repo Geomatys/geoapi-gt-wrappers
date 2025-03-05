@@ -46,6 +46,7 @@ final class EngineeringDatumFromGT extends DatumFromGT<org.geotools.api.referenc
         switch (impl) {
             case null: return null;
             case EngineeringDatum c: return c;
+            case EngineeringDatumToGT c: return c.impl;
             default: return new EngineeringDatumFromGT(impl);
         }
     }

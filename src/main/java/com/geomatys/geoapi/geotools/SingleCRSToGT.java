@@ -49,6 +49,7 @@ class SingleCRSToGT<S extends org.opengis.referencing.crs.SingleCRS>
         switch (impl) {
             case null: return null;
             case SingleCRS c: return c;
+            case SingleCRSFromGT<?> c: return c.impl;
             case org.opengis.referencing.crs.ProjectedCRS      c: return new ProjectedCRSToGT(c);
             case org.opengis.referencing.crs.GeneralDerivedCRS c: return GeneralDerivedCRSToGT.wrap(c);
             case org.opengis.referencing.crs.GeodeticCRS       c: return GeodeticCRSToGT.wrap(c);

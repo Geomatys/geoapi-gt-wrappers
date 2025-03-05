@@ -47,6 +47,7 @@ final class TemporalDatumToGT extends DatumToGT<org.opengis.referencing.datum.Te
         switch (impl) {
             case null: return null;
             case TemporalDatum c: return c;
+            case TemporalDatumFromGT c: return c.impl;
             default: return new TemporalDatumToGT(impl);
         }
     }

@@ -38,7 +38,7 @@ final class CRSAuthorityFactoryFromGT extends AuthorityFactoryFromGT implements 
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.referencing.crs.CRSAuthorityFactory impl;
+    final org.geotools.api.referencing.crs.CRSAuthorityFactory impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -60,6 +60,7 @@ final class CRSAuthorityFactoryFromGT extends AuthorityFactoryFromGT implements 
         switch (impl) {
             case null: return null;
             case CRSAuthorityFactory c: return c;
+            case CRSAuthorityFactoryToGT c: return c.impl;
             default: return new CRSAuthorityFactoryFromGT(impl);
         }
     }

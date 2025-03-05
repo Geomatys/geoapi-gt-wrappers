@@ -48,6 +48,7 @@ final class ConformanceResultFromGT extends QualityResultFromGT<org.geotools.api
         switch (impl) {
             case null: return null;
             case ConformanceResult c: return c;
+            case ConformanceResultToGT c: return c.impl;
             default: return new ConformanceResultFromGT(impl);
         }
     }

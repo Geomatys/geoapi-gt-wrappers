@@ -28,7 +28,7 @@ final class NameSpaceToGT extends WrapperToGT implements NameSpace {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    private final org.opengis.util.NameSpace impl;
+    final org.opengis.util.NameSpace impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -50,6 +50,7 @@ final class NameSpaceToGT extends WrapperToGT implements NameSpace {
         switch (impl) {
             case null: return null;
             case NameSpace c: return c;
+            case NameSpaceFromGT c: return c.impl;
             default: return new NameSpaceToGT(impl);
         }
     }

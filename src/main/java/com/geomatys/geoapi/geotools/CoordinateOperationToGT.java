@@ -54,6 +54,7 @@ class CoordinateOperationToGT<S extends org.opengis.referencing.operation.Coordi
         switch (impl) {
             case null: return null;
             case CoordinateOperation c: return c;
+            case CoordinateOperationFromGT<?> c: return c.impl;
             case org.opengis.referencing.operation.SingleOperation c: return SingleOperationToGT.wrap(c);
             case org.opengis.referencing.operation.ConcatenatedOperation c: return new ConcatenatedOperationToGT(c);
             default: return new CoordinateOperationToGT<>(impl);

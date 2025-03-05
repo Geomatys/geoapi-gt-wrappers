@@ -30,7 +30,7 @@ final class ResponsiblePartyFromGT extends WrapperFromGT implements ResponsibleP
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.metadata.citation.ResponsibleParty impl;
+    final org.geotools.api.metadata.citation.ResponsibleParty impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -52,6 +52,7 @@ final class ResponsiblePartyFromGT extends WrapperFromGT implements ResponsibleP
         switch (impl) {
             case null: return null;
             case ResponsibleParty c: return c;
+            case ResponsiblePartyToGT c: return c.impl;
             default: return new ResponsiblePartyFromGT(impl);
         }
     }

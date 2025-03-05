@@ -46,6 +46,7 @@ final class GeographicBoundingBoxFromGT extends GeographicExtentFromGT<org.geoto
         switch (impl) {
             case null: return null;
             case GeographicBoundingBox c: return c;
+            case GeographicBoundingBoxToGT c: return c.impl;
             default: return new GeographicBoundingBoxFromGT(impl);
         }
     }

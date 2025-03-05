@@ -51,6 +51,7 @@ final class MathTransform2DFromGT extends MathTransformFromGT<org.geotools.api.r
         switch (impl) {
             case null: return null;
             case MathTransform2D c: return c;
+            case MathTransform2DToGT c: return c.impl;
             default: return new MathTransform2DFromGT(impl);
         }
     }

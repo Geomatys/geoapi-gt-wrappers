@@ -51,6 +51,7 @@ class QualityResultToGT<S extends org.opengis.metadata.quality.Result> extends W
         switch (impl) {
             case null: return null;
             case Result c: return c;
+            case QualityResultFromGT<?> c: return c.impl;
             case org.opengis.metadata.quality.ConformanceResult  c: return new ConformanceResultToGT (c);
             case org.opengis.metadata.quality.QuantitativeResult c: return new QuantitativeResultToGT(c);
             default: return new QualityResultToGT<>(impl);

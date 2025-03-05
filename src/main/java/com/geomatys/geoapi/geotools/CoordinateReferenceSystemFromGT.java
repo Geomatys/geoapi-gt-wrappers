@@ -49,22 +49,10 @@ class CoordinateReferenceSystemFromGT<S extends org.geotools.api.referencing.crs
         switch (impl) {
             case null: return null;
             case CoordinateReferenceSystem c: return c;
+            case CoordinateReferenceSystemToGT<?> c: return c.impl;
             case org.geotools.api.referencing.crs.SingleCRS c: return SingleCRSFromGT.wrap(c);
             case org.geotools.api.referencing.crs.CompoundCRS c: return new CompoundCRSFromGT(c);
             default: return new CoordinateReferenceSystemFromGT<>(impl);
-        }
-    }
-
-    /**
-     * {@return the GeoTools implementation behind the given wrapper}.
-     *
-     * @param wrapper the wrapper from which to get the GeoTools implementation.
-     * @throws ClassCastException if the given value is not a wrapper for GeoTools.
-     */
-    static org.geotools.api.referencing.crs.CoordinateReferenceSystem unwrap(CoordinateReferenceSystem wrapper) {
-        switch (wrapper) {
-            case null: return null;
-            default: return ((CoordinateReferenceSystemFromGT<?>) wrapper).impl;
         }
     }
 

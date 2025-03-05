@@ -29,7 +29,7 @@ final class AddressToGT extends WrapperToGT implements Address {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    private final org.opengis.metadata.citation.Address impl;
+    final org.opengis.metadata.citation.Address impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -51,6 +51,7 @@ final class AddressToGT extends WrapperToGT implements Address {
         switch (impl) {
             case null: return null;
             case Address c: return c;
+            case AddressFromGT c: return c.impl;
             default: return new AddressToGT(impl);
         }
     }

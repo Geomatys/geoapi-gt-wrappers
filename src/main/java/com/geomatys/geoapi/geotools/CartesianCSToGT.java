@@ -44,6 +44,7 @@ final class CartesianCSToGT extends AffineCSToGT implements CartesianCS {
         switch (impl) {
             case null: return null;
             case CartesianCS c: return c;
+            case CartesianCSFromGT c: return (CartesianCS) c.impl;
             default: return new CartesianCSToGT(impl);
         }
     }

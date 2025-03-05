@@ -50,6 +50,7 @@ final class ProjectedCRSFromGT extends GeneralDerivedCRSFromGT<org.geotools.api.
         switch (impl) {
             case null: return null;
             case ProjectedCRS c: return c;
+            case ProjectedCRSToGT c: return c.impl;
             default: return new ProjectedCRSFromGT(impl);
         }
     }

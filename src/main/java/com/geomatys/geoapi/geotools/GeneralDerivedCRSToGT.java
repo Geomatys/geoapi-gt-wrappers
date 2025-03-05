@@ -50,6 +50,7 @@ class GeneralDerivedCRSToGT<S extends org.opengis.referencing.crs.GeneralDerived
         switch (impl) {
             case null: return null;
             case GeneralDerivedCRS c: return c;
+            case GeneralDerivedCRSFromGT<?> c: return c.impl;
             case org.opengis.referencing.crs.DerivedCRS c: return DerivedCRSToGT.wrap(c);
             default: return new GeneralDerivedCRSToGT<>(impl);
         }

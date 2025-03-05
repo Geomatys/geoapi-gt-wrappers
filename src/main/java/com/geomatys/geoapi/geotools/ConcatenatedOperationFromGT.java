@@ -48,6 +48,7 @@ final class ConcatenatedOperationFromGT extends CoordinateOperationFromGT<org.ge
         switch (impl) {
             case null: return null;
             case ConcatenatedOperation c: return c;
+            case ConcatenatedOperationToGT c: return c.impl;
             default: return new ConcatenatedOperationFromGT(impl);
         }
     }

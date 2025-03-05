@@ -29,7 +29,7 @@ final class InternationalStringToGT extends WrapperToGT implements International
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    private final org.opengis.util.InternationalString impl;
+    final org.opengis.util.InternationalString impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -48,7 +48,11 @@ final class InternationalStringToGT extends WrapperToGT implements International
      * @return wrapper for the given implementation
      */
     static InternationalString wrap(final org.opengis.util.InternationalString impl) {
-        return (impl == null) ? null : new InternationalStringToGT(impl);
+        switch (impl) {
+            case null: return null;
+            case InternationalStringFromGT c: return c.impl;
+            default: return new InternationalStringToGT(impl);
+        }
     }
 
     /**

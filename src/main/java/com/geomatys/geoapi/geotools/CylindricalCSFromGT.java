@@ -44,6 +44,7 @@ final class CylindricalCSFromGT extends CoordinateSystemFromGT implements Cylind
         switch (impl) {
             case null: return null;
             case CylindricalCS c: return c;
+            case CylindricalCSToGT c: return (CylindricalCS) c.impl;
             default: return new CylindricalCSFromGT(impl);
         }
     }

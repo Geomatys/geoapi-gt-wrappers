@@ -46,6 +46,7 @@ final class ReferenceIdentifierFromGT extends IdentifierFromGT<org.geotools.api.
         switch (impl) {
             case null: return null;
             case ReferenceIdentifier c: return c;
+            case ReferenceIdentifierToGT c: return c.impl;
             default: return new ReferenceIdentifierFromGT(impl);
         }
     }

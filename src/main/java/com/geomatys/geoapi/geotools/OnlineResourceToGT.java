@@ -30,7 +30,7 @@ final class OnlineResourceToGT extends WrapperToGT implements OnLineResource {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    private final org.opengis.metadata.citation.OnlineResource impl;
+    final org.opengis.metadata.citation.OnlineResource impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -52,6 +52,7 @@ final class OnlineResourceToGT extends WrapperToGT implements OnLineResource {
         switch (impl) {
             case null: return null;
             case OnLineResource c: return c;
+            case OnlineResourceFromGT c: return c.impl;
             default: return new OnlineResourceToGT(impl);
         }
     }

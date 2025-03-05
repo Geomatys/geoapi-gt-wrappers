@@ -47,6 +47,7 @@ final class VerticalDatumFromGT extends DatumFromGT<org.geotools.api.referencing
         switch (impl) {
             case null: return null;
             case VerticalDatum c: return c;
+            case VerticalDatumToGT c: return c.impl;
             default: return new VerticalDatumFromGT(impl);
         }
     }

@@ -48,6 +48,7 @@ final class ImageCRSFromGT extends CoordinateReferenceSystemFromGT<org.geotools.
         switch (impl) {
             case null: return null;
             case ImageCRS c: return c;
+            case ImageCRSToGT c: return c.impl;
             default: return new ImageCRSFromGT(impl);
         }
     }

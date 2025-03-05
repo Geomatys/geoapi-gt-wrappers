@@ -44,6 +44,7 @@ class PositionalAccuracyFromGT extends QualityElementFromGT implements Positiona
         switch (impl) {
             case null: return null;
             case PositionalAccuracy c: return c;
+            case PositionalAccuracyToGT c: return (PositionalAccuracy) c.impl;
             case org.geotools.api.metadata.quality.AbsoluteExternalPositionalAccuracy c: return new AbsoluteExternalPositionalAccuracyFromGT(c);
             default: return new PositionalAccuracyFromGT(impl);
         }

@@ -48,6 +48,7 @@ final class TemporalCRSFromGT extends CoordinateReferenceSystemFromGT<org.geotoo
         switch (impl) {
             case null: return null;
             case TemporalCRS c: return c;
+            case TemporalCRSToGT c: return c.impl;
             default: return new TemporalCRSFromGT(impl);
         }
     }

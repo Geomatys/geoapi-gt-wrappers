@@ -48,6 +48,7 @@ final class OperationMethodToGT extends IdentifiedObjectToGT<org.opengis.referen
         switch (impl) {
             case null: return null;
             case OperationMethod c: return c;
+            case OperationMethodFromGT c: return c.impl;
             default: return new OperationMethodToGT(impl);
         }
     }

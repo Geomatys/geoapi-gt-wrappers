@@ -58,6 +58,7 @@ class MathTransformFromGT<S extends org.geotools.api.referencing.operation.MathT
         switch (impl) {
             case null: return null;
             case MathTransform c: return c;
+            case MathTransformToGT<?> c: return c.impl;
             case org.geotools.api.referencing.operation.MathTransform1D c: return new MathTransform1DFromGT(c);
             case org.geotools.api.referencing.operation.MathTransform2D c: return new MathTransform2DFromGT(c);
             default: return new MathTransformFromGT<>(impl);

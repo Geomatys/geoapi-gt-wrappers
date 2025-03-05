@@ -28,7 +28,7 @@ final class TelephoneFromGT extends WrapperFromGT implements Telephone {
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.metadata.citation.Telephone impl;
+    final org.geotools.api.metadata.citation.Telephone impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -50,6 +50,7 @@ final class TelephoneFromGT extends WrapperFromGT implements Telephone {
         switch (impl) {
             case null: return null;
             case Telephone c: return c;
+            case TelephoneToGT c: return c.impl;
             default: return new TelephoneFromGT(impl);
         }
     }

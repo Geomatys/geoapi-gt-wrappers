@@ -31,7 +31,7 @@ final class RecordSchemaFromGT extends WrapperFromGT implements RecordSchema {
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.util.RecordSchema impl;
+    final org.geotools.api.util.RecordSchema impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -53,6 +53,7 @@ final class RecordSchemaFromGT extends WrapperFromGT implements RecordSchema {
         switch (impl) {
             case null: return null;
             case RecordSchema c: return c;
+            case RecordSchemaToGT c: return c.impl;
             default: return new RecordSchemaFromGT(impl);
         }
     }
@@ -77,6 +78,6 @@ final class RecordSchemaFromGT extends WrapperFromGT implements RecordSchema {
 
     @Override
     public RecordType locate(final TypeName name) {
-        return RecordTypeFromGT.wrap(impl.locate(TypeNameFromGT.unwrap(name)));
+        return RecordTypeFromGT.wrap(impl.locate(TypeNameToGT.wrap(name)));
     }
 }

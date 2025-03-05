@@ -44,6 +44,7 @@ final class TransformationToGT extends SingleOperationToGT implements Transforma
         switch (impl) {
             case null: return null;
             case Transformation c: return c;
+            case TransformationFromGT c: return (Transformation) c.impl;
             default: return new TransformationToGT(impl);
         }
     }

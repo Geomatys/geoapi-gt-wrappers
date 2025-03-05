@@ -30,7 +30,7 @@ final class ResponsiblePartyToGT extends WrapperToGT implements ResponsibleParty
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    private final org.opengis.metadata.citation.ResponsibleParty impl;
+    final org.opengis.metadata.citation.ResponsibleParty impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -52,6 +52,7 @@ final class ResponsiblePartyToGT extends WrapperToGT implements ResponsibleParty
         switch (impl) {
             case null: return null;
             case ResponsibleParty c: return c;
+            case ResponsiblePartyFromGT c: return c.impl;
             default: return new ResponsiblePartyToGT(impl);
         }
     }

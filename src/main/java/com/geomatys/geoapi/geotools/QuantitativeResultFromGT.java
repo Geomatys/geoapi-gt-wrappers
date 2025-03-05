@@ -51,6 +51,7 @@ final class QuantitativeResultFromGT extends QualityResultFromGT<org.geotools.ap
         switch (impl) {
             case null: return null;
             case QuantitativeResult c: return c;
+            case QuantitativeResultToGT c: return c.impl;
             default: return new QuantitativeResultFromGT(impl);
         }
     }

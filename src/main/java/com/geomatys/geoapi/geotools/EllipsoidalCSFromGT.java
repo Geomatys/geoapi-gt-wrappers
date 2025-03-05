@@ -44,6 +44,7 @@ final class EllipsoidalCSFromGT extends CoordinateSystemFromGT implements Ellips
         switch (impl) {
             case null: return null;
             case EllipsoidalCS c: return c;
+            case EllipsoidalCSToGT c: return (EllipsoidalCS) c.impl;
             default: return new EllipsoidalCSFromGT(impl);
         }
     }

@@ -47,6 +47,7 @@ final class ImageDatumToGT extends DatumToGT<org.opengis.referencing.datum.Image
         switch (impl) {
             case null: return null;
             case ImageDatum c: return c;
+            case ImageDatumFromGT c: return c.impl;
             default: return new ImageDatumToGT(impl);
         }
     }

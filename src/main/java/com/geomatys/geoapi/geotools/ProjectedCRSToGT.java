@@ -50,6 +50,7 @@ final class ProjectedCRSToGT extends GeneralDerivedCRSToGT<org.opengis.referenci
         switch (impl) {
             case null: return null;
             case ProjectedCRS c: return c;
+            case ProjectedCRSFromGT c: return c.impl;
             default: return new ProjectedCRSToGT(impl);
         }
     }

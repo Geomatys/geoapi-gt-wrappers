@@ -48,6 +48,7 @@ final class ImageCRSToGT extends CoordinateReferenceSystemToGT<org.opengis.refer
         switch (impl) {
             case null: return null;
             case ImageCRS c: return c;
+            case ImageCRSFromGT c: return c.impl;
             default: return new ImageCRSToGT(impl);
         }
     }

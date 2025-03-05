@@ -47,6 +47,7 @@ final class ImageDatumFromGT extends DatumFromGT<org.geotools.api.referencing.da
         switch (impl) {
             case null: return null;
             case ImageDatum c: return c;
+            case ImageDatumToGT c: return c.impl;
             default: return new ImageDatumFromGT(impl);
         }
     }

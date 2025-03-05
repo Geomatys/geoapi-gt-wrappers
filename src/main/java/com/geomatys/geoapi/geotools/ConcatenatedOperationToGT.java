@@ -48,6 +48,7 @@ final class ConcatenatedOperationToGT extends CoordinateOperationToGT<org.opengi
         switch (impl) {
             case null: return null;
             case ConcatenatedOperation c: return c;
+            case ConcatenatedOperationFromGT c: return c.impl;
             default: return new ConcatenatedOperationToGT(impl);
         }
     }

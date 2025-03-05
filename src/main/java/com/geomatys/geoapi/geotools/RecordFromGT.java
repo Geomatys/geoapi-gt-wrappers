@@ -31,7 +31,7 @@ final class RecordFromGT extends WrapperFromGT implements Record {
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.util.Record impl;
+    final org.geotools.api.util.Record impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -53,20 +53,8 @@ final class RecordFromGT extends WrapperFromGT implements Record {
         switch (impl) {
             case null: return null;
             case Record c: return c;
+            case RecordToGT c: return c.impl;
             default: return new RecordFromGT(impl);
-        }
-    }
-
-    /**
-     * {@return the GeoTools implementation behind the given wrapper}.
-     *
-     * @param wrapper the wrapper from which to get the GeoTools implementation.
-     * @throws ClassCastException if the given value is not a wrapper for GeoTools.
-     */
-    static org.geotools.api.util.Record unwrap(final Record wrapper) {
-        switch (wrapper) {
-            case null: return null;
-            default: return ((RecordFromGT) wrapper).impl;
         }
     }
 
@@ -90,11 +78,11 @@ final class RecordFromGT extends WrapperFromGT implements Record {
 
     @Override
     public Object locate(MemberName name) {
-        return impl.locate(MemberNameFromGT.unwrap(name));
+        return impl.locate(MemberNameToGT.wrap(name));
     }
 
     @Override
     public void set(MemberName name, Object value) {
-        impl.set(MemberNameFromGT.unwrap(name), value);
+        impl.set(MemberNameToGT.wrap(name), value);
     }
 }

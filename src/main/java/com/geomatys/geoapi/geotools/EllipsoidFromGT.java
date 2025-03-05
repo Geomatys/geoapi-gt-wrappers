@@ -48,6 +48,7 @@ final class EllipsoidFromGT extends IdentifiedObjectFromGT<org.geotools.api.refe
         switch (impl) {
             case null: return null;
             case Ellipsoid c: return c;
+            case EllipsoidToGT c: return c.impl;
             default: return new EllipsoidFromGT(impl);
         }
     }

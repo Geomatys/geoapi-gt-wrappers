@@ -47,6 +47,7 @@ final class VerticalDatumToGT extends DatumToGT<org.opengis.referencing.datum.Ve
         switch (impl) {
             case null: return null;
             case VerticalDatum c: return c;
+            case VerticalDatumFromGT c: return c.impl;
             default: return new VerticalDatumToGT(impl);
         }
     }

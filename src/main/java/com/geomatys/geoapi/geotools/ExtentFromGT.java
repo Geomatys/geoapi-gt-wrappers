@@ -32,7 +32,7 @@ final class ExtentFromGT extends WrapperFromGT implements Extent {
     /**
      * The GeoTools implementation on which to delegate all methods.
      */
-    private final org.geotools.api.metadata.extent.Extent impl;
+    final org.geotools.api.metadata.extent.Extent impl;
 
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -54,6 +54,7 @@ final class ExtentFromGT extends WrapperFromGT implements Extent {
         switch (impl) {
             case null: return null;
             case Extent c: return c;
+            case ExtentToGT c: return c.impl;
             default: return new ExtentFromGT(impl);
         }
     }

@@ -54,6 +54,7 @@ class GeneralParameterValueFromGT<S extends org.geotools.api.parameter.GeneralPa
         switch (impl) {
             case null: return null;
             case GeneralParameterValue c: return c;
+            case GeneralParameterValueToGT<?> c: return c.impl;
             case org.geotools.api.parameter.ParameterValue<?> c: return new ParameterValueFromGT<>(c);
             case org.geotools.api.parameter.ParameterValueGroup c: return new ParameterValueGroupFromGT(c);
             default: return new GeneralParameterValueFromGT<>(impl);

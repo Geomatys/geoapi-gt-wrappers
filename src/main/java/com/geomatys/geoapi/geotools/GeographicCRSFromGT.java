@@ -47,6 +47,7 @@ final class GeographicCRSFromGT extends GeodeticCRSFromGT<org.geotools.api.refer
         switch (impl) {
             case null: return null;
             case GeographicCRS c: return c;
+            case GeographicCRSToGT c: return c.impl;
             default: return new GeographicCRSFromGT(impl);
         }
     }

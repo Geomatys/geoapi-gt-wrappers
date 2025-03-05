@@ -54,10 +54,12 @@ class DerivedCRSToGT extends GeneralDerivedCRSToGT<org.opengis.referencing.crs.D
      * @param impl the GeoAPI implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
+    @SuppressWarnings("unused")
     static DerivedCRS wrap(final org.opengis.referencing.crs.DerivedCRS impl) {
         switch (impl) {
             case null: return null;
             case DerivedCRS c: return c;
+            case DerivedCRSFromGT c: return c.impl;
             case org.opengis.referencing.crs.GeographicCRS  c: return new Geographic (impl);
             case org.opengis.referencing.crs.GeodeticCRS    c: return new Geodetic   (impl);
             case org.opengis.referencing.crs.VerticalCRS    c: return new Vertical   (impl);

@@ -57,22 +57,10 @@ class GenericNameToGT<S extends org.opengis.util.GenericName>
     static GenericName wrap(final org.opengis.util.GenericName impl) {
         switch (impl) {
             case null: return null;
+            case GenericNameFromGT<?> c: return c.impl;
             case org.opengis.util.LocalName  c: return LocalNameToGT.wrap(c);
             case org.opengis.util.ScopedName c: return new ScopedNameToGT(c);
             default: return new GenericNameToGT<>(impl);
-        }
-    }
-
-    /**
-     * {@return the GeoAPI implementation behind the given wrapper}.
-     *
-     * @param wrapper the wrapper from which to get the GeoAPI implementation.
-     * @throws ClassCastException if the given value is not a wrapper for GeoAPI.
-     */
-    static org.opengis.util.GenericName unwrap(final GenericName wrapper) {
-        switch (wrapper) {
-            case null: return null;
-            default: return ((GenericNameToGT) wrapper).impl;
         }
     }
 
@@ -116,7 +104,7 @@ class GenericNameToGT<S extends org.opengis.util.GenericName>
 
     @Override
     public ScopedName push(final GenericName scope) {
-        return ScopedNameToGT.wrap(impl.push(unwrap(scope)));
+        return ScopedNameToGT.wrap(impl.push(GenericNameFromGT.wrap(scope)));
     }
 
     @Override
@@ -126,6 +114,6 @@ class GenericNameToGT<S extends org.opengis.util.GenericName>
 
     @Override
     public int compareTo(final GenericName other) {
-        return impl.compareTo(unwrap(other));
+        return impl.compareTo(GenericNameFromGT.wrap(other));
     }
 }

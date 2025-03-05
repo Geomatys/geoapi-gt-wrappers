@@ -50,6 +50,7 @@ final class OperationMethodFromGT extends IdentifiedObjectFromGT<org.geotools.ap
         switch (impl) {
             case null: return null;
             case OperationMethod c: return c;
+            case OperationMethodToGT c: return c.impl;
             default: return new OperationMethodFromGT(impl);
         }
     }

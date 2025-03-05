@@ -47,6 +47,7 @@ final class EngineeringCRSFromGT extends CoordinateReferenceSystemFromGT<org.geo
         switch (impl) {
             case null: return null;
             case EngineeringCRS c: return c;
+            case EngineeringCRSToGT c: return c.impl;
             default: return new EngineeringCRSFromGT(impl);
         }
     }

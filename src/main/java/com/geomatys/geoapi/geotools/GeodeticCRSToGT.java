@@ -49,6 +49,7 @@ class GeodeticCRSToGT<S extends org.opengis.referencing.crs.GeodeticCRS>
         switch (impl) {
             case null: return null;
             case GeodeticCRS c: return c;
+            case GeodeticCRSFromGT<?> c: return c.impl;
             case org.opengis.referencing.crs.GeographicCRS c: return new GeographicCRSToGT(c);
             case org.opengis.referencing.crs.GeocentricCRS c: return new GeocentricCRSToGT(c);
             default: return new GeodeticCRSToGT<>(impl);
