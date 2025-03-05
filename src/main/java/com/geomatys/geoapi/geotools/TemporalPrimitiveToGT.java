@@ -15,9 +15,8 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.geotools.api.geometry.Position;
-import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
-
+import org.geotools.api.temporal.RelativePosition;
+import org.geotools.api.temporal.TemporalPrimitive;
 
 
 /**
@@ -25,18 +24,18 @@ import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class DirectPositionToGT extends WrapperToGT implements Position {
+final class TemporalPrimitiveToGT extends WrapperToGT implements TemporalPrimitive {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    final org.opengis.geometry.DirectPosition impl;
+    private final org.opengis.temporal.TemporalPrimitive impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
      * @param impl the GeoAPI implementation on which to delegate all methods
      */
-    private DirectPositionToGT(final org.opengis.geometry.DirectPosition impl) {
+    private TemporalPrimitiveToGT(final org.opengis.temporal.TemporalPrimitive impl) {
         this.impl = impl;
     }
 
@@ -47,12 +46,11 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
      * @param impl the GeoAPI implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static Position wrap(final org.opengis.geometry.DirectPosition impl) {
+    static TemporalPrimitive wrap(final org.opengis.temporal.TemporalPrimitive impl) {
         switch (impl) {
             case null: return null;
-            case Position c: return c;
-            case DirectPositionFromGT c: return c.impl;
-            default: return new DirectPositionToGT(impl);
+            case TemporalPrimitive c: return c;
+            default: return new TemporalPrimitiveToGT(impl);
         }
     }
 
@@ -65,32 +63,8 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
     }
 
     @Override
-    public CoordinateReferenceSystem getCoordinateReferenceSystem() {
-        return CoordinateReferenceSystemFromGT.unwrap(impl.getCoordinateReferenceSystem());
-    }
-
-    @Override
-    public int getDimension() {
-        return impl.getDimension();
-    }
-
-    @Override
-    public double[] getCoordinate() {
-        return impl.getCoordinate();
-    }
-
-    @Override
-    public double getOrdinate(int dimension) {
-        return impl.getOrdinate(dimension);
-    }
-
-    @Override
-    public void setOrdinate(int dimension, double value) {
-        impl.setOrdinate(dimension, value);
-    }
-
-    @Override
-    public Position getDirectPosition() {
-        return this;
+    @Deprecated(since = "GeoAPI 3.0")
+    public RelativePosition relativePosition(TemporalPrimitive other) {
+        return RelativePosition.valueOf("UNKNOWN");
     }
 }

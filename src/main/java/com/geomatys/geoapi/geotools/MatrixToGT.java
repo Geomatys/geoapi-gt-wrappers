@@ -15,9 +15,7 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.geotools.api.geometry.Position;
-import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
-
+import org.geotools.api.referencing.operation.Matrix;
 
 
 /**
@@ -25,18 +23,18 @@ import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class DirectPositionToGT extends WrapperToGT implements Position {
+final class MatrixToGT extends WrapperToGT implements Matrix {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    final org.opengis.geometry.DirectPosition impl;
+    private final org.opengis.referencing.operation.Matrix impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
      * @param impl the GeoAPI implementation on which to delegate all methods
      */
-    private DirectPositionToGT(final org.opengis.geometry.DirectPosition impl) {
+    private MatrixToGT(final org.opengis.referencing.operation.Matrix impl) {
         this.impl = impl;
     }
 
@@ -47,12 +45,11 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
      * @param impl the GeoAPI implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static Position wrap(final org.opengis.geometry.DirectPosition impl) {
+    static Matrix wrap(final org.opengis.referencing.operation.Matrix impl) {
         switch (impl) {
             case null: return null;
-            case Position c: return c;
-            case DirectPositionFromGT c: return c.impl;
-            default: return new DirectPositionToGT(impl);
+            case Matrix c: return c;
+            default: return new MatrixToGT(impl);
         }
     }
 
@@ -65,32 +62,33 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
     }
 
     @Override
-    public CoordinateReferenceSystem getCoordinateReferenceSystem() {
-        return CoordinateReferenceSystemFromGT.unwrap(impl.getCoordinateReferenceSystem());
+    public int getNumRow() {
+        return impl.getNumRow();
     }
 
     @Override
-    public int getDimension() {
-        return impl.getDimension();
+    public int getNumCol() {
+        return impl.getNumCol();
     }
 
     @Override
-    public double[] getCoordinate() {
-        return impl.getCoordinate();
+    public double getElement(int row, int column) {
+        return impl.getElement(row, column);
     }
 
     @Override
-    public double getOrdinate(int dimension) {
-        return impl.getOrdinate(dimension);
+    public void setElement(int row, int column, double value) {
+        impl.setElement(row, column, value);
     }
 
     @Override
-    public void setOrdinate(int dimension, double value) {
-        impl.setOrdinate(dimension, value);
+    public boolean isIdentity() {
+        return impl.isIdentity();
     }
 
     @Override
-    public Position getDirectPosition() {
-        return this;
+    @SuppressWarnings("CloneDoesntCallSuperClone")
+    public Matrix clone() {
+        return wrap(impl.clone());
     }
 }

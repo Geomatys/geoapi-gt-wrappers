@@ -15,9 +15,9 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.geotools.api.geometry.Position;
-import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
-
+import java.util.Collection;
+import org.geotools.api.metadata.citation.Address;
+import org.geotools.api.util.InternationalString;
 
 
 /**
@@ -25,18 +25,18 @@ import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class DirectPositionToGT extends WrapperToGT implements Position {
+final class AddressToGT extends WrapperToGT implements Address {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    final org.opengis.geometry.DirectPosition impl;
+    private final org.opengis.metadata.citation.Address impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
      * @param impl the GeoAPI implementation on which to delegate all methods
      */
-    private DirectPositionToGT(final org.opengis.geometry.DirectPosition impl) {
+    private AddressToGT(final org.opengis.metadata.citation.Address impl) {
         this.impl = impl;
     }
 
@@ -47,12 +47,11 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
      * @param impl the GeoAPI implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static Position wrap(final org.opengis.geometry.DirectPosition impl) {
+    static Address wrap(final org.opengis.metadata.citation.Address impl) {
         switch (impl) {
             case null: return null;
-            case Position c: return c;
-            case DirectPositionFromGT c: return c.impl;
-            default: return new DirectPositionToGT(impl);
+            case Address c: return c;
+            default: return new AddressToGT(impl);
         }
     }
 
@@ -65,32 +64,32 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
     }
 
     @Override
-    public CoordinateReferenceSystem getCoordinateReferenceSystem() {
-        return CoordinateReferenceSystemFromGT.unwrap(impl.getCoordinateReferenceSystem());
+    public Collection<String> getDeliveryPoints() {
+        return impl.getDeliveryPoints();
     }
 
     @Override
-    public int getDimension() {
-        return impl.getDimension();
+    public InternationalString getCity() {
+        return InternationalStringToGT.wrap(impl.getCity());
     }
 
     @Override
-    public double[] getCoordinate() {
-        return impl.getCoordinate();
+    public InternationalString getAdministrativeArea() {
+        return InternationalStringToGT.wrap(impl.getAdministrativeArea());
     }
 
     @Override
-    public double getOrdinate(int dimension) {
-        return impl.getOrdinate(dimension);
+    public String getPostalCode() {
+        return impl.getPostalCode();
     }
 
     @Override
-    public void setOrdinate(int dimension, double value) {
-        impl.setOrdinate(dimension, value);
+    public InternationalString getCountry() {
+        return InternationalStringToGT.wrap(impl.getCountry());
     }
 
     @Override
-    public Position getDirectPosition() {
-        return this;
+    public Collection<String> getElectronicMailAddresses() {
+        return impl.getElectronicMailAddresses();
     }
 }

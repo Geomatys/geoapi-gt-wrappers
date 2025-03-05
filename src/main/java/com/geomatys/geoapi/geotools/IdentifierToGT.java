@@ -15,28 +15,31 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.geotools.api.geometry.Position;
-import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
-
+import org.geotools.api.metadata.Identifier;
+import org.geotools.api.metadata.citation.Citation;
 
 
 /**
  * GeoTools wrapper for an implementation of the GeoAPI interface.
  *
+ * @param <S> the interface from the GeoAPI of the wrapped implementation.
+ *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class DirectPositionToGT extends WrapperToGT implements Position {
+class IdentifierToGT<S extends org.opengis.metadata.Identifier>
+        extends WrapperToGT implements Identifier
+{
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    final org.opengis.geometry.DirectPosition impl;
+    final S impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
      * @param impl the GeoAPI implementation on which to delegate all methods
      */
-    private DirectPositionToGT(final org.opengis.geometry.DirectPosition impl) {
+    IdentifierToGT(final S impl) {
         this.impl = impl;
     }
 
@@ -47,50 +50,27 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
      * @param impl the GeoAPI implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static Position wrap(final org.opengis.geometry.DirectPosition impl) {
+    static Identifier wrap(final org.opengis.metadata.Identifier impl) {
         switch (impl) {
             case null: return null;
-            case Position c: return c;
-            case DirectPositionFromGT c: return c.impl;
-            default: return new DirectPositionToGT(impl);
+            case Identifier c: return c;
+            case org.opengis.referencing.ReferenceIdentifier c: return new ReferenceIdentifierToGT(c);
+            default: return new IdentifierToGT<>(impl);
         }
     }
 
-    /**
-     * {@return the GeoAPI implementation on which this wrapper delegates all operations}.
-     */
     @Override
     final Object implementation() {
         return impl;
     }
 
     @Override
-    public CoordinateReferenceSystem getCoordinateReferenceSystem() {
-        return CoordinateReferenceSystemFromGT.unwrap(impl.getCoordinateReferenceSystem());
+    public String getCode() {
+        return impl.getCode();
     }
 
     @Override
-    public int getDimension() {
-        return impl.getDimension();
-    }
-
-    @Override
-    public double[] getCoordinate() {
-        return impl.getCoordinate();
-    }
-
-    @Override
-    public double getOrdinate(int dimension) {
-        return impl.getOrdinate(dimension);
-    }
-
-    @Override
-    public void setOrdinate(int dimension, double value) {
-        impl.setOrdinate(dimension, value);
-    }
-
-    @Override
-    public Position getDirectPosition() {
-        return this;
+    public Citation getAuthority() {
+        return CitationToGT.wrap(impl.getAuthority());
     }
 }

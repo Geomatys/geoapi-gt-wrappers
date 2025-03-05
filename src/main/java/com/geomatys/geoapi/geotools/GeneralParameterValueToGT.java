@@ -15,28 +15,31 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.geotools.api.geometry.Position;
-import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
-
+import org.geotools.api.parameter.GeneralParameterDescriptor;
+import org.geotools.api.parameter.GeneralParameterValue;
 
 
 /**
  * GeoTools wrapper for an implementation of the GeoAPI interface.
  *
+ * @param <S> the interface from the GeoAPI of the wrapped implementation.
+ *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class DirectPositionToGT extends WrapperToGT implements Position {
+class GeneralParameterValueToGT<S extends org.opengis.parameter.GeneralParameterValue>
+        extends WrapperToGT implements GeneralParameterValue
+{
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    final org.opengis.geometry.DirectPosition impl;
+    final S impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
      * @param impl the GeoAPI implementation on which to delegate all methods
      */
-    private DirectPositionToGT(final org.opengis.geometry.DirectPosition impl) {
+    GeneralParameterValueToGT(final S impl) {
         this.impl = impl;
     }
 
@@ -47,12 +50,13 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
      * @param impl the GeoAPI implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static Position wrap(final org.opengis.geometry.DirectPosition impl) {
+    static GeneralParameterValue wrap(final org.opengis.parameter.GeneralParameterValue impl) {
         switch (impl) {
             case null: return null;
-            case Position c: return c;
-            case DirectPositionFromGT c: return c.impl;
-            default: return new DirectPositionToGT(impl);
+            case GeneralParameterValue c: return c;
+            case org.opengis.parameter.ParameterValue<?> c: return new ParameterValueToGT<>(c);
+            case org.opengis.parameter.ParameterValueGroup c: return new ParameterValueGroupToGT(c);
+            default: return new GeneralParameterValueToGT<>(impl);
         }
     }
 
@@ -65,32 +69,13 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
     }
 
     @Override
-    public CoordinateReferenceSystem getCoordinateReferenceSystem() {
-        return CoordinateReferenceSystemFromGT.unwrap(impl.getCoordinateReferenceSystem());
+    public GeneralParameterDescriptor getDescriptor() {
+        return GeneralParameterDescriptorToGT.wrap(impl.getDescriptor());
     }
 
     @Override
-    public int getDimension() {
-        return impl.getDimension();
-    }
-
-    @Override
-    public double[] getCoordinate() {
-        return impl.getCoordinate();
-    }
-
-    @Override
-    public double getOrdinate(int dimension) {
-        return impl.getOrdinate(dimension);
-    }
-
-    @Override
-    public void setOrdinate(int dimension, double value) {
-        impl.setOrdinate(dimension, value);
-    }
-
-    @Override
-    public Position getDirectPosition() {
-        return this;
+    @SuppressWarnings("CloneDoesntCallSuperClone")
+    public GeneralParameterValue clone() {
+        return wrap(impl.clone());
     }
 }

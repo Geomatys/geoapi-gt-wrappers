@@ -15,9 +15,10 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.geotools.api.geometry.Position;
-import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
-
+import javax.measure.Unit;
+import org.geotools.api.referencing.cs.AxisDirection;
+import org.geotools.api.referencing.cs.CoordinateSystemAxis;
+import org.geotools.api.referencing.cs.RangeMeaning;
 
 
 /**
@@ -25,19 +26,16 @@ import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class DirectPositionToGT extends WrapperToGT implements Position {
-    /**
-     * The GeoAPI implementation on which to delegate all methods.
-     */
-    final org.opengis.geometry.DirectPosition impl;
-
+final class CoordinateSystemAxisToGT extends IdentifiedObjectToGT<org.opengis.referencing.cs.CoordinateSystemAxis>
+        implements CoordinateSystemAxis
+{
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
      * @param impl the GeoAPI implementation on which to delegate all methods
      */
-    private DirectPositionToGT(final org.opengis.geometry.DirectPosition impl) {
-        this.impl = impl;
+    CoordinateSystemAxisToGT(final org.opengis.referencing.cs.CoordinateSystemAxis impl) {
+        super(impl);
     }
 
     /**
@@ -47,50 +45,41 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
      * @param impl the GeoAPI implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static Position wrap(final org.opengis.geometry.DirectPosition impl) {
+    static CoordinateSystemAxis wrap(final org.opengis.referencing.cs.CoordinateSystemAxis impl) {
         switch (impl) {
             case null: return null;
-            case Position c: return c;
-            case DirectPositionFromGT c: return c.impl;
-            default: return new DirectPositionToGT(impl);
+            case CoordinateSystemAxis c: return c;
+            default: return new CoordinateSystemAxisToGT(impl);
         }
     }
 
-    /**
-     * {@return the GeoAPI implementation on which this wrapper delegates all operations}.
-     */
     @Override
-    final Object implementation() {
-        return impl;
+    public String getAbbreviation() {
+        return impl.getAbbreviation();
     }
 
     @Override
-    public CoordinateReferenceSystem getCoordinateReferenceSystem() {
-        return CoordinateReferenceSystemFromGT.unwrap(impl.getCoordinateReferenceSystem());
+    public AxisDirection getDirection() {
+        return wrap(impl.getDirection(), AxisDirection::valueOf);
     }
 
     @Override
-    public int getDimension() {
-        return impl.getDimension();
+    public double getMinimumValue() {
+        return impl.getMinimumValue();
     }
 
     @Override
-    public double[] getCoordinate() {
-        return impl.getCoordinate();
+    public double getMaximumValue() {
+        return impl.getMaximumValue();
     }
 
     @Override
-    public double getOrdinate(int dimension) {
-        return impl.getOrdinate(dimension);
+    public RangeMeaning getRangeMeaning() {
+        return wrap(impl.getRangeMeaning(), RangeMeaning::valueOf);
     }
 
     @Override
-    public void setOrdinate(int dimension, double value) {
-        impl.setOrdinate(dimension, value);
-    }
-
-    @Override
-    public Position getDirectPosition() {
-        return this;
+    public Unit<?> getUnit() {
+        return impl.getUnit();
     }
 }

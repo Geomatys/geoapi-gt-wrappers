@@ -15,9 +15,8 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.geotools.api.geometry.Position;
-import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
-
+import org.geotools.api.temporal.PeriodDuration;
+import org.geotools.api.util.InternationalString;
 
 
 /**
@@ -25,18 +24,18 @@ import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class DirectPositionToGT extends WrapperToGT implements Position {
+final class PeriodDurationToGT extends WrapperToGT implements PeriodDuration {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    final org.opengis.geometry.DirectPosition impl;
+    private final org.opengis.temporal.PeriodDuration impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
      * @param impl the GeoAPI implementation on which to delegate all methods
      */
-    private DirectPositionToGT(final org.opengis.geometry.DirectPosition impl) {
+    private PeriodDurationToGT(final org.opengis.temporal.PeriodDuration impl) {
         this.impl = impl;
     }
 
@@ -47,12 +46,11 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
      * @param impl the GeoAPI implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static Position wrap(final org.opengis.geometry.DirectPosition impl) {
+    static PeriodDuration wrap(final org.opengis.temporal.PeriodDuration impl) {
         switch (impl) {
             case null: return null;
-            case Position c: return c;
-            case DirectPositionFromGT c: return c.impl;
-            default: return new DirectPositionToGT(impl);
+            case PeriodDuration c: return c;
+            default: return new PeriodDurationToGT(impl);
         }
     }
 
@@ -65,32 +63,50 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
     }
 
     @Override
-    public CoordinateReferenceSystem getCoordinateReferenceSystem() {
-        return CoordinateReferenceSystemFromGT.unwrap(impl.getCoordinateReferenceSystem());
+    @Deprecated(since = "GeoAPI 3.0")
+    public InternationalString getDesignator() {
+        return null;
     }
 
     @Override
-    public int getDimension() {
-        return impl.getDimension();
+    @Deprecated(since = "GeoAPI 3.0")
+    public InternationalString getYears() {
+        return null;
     }
 
     @Override
-    public double[] getCoordinate() {
-        return impl.getCoordinate();
+    @Deprecated(since = "GeoAPI 3.0")
+    public InternationalString getMonths() {
+        return null;
     }
 
     @Override
-    public double getOrdinate(int dimension) {
-        return impl.getOrdinate(dimension);
+    @Deprecated(since = "GeoAPI 3.0")
+    public InternationalString getDays() {
+        return null;
     }
 
     @Override
-    public void setOrdinate(int dimension, double value) {
-        impl.setOrdinate(dimension, value);
+    @Deprecated(since = "GeoAPI 3.0")
+    public InternationalString getTimeIndicator() {
+        return null;
     }
 
     @Override
-    public Position getDirectPosition() {
-        return this;
+    @Deprecated(since = "GeoAPI 3.0")
+    public InternationalString getHours() {
+        return null;
+    }
+
+    @Override
+    @Deprecated(since = "GeoAPI 3.0")
+    public InternationalString getMinutes() {
+        return null;
+    }
+
+    @Override
+    @Deprecated(since = "GeoAPI 3.0")
+    public InternationalString getSeconds() {
+        return null;
     }
 }

@@ -15,9 +15,8 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.geotools.api.geometry.Position;
-import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
-
+import java.util.Collection;
+import org.geotools.api.metadata.citation.Telephone;
 
 
 /**
@@ -25,18 +24,18 @@ import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class DirectPositionToGT extends WrapperToGT implements Position {
+final class TelephoneToGT extends WrapperToGT implements Telephone {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    final org.opengis.geometry.DirectPosition impl;
+    private final org.opengis.metadata.citation.Telephone impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
      * @param impl the GeoAPI implementation on which to delegate all methods
      */
-    private DirectPositionToGT(final org.opengis.geometry.DirectPosition impl) {
+    private TelephoneToGT(final org.opengis.metadata.citation.Telephone impl) {
         this.impl = impl;
     }
 
@@ -47,12 +46,11 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
      * @param impl the GeoAPI implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static Position wrap(final org.opengis.geometry.DirectPosition impl) {
+    static Telephone wrap(final org.opengis.metadata.citation.Telephone impl) {
         switch (impl) {
             case null: return null;
-            case Position c: return c;
-            case DirectPositionFromGT c: return c.impl;
-            default: return new DirectPositionToGT(impl);
+            case Telephone c: return c;
+            default: return new TelephoneToGT(impl);
         }
     }
 
@@ -65,32 +63,12 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
     }
 
     @Override
-    public CoordinateReferenceSystem getCoordinateReferenceSystem() {
-        return CoordinateReferenceSystemFromGT.unwrap(impl.getCoordinateReferenceSystem());
+    public Collection<String> getVoices() {
+        return impl.getVoices();
     }
 
     @Override
-    public int getDimension() {
-        return impl.getDimension();
-    }
-
-    @Override
-    public double[] getCoordinate() {
-        return impl.getCoordinate();
-    }
-
-    @Override
-    public double getOrdinate(int dimension) {
-        return impl.getOrdinate(dimension);
-    }
-
-    @Override
-    public void setOrdinate(int dimension, double value) {
-        impl.setOrdinate(dimension, value);
-    }
-
-    @Override
-    public Position getDirectPosition() {
-        return this;
+    public Collection<String> getFacsimiles() {
+        return impl.getFacsimiles();
     }
 }

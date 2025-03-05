@@ -15,28 +15,30 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.geotools.api.geometry.Position;
-import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
-
+import org.geotools.api.metadata.extent.GeographicExtent;
 
 
 /**
  * GeoTools wrapper for an implementation of the GeoAPI interface.
  *
+ * @param <S> the interface from the GeoAPI of the wrapped implementation.
+ *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class DirectPositionToGT extends WrapperToGT implements Position {
+class GeographicExtentToGT<S extends org.opengis.metadata.extent.GeographicExtent>
+        extends WrapperToGT implements GeographicExtent
+{
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    final org.opengis.geometry.DirectPosition impl;
+    final S impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
      * @param impl the GeoAPI implementation on which to delegate all methods
      */
-    private DirectPositionToGT(final org.opengis.geometry.DirectPosition impl) {
+    GeographicExtentToGT(final S impl) {
         this.impl = impl;
     }
 
@@ -47,12 +49,12 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
      * @param impl the GeoAPI implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static Position wrap(final org.opengis.geometry.DirectPosition impl) {
+    static GeographicExtent wrap(final org.opengis.metadata.extent.GeographicExtent impl) {
         switch (impl) {
             case null: return null;
-            case Position c: return c;
-            case DirectPositionFromGT c: return c.impl;
-            default: return new DirectPositionToGT(impl);
+            case GeographicExtent c: return c;
+            case org.opengis.metadata.extent.GeographicBoundingBox c: return new GeographicBoundingBoxToGT(c);
+            default: return new GeographicExtentToGT<>(impl);
         }
     }
 
@@ -65,32 +67,7 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
     }
 
     @Override
-    public CoordinateReferenceSystem getCoordinateReferenceSystem() {
-        return CoordinateReferenceSystemFromGT.unwrap(impl.getCoordinateReferenceSystem());
-    }
-
-    @Override
-    public int getDimension() {
-        return impl.getDimension();
-    }
-
-    @Override
-    public double[] getCoordinate() {
-        return impl.getCoordinate();
-    }
-
-    @Override
-    public double getOrdinate(int dimension) {
-        return impl.getOrdinate(dimension);
-    }
-
-    @Override
-    public void setOrdinate(int dimension, double value) {
-        impl.setOrdinate(dimension, value);
-    }
-
-    @Override
-    public Position getDirectPosition() {
-        return this;
+    public Boolean getInclusion() {
+        return impl.getInclusion();
     }
 }

@@ -15,82 +15,78 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.geotools.api.geometry.Position;
-import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
-
+import java.util.Set;
+import javax.measure.Unit;
+import org.geotools.api.parameter.ParameterDescriptor;
+import org.geotools.api.parameter.ParameterValue;
 
 
 /**
  * GeoTools wrapper for an implementation of the GeoAPI interface.
  *
+ * @param <V> the type of value stored in the parameter.
+ *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class DirectPositionToGT extends WrapperToGT implements Position {
-    /**
-     * The GeoAPI implementation on which to delegate all methods.
-     */
-    final org.opengis.geometry.DirectPosition impl;
-
+final class ParameterDescriptorToGT<V> extends GeneralParameterDescriptorToGT<org.opengis.parameter.ParameterDescriptor<V>>
+        implements ParameterDescriptor<V>
+{
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
      * @param impl the GeoAPI implementation on which to delegate all methods
      */
-    private DirectPositionToGT(final org.opengis.geometry.DirectPosition impl) {
-        this.impl = impl;
+    ParameterDescriptorToGT(final org.opengis.parameter.ParameterDescriptor<V> impl) {
+        super(impl);
     }
 
     /**
      * Creates a new wrapper of the most appropriate type for the given instance.
      * If the given implementation is {@code null}, then this method returns {@code null}.
      *
+     * @param <V> the type of value stored in the parameter.
      * @param impl the GeoAPI implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static Position wrap(final org.opengis.geometry.DirectPosition impl) {
+    static <V> ParameterDescriptor<V> wrap(final org.opengis.parameter.ParameterDescriptor<V> impl) {
         switch (impl) {
             case null: return null;
-            case Position c: return c;
-            case DirectPositionFromGT c: return c.impl;
-            default: return new DirectPositionToGT(impl);
+            default: return new ParameterDescriptorToGT<>(impl);
         }
     }
 
-    /**
-     * {@return the GeoAPI implementation on which this wrapper delegates all operations}.
-     */
     @Override
-    final Object implementation() {
-        return impl;
+    public ParameterValue<V> createValue() {
+        return ParameterValueToGT.wrap(impl.createValue());
     }
 
     @Override
-    public CoordinateReferenceSystem getCoordinateReferenceSystem() {
-        return CoordinateReferenceSystemFromGT.unwrap(impl.getCoordinateReferenceSystem());
+    public Class<V> getValueClass() {
+        return impl.getValueClass();
     }
 
     @Override
-    public int getDimension() {
-        return impl.getDimension();
+    public Set<V> getValidValues() {
+        return impl.getValidValues();
     }
 
     @Override
-    public double[] getCoordinate() {
-        return impl.getCoordinate();
+    public V getDefaultValue() {
+        return impl.getDefaultValue();
     }
 
     @Override
-    public double getOrdinate(int dimension) {
-        return impl.getOrdinate(dimension);
+    public Comparable<V> getMinimumValue() {
+        return impl.getMinimumValue();
     }
 
     @Override
-    public void setOrdinate(int dimension, double value) {
-        impl.setOrdinate(dimension, value);
+    public Comparable<V> getMaximumValue() {
+        return impl.getMaximumValue();
     }
 
     @Override
-    public Position getDirectPosition() {
-        return this;
+    public Unit<?> getUnit() {
+        return impl.getUnit();
     }
 }

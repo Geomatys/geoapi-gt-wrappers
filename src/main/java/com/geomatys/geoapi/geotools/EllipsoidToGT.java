@@ -15,9 +15,9 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.geotools.api.geometry.Position;
-import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
-
+import javax.measure.Unit;
+import javax.measure.quantity.Length;
+import org.geotools.api.referencing.datum.Ellipsoid;
 
 
 /**
@@ -25,19 +25,16 @@ import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class DirectPositionToGT extends WrapperToGT implements Position {
-    /**
-     * The GeoAPI implementation on which to delegate all methods.
-     */
-    final org.opengis.geometry.DirectPosition impl;
-
+final class EllipsoidToGT extends IdentifiedObjectToGT<org.opengis.referencing.datum.Ellipsoid>
+        implements Ellipsoid
+{
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
      * @param impl the GeoAPI implementation on which to delegate all methods
      */
-    private DirectPositionToGT(final org.opengis.geometry.DirectPosition impl) {
-        this.impl = impl;
+    EllipsoidToGT(final org.opengis.referencing.datum.Ellipsoid impl) {
+        super(impl);
     }
 
     /**
@@ -47,50 +44,41 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
      * @param impl the GeoAPI implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static Position wrap(final org.opengis.geometry.DirectPosition impl) {
+    static Ellipsoid wrap(final org.opengis.referencing.datum.Ellipsoid impl) {
         switch (impl) {
             case null: return null;
-            case Position c: return c;
-            case DirectPositionFromGT c: return c.impl;
-            default: return new DirectPositionToGT(impl);
+            case Ellipsoid c: return c;
+            default: return new EllipsoidToGT(impl);
         }
     }
 
-    /**
-     * {@return the GeoAPI implementation on which this wrapper delegates all operations}.
-     */
     @Override
-    final Object implementation() {
-        return impl;
+    public Unit<Length> getAxisUnit() {
+        return impl.getAxisUnit();
     }
 
     @Override
-    public CoordinateReferenceSystem getCoordinateReferenceSystem() {
-        return CoordinateReferenceSystemFromGT.unwrap(impl.getCoordinateReferenceSystem());
+    public double getSemiMajorAxis() {
+        return impl.getSemiMajorAxis();
     }
 
     @Override
-    public int getDimension() {
-        return impl.getDimension();
+    public double getSemiMinorAxis() {
+        return impl.getSemiMinorAxis();
     }
 
     @Override
-    public double[] getCoordinate() {
-        return impl.getCoordinate();
+    public double getInverseFlattening() {
+        return impl.getInverseFlattening();
     }
 
     @Override
-    public double getOrdinate(int dimension) {
-        return impl.getOrdinate(dimension);
+    public boolean isIvfDefinitive() {
+        return impl.isIvfDefinitive();
     }
 
     @Override
-    public void setOrdinate(int dimension, double value) {
-        impl.setOrdinate(dimension, value);
-    }
-
-    @Override
-    public Position getDirectPosition() {
-        return this;
+    public boolean isSphere() {
+        return impl.isSphere();
     }
 }

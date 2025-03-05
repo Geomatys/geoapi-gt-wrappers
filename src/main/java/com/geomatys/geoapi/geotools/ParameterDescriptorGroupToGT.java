@@ -15,9 +15,11 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.geotools.api.geometry.Position;
-import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
-
+import java.util.List;
+import org.geotools.api.parameter.GeneralParameterDescriptor;
+import org.geotools.api.parameter.ParameterDescriptorGroup;
+import org.geotools.api.parameter.ParameterNotFoundException;
+import org.geotools.api.parameter.ParameterValueGroup;
 
 
 /**
@@ -25,19 +27,16 @@ import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class DirectPositionToGT extends WrapperToGT implements Position {
-    /**
-     * The GeoAPI implementation on which to delegate all methods.
-     */
-    final org.opengis.geometry.DirectPosition impl;
-
+final class ParameterDescriptorGroupToGT extends GeneralParameterDescriptorToGT<org.opengis.parameter.ParameterDescriptorGroup>
+        implements ParameterDescriptorGroup
+{
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
      * @param impl the GeoAPI implementation on which to delegate all methods
      */
-    private DirectPositionToGT(final org.opengis.geometry.DirectPosition impl) {
-        this.impl = impl;
+    ParameterDescriptorGroupToGT(final org.opengis.parameter.ParameterDescriptorGroup impl) {
+        super(impl);
     }
 
     /**
@@ -47,50 +46,29 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
      * @param impl the GeoAPI implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static Position wrap(final org.opengis.geometry.DirectPosition impl) {
+    static <V> ParameterDescriptorGroup wrap(final org.opengis.parameter.ParameterDescriptorGroup impl) {
         switch (impl) {
             case null: return null;
-            case Position c: return c;
-            case DirectPositionFromGT c: return c.impl;
-            default: return new DirectPositionToGT(impl);
+            default: return new ParameterDescriptorGroupToGT(impl);
         }
     }
 
-    /**
-     * {@return the GeoAPI implementation on which this wrapper delegates all operations}.
-     */
     @Override
-    final Object implementation() {
-        return impl;
+    public ParameterValueGroup createValue() {
+        return ParameterValueGroupToGT.wrap(impl.createValue());
     }
 
     @Override
-    public CoordinateReferenceSystem getCoordinateReferenceSystem() {
-        return CoordinateReferenceSystemFromGT.unwrap(impl.getCoordinateReferenceSystem());
+    public List<GeneralParameterDescriptor> descriptors() {
+        return wrap(impl.descriptors(), GeneralParameterDescriptorToGT::wrap);
     }
 
     @Override
-    public int getDimension() {
-        return impl.getDimension();
-    }
-
-    @Override
-    public double[] getCoordinate() {
-        return impl.getCoordinate();
-    }
-
-    @Override
-    public double getOrdinate(int dimension) {
-        return impl.getOrdinate(dimension);
-    }
-
-    @Override
-    public void setOrdinate(int dimension, double value) {
-        impl.setOrdinate(dimension, value);
-    }
-
-    @Override
-    public Position getDirectPosition() {
-        return this;
+    public GeneralParameterDescriptor descriptor(String name) throws ParameterNotFoundException {
+        try {
+            return wrap(impl.descriptor(name));
+        } catch (org.opengis.parameter.ParameterNotFoundException e) {
+            throw ParameterValueGroupToGT.wrap(e);
+        }
     }
 }

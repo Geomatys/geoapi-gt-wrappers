@@ -15,9 +15,7 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.geotools.api.geometry.Position;
-import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
-
+import org.geotools.api.metadata.extent.GeographicBoundingBox;
 
 
 /**
@@ -25,19 +23,16 @@ import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class DirectPositionToGT extends WrapperToGT implements Position {
-    /**
-     * The GeoAPI implementation on which to delegate all methods.
-     */
-    final org.opengis.geometry.DirectPosition impl;
-
+final class GeographicBoundingBoxToGT extends GeographicExtentToGT<org.opengis.metadata.extent.GeographicBoundingBox>
+        implements GeographicBoundingBox
+{
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
      * @param impl the GeoAPI implementation on which to delegate all methods
      */
-    private DirectPositionToGT(final org.opengis.geometry.DirectPosition impl) {
-        this.impl = impl;
+    GeographicBoundingBoxToGT(final org.opengis.metadata.extent.GeographicBoundingBox impl) {
+        super(impl);
     }
 
     /**
@@ -47,50 +42,31 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
      * @param impl the GeoAPI implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static Position wrap(final org.opengis.geometry.DirectPosition impl) {
+    static GeographicBoundingBox wrap(final org.opengis.metadata.extent.GeographicBoundingBox impl) {
         switch (impl) {
             case null: return null;
-            case Position c: return c;
-            case DirectPositionFromGT c: return c.impl;
-            default: return new DirectPositionToGT(impl);
+            case GeographicBoundingBox c: return c;
+            default: return new GeographicBoundingBoxToGT(impl);
         }
     }
 
-    /**
-     * {@return the GeoAPI implementation on which this wrapper delegates all operations}.
-     */
     @Override
-    final Object implementation() {
-        return impl;
+    public double getWestBoundLongitude() {
+        return impl.getWestBoundLongitude();
     }
 
     @Override
-    public CoordinateReferenceSystem getCoordinateReferenceSystem() {
-        return CoordinateReferenceSystemFromGT.unwrap(impl.getCoordinateReferenceSystem());
+    public double getEastBoundLongitude() {
+        return impl.getEastBoundLongitude();
     }
 
     @Override
-    public int getDimension() {
-        return impl.getDimension();
+    public double getSouthBoundLatitude() {
+        return impl.getSouthBoundLatitude();
     }
 
     @Override
-    public double[] getCoordinate() {
-        return impl.getCoordinate();
-    }
-
-    @Override
-    public double getOrdinate(int dimension) {
-        return impl.getOrdinate(dimension);
-    }
-
-    @Override
-    public void setOrdinate(int dimension, double value) {
-        impl.setOrdinate(dimension, value);
-    }
-
-    @Override
-    public Position getDirectPosition() {
-        return this;
+    public double getNorthBoundLatitude() {
+        return impl.getNorthBoundLatitude();
     }
 }

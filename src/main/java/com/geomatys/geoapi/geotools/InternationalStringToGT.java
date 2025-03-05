@@ -15,9 +15,9 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.geotools.api.geometry.Position;
-import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
-
+import java.util.Locale;
+import java.util.stream.IntStream;
+import org.geotools.api.util.InternationalString;
 
 
 /**
@@ -25,18 +25,18 @@ import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class DirectPositionToGT extends WrapperToGT implements Position {
+final class InternationalStringToGT extends WrapperToGT implements InternationalString {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    final org.opengis.geometry.DirectPosition impl;
+    private final org.opengis.util.InternationalString impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
      * @param impl the GeoAPI implementation on which to delegate all methods
      */
-    private DirectPositionToGT(final org.opengis.geometry.DirectPosition impl) {
+    private InternationalStringToGT(final org.opengis.util.InternationalString impl) {
         this.impl = impl;
     }
 
@@ -47,13 +47,8 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
      * @param impl the GeoAPI implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static Position wrap(final org.opengis.geometry.DirectPosition impl) {
-        switch (impl) {
-            case null: return null;
-            case Position c: return c;
-            case DirectPositionFromGT c: return c.impl;
-            default: return new DirectPositionToGT(impl);
-        }
+    static InternationalString wrap(final org.opengis.util.InternationalString impl) {
+        return (impl == null) ? null : new InternationalStringToGT(impl);
     }
 
     /**
@@ -65,32 +60,46 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
     }
 
     @Override
-    public CoordinateReferenceSystem getCoordinateReferenceSystem() {
-        return CoordinateReferenceSystemFromGT.unwrap(impl.getCoordinateReferenceSystem());
+    public boolean isEmpty() {
+        return impl.isEmpty();
     }
 
     @Override
-    public int getDimension() {
-        return impl.getDimension();
+    public int length() {
+        return impl.length();
     }
 
     @Override
-    public double[] getCoordinate() {
-        return impl.getCoordinate();
+    public char charAt(int index) {
+        return impl.charAt(index);
     }
 
     @Override
-    public double getOrdinate(int dimension) {
-        return impl.getOrdinate(dimension);
+    public CharSequence subSequence(int start, int end) {
+        return impl.subSequence(start, end);
     }
 
     @Override
-    public void setOrdinate(int dimension, double value) {
-        impl.setOrdinate(dimension, value);
+    public IntStream chars() {
+        return impl.chars();
     }
 
     @Override
-    public Position getDirectPosition() {
-        return this;
+    public IntStream codePoints() {
+        return impl.codePoints();
+    }
+
+    @Override
+    public String toString(Locale locale) {
+        return impl.toString(locale);
+    }
+
+    @Override
+    public int compareTo(final InternationalString o) {
+        if (o instanceof InternationalStringToGT i18n) {
+            return impl.compareTo(i18n.impl);
+        } else {
+            return toString().compareTo(o.toString());
+        }
     }
 }

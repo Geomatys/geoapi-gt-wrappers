@@ -15,9 +15,13 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.geotools.api.geometry.Position;
-import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
-
+import java.util.Map;
+import java.util.Set;
+import org.geotools.api.util.MemberName;
+import org.geotools.api.util.Record;
+import org.geotools.api.util.RecordSchema;
+import org.geotools.api.util.RecordType;
+import org.geotools.api.util.TypeName;
 
 
 /**
@@ -25,18 +29,18 @@ import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class DirectPositionToGT extends WrapperToGT implements Position {
+final class RecordTypeToGT extends WrapperToGT implements RecordType {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    final org.opengis.geometry.DirectPosition impl;
+    private final org.opengis.util.RecordType impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
      * @param impl the GeoAPI implementation on which to delegate all methods
      */
-    private DirectPositionToGT(final org.opengis.geometry.DirectPosition impl) {
+    private RecordTypeToGT(final org.opengis.util.RecordType impl) {
         this.impl = impl;
     }
 
@@ -47,12 +51,11 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
      * @param impl the GeoAPI implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static Position wrap(final org.opengis.geometry.DirectPosition impl) {
+    static RecordType wrap(final org.opengis.util.RecordType impl) {
         switch (impl) {
             case null: return null;
-            case Position c: return c;
-            case DirectPositionFromGT c: return c.impl;
-            default: return new DirectPositionToGT(impl);
+            case RecordType c: return c;
+            default: return new RecordTypeToGT(impl);
         }
     }
 
@@ -65,32 +68,32 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
     }
 
     @Override
-    public CoordinateReferenceSystem getCoordinateReferenceSystem() {
-        return CoordinateReferenceSystemFromGT.unwrap(impl.getCoordinateReferenceSystem());
+    public TypeName getTypeName() {
+        return TypeNameToGT.wrap(impl.getTypeName());
     }
 
     @Override
-    public int getDimension() {
-        return impl.getDimension();
+    public RecordSchema getContainer() {
+        return RecordSchemaToGT.wrap(impl.getContainer());
     }
 
     @Override
-    public double[] getCoordinate() {
-        return impl.getCoordinate();
+    public Map<MemberName, TypeName> getAttributeTypes() {
+        return wrap(impl.getMemberTypes(), MemberNameToGT::wrap, TypeNameToGT::wrap);
     }
 
     @Override
-    public double getOrdinate(int dimension) {
-        return impl.getOrdinate(dimension);
+    public Set<MemberName> getMembers() {
+        return wrap(impl.getMembers(), MemberNameToGT::wrap);
     }
 
     @Override
-    public void setOrdinate(int dimension, double value) {
-        impl.setOrdinate(dimension, value);
+    public TypeName locate(MemberName name) {
+        return TypeNameToGT.wrap(impl.locate(MemberNameToGT.unwrap(name)));
     }
 
     @Override
-    public Position getDirectPosition() {
-        return this;
+    public boolean isInstance(Record record) {
+        return impl.isInstance(RecordToGT.unwrap(record));
     }
 }

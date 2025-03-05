@@ -15,29 +15,29 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.geotools.api.geometry.Position;
-import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
-
+import java.util.Date;
+import org.geotools.api.metadata.extent.Extent;
+import org.geotools.api.referencing.datum.Datum;
+import org.geotools.api.util.InternationalString;
 
 
 /**
  * GeoTools wrapper for an implementation of the GeoAPI interface.
  *
+ * @param <S> the interface from the GeoAPI of the wrapped implementation.
+ *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class DirectPositionToGT extends WrapperToGT implements Position {
-    /**
-     * The GeoAPI implementation on which to delegate all methods.
-     */
-    final org.opengis.geometry.DirectPosition impl;
-
+class DatumToGT<S extends org.opengis.referencing.datum.Datum>
+        extends IdentifiedObjectToGT<S> implements Datum
+{
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
      * @param impl the GeoAPI implementation on which to delegate all methods
      */
-    private DirectPositionToGT(final org.opengis.geometry.DirectPosition impl) {
-        this.impl = impl;
+    DatumToGT(final S impl) {
+        super(impl);
     }
 
     /**
@@ -47,50 +47,36 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
      * @param impl the GeoAPI implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static Position wrap(final org.opengis.geometry.DirectPosition impl) {
+    static Datum wrap(final org.opengis.referencing.datum.Datum impl) {
         switch (impl) {
             case null: return null;
-            case Position c: return c;
-            case DirectPositionFromGT c: return c.impl;
-            default: return new DirectPositionToGT(impl);
+            case Datum c: return c;
+            case org.opengis.referencing.datum.GeodeticDatum    c: return new GeodeticDatumToGT(c);
+            case org.opengis.referencing.datum.VerticalDatum    c: return new VerticalDatumToGT(c);
+            case org.opengis.referencing.datum.TemporalDatum    c: return new TemporalDatumToGT(c);
+            case org.opengis.referencing.datum.EngineeringDatum c: return new EngineeringDatumToGT(c);
+            case org.opengis.referencing.datum.ImageDatum       c: return new ImageDatumToGT(c);
+            default: return new DatumToGT<>(impl);
         }
     }
 
-    /**
-     * {@return the GeoAPI implementation on which this wrapper delegates all operations}.
-     */
     @Override
-    final Object implementation() {
-        return impl;
+    public InternationalString getAnchorPoint() {
+        return InternationalStringToGT.wrap(impl.getAnchorPoint());
     }
 
     @Override
-    public CoordinateReferenceSystem getCoordinateReferenceSystem() {
-        return CoordinateReferenceSystemFromGT.unwrap(impl.getCoordinateReferenceSystem());
+    public Date getRealizationEpoch() {
+        return impl.getRealizationEpoch();
     }
 
     @Override
-    public int getDimension() {
-        return impl.getDimension();
+    public Extent getDomainOfValidity() {
+        return ExtentToGT.wrap(impl.getDomainOfValidity());
     }
 
     @Override
-    public double[] getCoordinate() {
-        return impl.getCoordinate();
-    }
-
-    @Override
-    public double getOrdinate(int dimension) {
-        return impl.getOrdinate(dimension);
-    }
-
-    @Override
-    public void setOrdinate(int dimension, double value) {
-        impl.setOrdinate(dimension, value);
-    }
-
-    @Override
-    public Position getDirectPosition() {
-        return this;
+    public InternationalString getScope() {
+        return InternationalStringToGT.wrap(impl.getScope());
     }
 }

@@ -15,9 +15,10 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.geotools.api.geometry.Position;
-import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
-
+import java.net.URI;
+import org.geotools.api.metadata.citation.OnLineFunction;
+import org.geotools.api.metadata.citation.OnLineResource;
+import org.geotools.api.util.InternationalString;
 
 
 /**
@@ -25,18 +26,18 @@ import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class DirectPositionToGT extends WrapperToGT implements Position {
+final class OnlineResourceToGT extends WrapperToGT implements OnLineResource {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    final org.opengis.geometry.DirectPosition impl;
+    private final org.opengis.metadata.citation.OnlineResource impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
      * @param impl the GeoAPI implementation on which to delegate all methods
      */
-    private DirectPositionToGT(final org.opengis.geometry.DirectPosition impl) {
+    private OnlineResourceToGT(final org.opengis.metadata.citation.OnlineResource impl) {
         this.impl = impl;
     }
 
@@ -47,12 +48,11 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
      * @param impl the GeoAPI implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static Position wrap(final org.opengis.geometry.DirectPosition impl) {
+    static OnLineResource wrap(final org.opengis.metadata.citation.OnlineResource impl) {
         switch (impl) {
             case null: return null;
-            case Position c: return c;
-            case DirectPositionFromGT c: return c.impl;
-            default: return new DirectPositionToGT(impl);
+            case OnLineResource c: return c;
+            default: return new OnlineResourceToGT(impl);
         }
     }
 
@@ -65,32 +65,32 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
     }
 
     @Override
-    public CoordinateReferenceSystem getCoordinateReferenceSystem() {
-        return CoordinateReferenceSystemFromGT.unwrap(impl.getCoordinateReferenceSystem());
+    public URI getLinkage() {
+        return impl.getLinkage();
     }
 
     @Override
-    public int getDimension() {
-        return impl.getDimension();
+    public String getProtocol() {
+        return impl.getProtocol();
     }
 
     @Override
-    public double[] getCoordinate() {
-        return impl.getCoordinate();
+    public String getApplicationProfile() {
+        return impl.getApplicationProfile();
     }
 
     @Override
-    public double getOrdinate(int dimension) {
-        return impl.getOrdinate(dimension);
+    public String getName() {
+        return impl.getName();
     }
 
     @Override
-    public void setOrdinate(int dimension, double value) {
-        impl.setOrdinate(dimension, value);
+    public InternationalString getDescription() {
+        return InternationalStringToGT.wrap(impl.getDescription());
     }
 
     @Override
-    public Position getDirectPosition() {
-        return this;
+    public OnLineFunction getFunction() {
+        return wrap(impl.getFunction(), OnLineFunction::valueOf);
     }
 }

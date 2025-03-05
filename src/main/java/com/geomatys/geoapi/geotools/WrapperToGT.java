@@ -15,6 +15,10 @@
  */
 package com.geomatys.geoapi.geotools;
 
+import java.util.Collection;
+import java.util.function.Function;
+import org.geotools.api.util.CodeList;
+
 
 /**
  * Base class of all wrappers from GeoAPI to GeoTools.
@@ -26,5 +30,37 @@ abstract class WrapperToGT extends Wrapper {
      * Creates a new wrapper.
      */
     WrapperToGT() {
+    }
+
+    /**
+     * Returns the GeoTools code list value of the same name than the given GeoAPI code list value.
+     * If the given code list value is {@code null}, then this method returns {@code null}.
+     *
+     * @param <T>     the GeoTools code list type.
+     * @param impl    the GeoAPI code list value.
+     * @param wrapper the {@code valueOf(…)} function to invoke for creating a GeoTools code list value from a name.
+     * @return the GeoTools code list value.
+     */
+    static <T extends CodeList<T>> T wrap(
+            final org.opengis.util.CodeList<?> impl,
+            final Function<String,T> wrapper)
+    {
+        return (impl == null) ? null : wrapper.apply(impl.name());
+    }
+
+    /**
+     * Returns the GeoTools code list values of the same names than the given GeoAPI code list values.
+     * If the given collection is {@code null}, then this method returns {@code null}.
+     *
+     * @param <T>     the GeoTools code list type.
+     * @param impl    the GeoAPI code list value.
+     * @param wrapper the {@code valueOf(…)} function to invoke for creating a GeoTools code list value from a name.
+     * @return the GeoTools code list values.
+     */
+    static <T extends CodeList<T>> Collection<T> wrapAll(
+            final Collection<? extends org.opengis.util.CodeList<?>> impl,
+            final Function<String,T> wrapper)
+    {
+        return wrap(impl, wrapper.compose(org.opengis.util.CodeList::name));
     }
 }

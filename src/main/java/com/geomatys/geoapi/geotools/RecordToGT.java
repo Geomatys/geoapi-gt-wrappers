@@ -15,9 +15,11 @@
  */
 package com.geomatys.geoapi.geotools;
 
-import org.geotools.api.geometry.Position;
-import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
-
+import java.util.Map;
+import java.util.function.Function;
+import org.geotools.api.util.MemberName;
+import org.geotools.api.util.Record;
+import org.geotools.api.util.RecordType;
 
 
 /**
@@ -25,18 +27,18 @@ import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class DirectPositionToGT extends WrapperToGT implements Position {
+final class RecordToGT extends WrapperToGT implements Record {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    final org.opengis.geometry.DirectPosition impl;
+    private final org.opengis.util.Record impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
      * @param impl the GeoAPI implementation on which to delegate all methods
      */
-    private DirectPositionToGT(final org.opengis.geometry.DirectPosition impl) {
+    private RecordToGT(final org.opengis.util.Record impl) {
         this.impl = impl;
     }
 
@@ -47,12 +49,24 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
      * @param impl the GeoAPI implementation on which to delegate all methods
      * @return wrapper for the given implementation
      */
-    static Position wrap(final org.opengis.geometry.DirectPosition impl) {
+    static Record wrap(final org.opengis.util.Record impl) {
         switch (impl) {
             case null: return null;
-            case Position c: return c;
-            case DirectPositionFromGT c: return c.impl;
-            default: return new DirectPositionToGT(impl);
+            case Record c: return c;
+            default: return new RecordToGT(impl);
+        }
+    }
+
+    /**
+     * {@return the GeoAPI implementation behind the given wrapper}.
+     *
+     * @param wrapper the wrapper from which to get the GeoAPI implementation.
+     * @throws ClassCastException if the given value is not a wrapper for GeoAPI.
+     */
+    static org.opengis.util.Record unwrap(final Record wrapper) {
+        switch (wrapper) {
+            case null: return null;
+            default: return ((RecordToGT) wrapper).impl;
         }
     }
 
@@ -65,32 +79,22 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
     }
 
     @Override
-    public CoordinateReferenceSystem getCoordinateReferenceSystem() {
-        return CoordinateReferenceSystemFromGT.unwrap(impl.getCoordinateReferenceSystem());
+    public RecordType getRecordType() {
+        return RecordTypeToGT.wrap(impl.getRecordType());
     }
 
     @Override
-    public int getDimension() {
-        return impl.getDimension();
+    public Map<MemberName, Object> getAttributes() {
+        return wrap(impl.getAttributes(), MemberNameToGT::wrap, Function.identity());
     }
 
     @Override
-    public double[] getCoordinate() {
-        return impl.getCoordinate();
+    public Object locate(MemberName name) {
+        return impl.locate(MemberNameToGT.unwrap(name));
     }
 
     @Override
-    public double getOrdinate(int dimension) {
-        return impl.getOrdinate(dimension);
-    }
-
-    @Override
-    public void setOrdinate(int dimension, double value) {
-        impl.setOrdinate(dimension, value);
-    }
-
-    @Override
-    public Position getDirectPosition() {
-        return this;
+    public void set(MemberName name, Object value) {
+        impl.set(MemberNameToGT.unwrap(name), value);
     }
 }
