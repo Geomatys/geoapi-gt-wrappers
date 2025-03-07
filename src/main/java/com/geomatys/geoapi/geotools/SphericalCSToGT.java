@@ -23,7 +23,9 @@ import org.geotools.api.referencing.cs.SphericalCS;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class SphericalCSToGT extends CoordinateSystemToGT implements SphericalCS {
+final class SphericalCSToGT extends CoordinateSystemToGT<org.opengis.referencing.cs.SphericalCS>
+        implements SphericalCS
+{
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
@@ -44,7 +46,7 @@ final class SphericalCSToGT extends CoordinateSystemToGT implements SphericalCS 
         switch (impl) {
             case null: return null;
             case SphericalCS c: return c;
-            case SphericalCSFromGT c: return (SphericalCS) c.impl;
+            case SphericalCSFromGT c: return c.impl;
             default: return new SphericalCSToGT(impl);
         }
     }

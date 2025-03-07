@@ -19,7 +19,6 @@ import org.geotools.api.geometry.Position;
 import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
 
 
-
 /**
  * GeoTools wrapper for an implementation of the GeoAPI interface.
  *

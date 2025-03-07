@@ -19,7 +19,6 @@ import org.opengis.geometry.DirectPosition;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 
-
 /**
  * GeoAPI wrapper for an object from the GeoTools API.
  *

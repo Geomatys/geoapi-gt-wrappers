@@ -21,15 +21,19 @@ import org.geotools.api.metadata.quality.PositionalAccuracy;
 /**
  * GeoTools wrapper for an implementation of the GeoAPI interface.
  *
+ * @param <S> the interface from the GeoAPI of the wrapped implementation.
+ *
  * @author Martin Desruisseaux (Geomatys)
  */
-class PositionalAccuracyToGT extends QualityElementToGT implements PositionalAccuracy {
+class PositionalAccuracyToGT<S extends org.opengis.metadata.quality.PositionalAccuracy>
+        extends QualityElementToGT<S> implements PositionalAccuracy
+{
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
      * @param impl the GeoAPI implementation on which to delegate all methods
      */
-    PositionalAccuracyToGT(final org.opengis.metadata.quality.PositionalAccuracy impl) {
+    PositionalAccuracyToGT(final S impl) {
         super(impl);
     }
 
@@ -44,9 +48,9 @@ class PositionalAccuracyToGT extends QualityElementToGT implements PositionalAcc
         switch (impl) {
             case null: return null;
             case PositionalAccuracy c: return c;
-            case PositionalAccuracyFromGT c: return (PositionalAccuracy) c.impl;
+            case PositionalAccuracyFromGT<?> c: return c.impl;
             case org.opengis.metadata.quality.AbsoluteExternalPositionalAccuracy c: return new AbsoluteExternalPositionalAccuracyToGT(c);
-            default: return new PositionalAccuracyToGT(impl);
+            default: return new PositionalAccuracyToGT<>(impl);
         }
     }
 }

@@ -23,7 +23,9 @@ import org.opengis.referencing.cs.VerticalCS;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class VerticalCSFromGT extends CoordinateSystemFromGT implements VerticalCS {
+final class VerticalCSFromGT extends CoordinateSystemFromGT<org.geotools.api.referencing.cs.VerticalCS>
+        implements VerticalCS
+{
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
@@ -44,7 +46,7 @@ final class VerticalCSFromGT extends CoordinateSystemFromGT implements VerticalC
         switch (impl) {
             case null: return null;
             case VerticalCS c: return c;
-            case VerticalCSToGT c: return (VerticalCS) c.impl;
+            case VerticalCSToGT c: return c.impl;
             default: return new VerticalCSFromGT(impl);
         }
     }

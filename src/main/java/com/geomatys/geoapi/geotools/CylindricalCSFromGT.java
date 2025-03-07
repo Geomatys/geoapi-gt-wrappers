@@ -23,7 +23,9 @@ import org.opengis.referencing.cs.CylindricalCS;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class CylindricalCSFromGT extends CoordinateSystemFromGT implements CylindricalCS {
+final class CylindricalCSFromGT extends CoordinateSystemFromGT<org.geotools.api.referencing.cs.CylindricalCS>
+        implements CylindricalCS
+{
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
@@ -44,7 +46,7 @@ final class CylindricalCSFromGT extends CoordinateSystemFromGT implements Cylind
         switch (impl) {
             case null: return null;
             case CylindricalCS c: return c;
-            case CylindricalCSToGT c: return (CylindricalCS) c.impl;
+            case CylindricalCSToGT c: return c.impl;
             default: return new CylindricalCSFromGT(impl);
         }
     }

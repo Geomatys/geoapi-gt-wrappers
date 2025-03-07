@@ -23,7 +23,9 @@ import org.geotools.api.referencing.cs.EllipsoidalCS;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class EllipsoidalCSToGT extends CoordinateSystemToGT implements EllipsoidalCS {
+final class EllipsoidalCSToGT extends CoordinateSystemToGT<org.opengis.referencing.cs.EllipsoidalCS>
+        implements EllipsoidalCS
+{
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
@@ -44,7 +46,7 @@ final class EllipsoidalCSToGT extends CoordinateSystemToGT implements Ellipsoida
         switch (impl) {
             case null: return null;
             case EllipsoidalCS c: return c;
-            case EllipsoidalCSFromGT c: return (EllipsoidalCS) c.impl;
+            case EllipsoidalCSFromGT c: return c.impl;
             default: return new EllipsoidalCSToGT(impl);
         }
     }

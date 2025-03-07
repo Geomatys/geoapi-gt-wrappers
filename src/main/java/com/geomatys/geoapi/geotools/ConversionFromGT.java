@@ -21,15 +21,19 @@ import org.opengis.referencing.operation.Conversion;
 /**
  * GeoAPI wrapper for an object from the GeoTools API.
  *
+ * @param <S> the interface from the GeoTools API of the wrapped implementation.
+ *
  * @author Martin Desruisseaux (Geomatys)
  */
-class ConversionFromGT extends SingleOperationFromGT implements Conversion {
+class ConversionFromGT<S extends org.geotools.api.referencing.operation.Conversion>
+        extends SingleOperationFromGT<S> implements Conversion
+{
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    ConversionFromGT(final org.geotools.api.referencing.operation.Conversion impl) {
+    ConversionFromGT(final S impl) {
         super(impl);
     }
 
@@ -44,9 +48,9 @@ class ConversionFromGT extends SingleOperationFromGT implements Conversion {
         switch (impl) {
             case null: return null;
             case Conversion c: return c;
-            case ConversionToGT c: return (Conversion) c.impl;
+            case ConversionToGT<?> c: return c.impl;
             case org.geotools.api.referencing.operation.Projection c: return ProjectionFromGT.wrap(c);
-            default: return new ConversionFromGT(impl);
+            default: return new ConversionFromGT<>(impl);
         }
     }
 }

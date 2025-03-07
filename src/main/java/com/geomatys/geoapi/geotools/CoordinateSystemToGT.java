@@ -22,17 +22,19 @@ import org.geotools.api.referencing.cs.CoordinateSystemAxis;
 /**
  * GeoTools wrapper for an implementation of the GeoAPI interface.
  *
+ * @param <S> the interface from the GeoAPI of the wrapped implementation.
+ *
  * @author Martin Desruisseaux (Geomatys)
  */
-class CoordinateSystemToGT extends IdentifiedObjectToGT<org.opengis.referencing.cs.CoordinateSystem>
-        implements CoordinateSystem
+class CoordinateSystemToGT<S extends org.opengis.referencing.cs.CoordinateSystem>
+        extends IdentifiedObjectToGT<S> implements CoordinateSystem
 {
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
      * @param impl the GeoAPI implementation on which to delegate all methods
      */
-    CoordinateSystemToGT(final org.opengis.referencing.cs.CoordinateSystem impl) {
+    CoordinateSystemToGT(final S impl) {
         super(impl);
     }
 
@@ -47,18 +49,18 @@ class CoordinateSystemToGT extends IdentifiedObjectToGT<org.opengis.referencing.
         switch (impl) {
             case null: return null;
             case CoordinateSystem c: return c;
-            case CoordinateSystemFromGT c: return c.impl;
+            case CoordinateSystemFromGT<?> c: return c.impl;
             case org.opengis.referencing.cs.EllipsoidalCS c: return new EllipsoidalCSToGT(c);
             case org.opengis.referencing.cs.SphericalCS   c: return new SphericalCSToGT  (c);
             case org.opengis.referencing.cs.CartesianCS   c: return new CartesianCSToGT  (c);
-            case org.opengis.referencing.cs.AffineCS      c: return new AffineCSToGT     (c);
+            case org.opengis.referencing.cs.AffineCS      c: return new AffineCSToGT<>   (c);
             case org.opengis.referencing.cs.CylindricalCS c: return new CylindricalCSToGT(c);
             case org.opengis.referencing.cs.PolarCS       c: return new PolarCSToGT      (c);
             case org.opengis.referencing.cs.VerticalCS    c: return new VerticalCSToGT   (c);
             case org.opengis.referencing.cs.LinearCS      c: return new LinearCSToGT     (c);
             case org.opengis.referencing.cs.TimeCS        c: return new TimeCSToGT       (c);
             case org.opengis.referencing.cs.UserDefinedCS c: return new UserDefinedCSToGT(c);
-            default: return new CoordinateSystemToGT(impl);
+            default: return new CoordinateSystemToGT<>(impl);
         }
     }
 

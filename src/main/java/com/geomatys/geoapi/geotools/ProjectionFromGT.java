@@ -23,7 +23,9 @@ import org.opengis.referencing.operation.Projection;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-class ProjectionFromGT extends ConversionFromGT implements Projection {
+class ProjectionFromGT extends ConversionFromGT<org.geotools.api.referencing.operation.Projection>
+        implements Projection
+{
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
@@ -44,7 +46,7 @@ class ProjectionFromGT extends ConversionFromGT implements Projection {
         switch (impl) {
             case null: return null;
             case Projection c: return c;
-            case ProjectionToGT c: return (Projection) c.impl;
+            case ProjectionToGT c: return c.impl;
             case org.geotools.api.referencing.operation.ConicProjection c:       return new ConicProjectionFromGT(c);
             case org.geotools.api.referencing.operation.PlanarProjection c:      return new PlanarProjectionFromGT(c);
             case org.geotools.api.referencing.operation.CylindricalProjection c: return new CylindricalProjectionFromGT(c);

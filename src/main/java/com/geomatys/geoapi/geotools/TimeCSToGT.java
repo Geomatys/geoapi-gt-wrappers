@@ -23,7 +23,9 @@ import org.geotools.api.referencing.cs.TimeCS;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class TimeCSToGT extends CoordinateSystemToGT implements TimeCS {
+final class TimeCSToGT extends CoordinateSystemToGT<org.opengis.referencing.cs.TimeCS>
+        implements TimeCS
+{
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
@@ -44,7 +46,7 @@ final class TimeCSToGT extends CoordinateSystemToGT implements TimeCS {
         switch (impl) {
             case null: return null;
             case TimeCS c: return c;
-            case TimeCSFromGT c: return (TimeCS) c.impl;
+            case TimeCSFromGT c: return c.impl;
             default: return new TimeCSToGT(impl);
         }
     }

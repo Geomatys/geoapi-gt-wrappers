@@ -23,7 +23,9 @@ import org.opengis.referencing.cs.UserDefinedCS;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class UserDefinedCSFromGT extends CoordinateSystemFromGT implements UserDefinedCS {
+final class UserDefinedCSFromGT extends CoordinateSystemFromGT<org.geotools.api.referencing.cs.UserDefinedCS>
+        implements UserDefinedCS
+{
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
@@ -44,7 +46,7 @@ final class UserDefinedCSFromGT extends CoordinateSystemFromGT implements UserDe
         switch (impl) {
             case null: return null;
             case UserDefinedCS c: return c;
-            case UserDefinedCSToGT c: return (UserDefinedCS) c.impl;
+            case UserDefinedCSToGT c: return c.impl;
             default: return new UserDefinedCSFromGT(impl);
         }
     }

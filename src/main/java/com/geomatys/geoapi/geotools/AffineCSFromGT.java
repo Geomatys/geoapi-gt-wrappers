@@ -21,15 +21,19 @@ import org.opengis.referencing.cs.AffineCS;
 /**
  * GeoAPI wrapper for an object from the GeoTools API.
  *
+ * @param <S> the interface from the GeoTools API of the wrapped implementation.
+ *
  * @author Martin Desruisseaux (Geomatys)
  */
-class AffineCSFromGT extends CoordinateSystemFromGT implements AffineCS {
+class AffineCSFromGT<S extends org.geotools.api.referencing.cs.AffineCS>
+        extends CoordinateSystemFromGT<S> implements AffineCS
+{
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    AffineCSFromGT(final org.geotools.api.referencing.cs.AffineCS impl) {
+    AffineCSFromGT(final S impl) {
         super(impl);
     }
 
@@ -44,9 +48,9 @@ class AffineCSFromGT extends CoordinateSystemFromGT implements AffineCS {
         switch (impl) {
             case null: return null;
             case AffineCS c: return c;
-            case AffineCSToGT c: return (AffineCS) c.impl;
+            case AffineCSToGT<?> c: return c.impl;
             case org.geotools.api.referencing.cs.CartesianCS c: return new CartesianCSFromGT(c);
-            default: return new AffineCSFromGT(impl);
+            default: return new AffineCSFromGT<>(impl);
         }
     }
 }

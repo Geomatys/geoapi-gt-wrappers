@@ -23,7 +23,9 @@ import org.geotools.api.referencing.cs.PolarCS;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class PolarCSToGT extends CoordinateSystemToGT implements PolarCS {
+final class PolarCSToGT extends CoordinateSystemToGT<org.opengis.referencing.cs.PolarCS>
+        implements PolarCS
+{
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
@@ -44,7 +46,7 @@ final class PolarCSToGT extends CoordinateSystemToGT implements PolarCS {
         switch (impl) {
             case null: return null;
             case PolarCS c: return c;
-            case PolarCSFromGT c: return (PolarCS) c.impl;
+            case PolarCSFromGT c: return c.impl;
             default: return new PolarCSToGT(impl);
         }
     }

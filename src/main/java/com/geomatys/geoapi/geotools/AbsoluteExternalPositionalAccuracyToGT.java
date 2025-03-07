@@ -23,7 +23,10 @@ import org.geotools.api.metadata.quality.AbsoluteExternalPositionalAccuracy;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class AbsoluteExternalPositionalAccuracyToGT extends PositionalAccuracyToGT implements AbsoluteExternalPositionalAccuracy {
+final class AbsoluteExternalPositionalAccuracyToGT
+        extends PositionalAccuracyToGT<org.opengis.metadata.quality.AbsoluteExternalPositionalAccuracy>
+        implements AbsoluteExternalPositionalAccuracy
+{
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
@@ -44,7 +47,7 @@ final class AbsoluteExternalPositionalAccuracyToGT extends PositionalAccuracyToG
         switch (impl) {
             case null: return null;
             case AbsoluteExternalPositionalAccuracy c: return c;
-            case AbsoluteExternalPositionalAccuracyFromGT c: return (AbsoluteExternalPositionalAccuracy) c.impl;
+            case AbsoluteExternalPositionalAccuracyFromGT c: return c.impl;
             default: return new AbsoluteExternalPositionalAccuracyToGT(impl);
         }
     }

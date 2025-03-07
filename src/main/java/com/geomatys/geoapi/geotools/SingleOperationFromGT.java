@@ -24,10 +24,12 @@ import org.geotools.api.referencing.operation.Operation;    // Specific to GeoTo
 /**
  * GeoAPI wrapper for an object from the GeoTools API.
  *
+ * @param <S> the interface from the GeoTools API of the wrapped implementation.
+ *
  * @author Martin Desruisseaux (Geomatys)
  */
-class SingleOperationFromGT extends CoordinateOperationFromGT<org.geotools.api.referencing.operation.SingleOperation>
-        implements SingleOperation
+class SingleOperationFromGT<S extends org.geotools.api.referencing.operation.SingleOperation>
+        extends CoordinateOperationFromGT<S> implements SingleOperation
 {
     /**
      * Creates a new wrapper for the given GeoTools implementation.
@@ -35,7 +37,7 @@ class SingleOperationFromGT extends CoordinateOperationFromGT<org.geotools.api.r
      *
      * @param impl the GeoTools implementation on which to delegate all methods
      */
-    SingleOperationFromGT(final org.geotools.api.referencing.operation.SingleOperation impl) {
+    SingleOperationFromGT(final S impl) {
         super(impl);
     }
 
@@ -55,10 +57,10 @@ class SingleOperationFromGT extends CoordinateOperationFromGT<org.geotools.api.r
         switch (impl) {
             case null: return null;
             case SingleOperation c: return c;
-            case SingleOperationToGT c: return c.impl;
+            case SingleOperationToGT<?> c: return c.impl;
             case org.geotools.api.referencing.operation.Transformation c: return new TransformationFromGT(c);
             case org.geotools.api.referencing.operation.Conversion c: return ConversionFromGT.wrap(c);
-            default: return new SingleOperationFromGT(impl);
+            default: return new SingleOperationFromGT<>(impl);
         }
     }
 

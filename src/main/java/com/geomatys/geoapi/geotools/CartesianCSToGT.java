@@ -23,7 +23,9 @@ import org.geotools.api.referencing.cs.CartesianCS;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class CartesianCSToGT extends AffineCSToGT implements CartesianCS {
+final class CartesianCSToGT extends AffineCSToGT<org.opengis.referencing.cs.CartesianCS>
+        implements CartesianCS
+{
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
@@ -44,7 +46,7 @@ final class CartesianCSToGT extends AffineCSToGT implements CartesianCS {
         switch (impl) {
             case null: return null;
             case CartesianCS c: return c;
-            case CartesianCSFromGT c: return (CartesianCS) c.impl;
+            case CartesianCSFromGT c: return c.impl;
             default: return new CartesianCSToGT(impl);
         }
     }

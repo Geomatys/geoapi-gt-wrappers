@@ -23,10 +23,12 @@ import org.geotools.api.referencing.operation.OperationMethod;
 /**
  * GeoTools wrapper for an implementation of the GeoAPI interface.
  *
+ * @param <S> the interface from the GeoAPI of the wrapped implementation.
+ *
  * @author Martin Desruisseaux (Geomatys)
  */
-class SingleOperationToGT extends CoordinateOperationToGT<org.opengis.referencing.operation.SingleOperation>
-        implements Operation
+class SingleOperationToGT<S extends org.opengis.referencing.operation.SingleOperation>
+        extends CoordinateOperationToGT<S> implements Operation
 {
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
@@ -34,7 +36,7 @@ class SingleOperationToGT extends CoordinateOperationToGT<org.opengis.referencin
      *
      * @param impl the GeoAPI implementation on which to delegate all methods
      */
-    SingleOperationToGT(final org.opengis.referencing.operation.SingleOperation impl) {
+    SingleOperationToGT(final S impl) {
         super(impl);
     }
 
@@ -51,7 +53,7 @@ class SingleOperationToGT extends CoordinateOperationToGT<org.opengis.referencin
      * @return wrapper for the given implementation
      */
     static Operation wrap(final org.opengis.referencing.operation.SingleOperation impl) {
-        if (impl instanceof SingleOperationFromGT c) {
+        if (impl instanceof SingleOperationFromGT<?> c) {
             if (c.impl instanceof Operation op) {
                 return op;
             }
@@ -61,7 +63,7 @@ class SingleOperationToGT extends CoordinateOperationToGT<org.opengis.referencin
             case Operation c: return c;
             case org.opengis.referencing.operation.Transformation c: return new TransformationToGT(c);
             case org.opengis.referencing.operation.Conversion c: return ConversionToGT.wrap(c);
-            default: return new SingleOperationToGT(impl);
+            default: return new SingleOperationToGT<>(impl);
         }
     }
 

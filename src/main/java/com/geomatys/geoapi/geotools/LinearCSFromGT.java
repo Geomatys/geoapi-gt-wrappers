@@ -23,7 +23,9 @@ import org.opengis.referencing.cs.LinearCS;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class LinearCSFromGT extends CoordinateSystemFromGT implements LinearCS {
+final class LinearCSFromGT extends CoordinateSystemFromGT<org.geotools.api.referencing.cs.LinearCS>
+        implements LinearCS
+{
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
@@ -44,7 +46,7 @@ final class LinearCSFromGT extends CoordinateSystemFromGT implements LinearCS {
         switch (impl) {
             case null: return null;
             case LinearCS c: return c;
-            case LinearCSToGT c: return (LinearCS) c.impl;
+            case LinearCSToGT c: return c.impl;
             default: return new LinearCSFromGT(impl);
         }
     }

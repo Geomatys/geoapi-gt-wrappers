@@ -23,7 +23,9 @@ import org.opengis.referencing.operation.Transformation;
  *
  * @author Martin Desruisseaux (Geomatys)
  */
-final class TransformationFromGT extends SingleOperationFromGT implements Transformation {
+final class TransformationFromGT extends SingleOperationFromGT<org.geotools.api.referencing.operation.Transformation>
+        implements Transformation
+{
     /**
      * Creates a new wrapper for the given GeoTools implementation.
      *
@@ -44,7 +46,7 @@ final class TransformationFromGT extends SingleOperationFromGT implements Transf
         switch (impl) {
             case null: return null;
             case Transformation c: return c;
-            case TransformationToGT c: return (Transformation) c.impl;
+            case TransformationToGT c: return c.impl;
             default: return new TransformationFromGT(impl);
         }
     }

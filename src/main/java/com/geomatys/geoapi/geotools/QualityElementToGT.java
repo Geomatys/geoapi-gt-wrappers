@@ -28,20 +28,22 @@ import org.geotools.api.util.InternationalString;
 /**
  * GeoTools wrapper for an implementation of the GeoAPI interface.
  *
+ * @param <S> the interface from the GeoAPI of the wrapped implementation.
+ *
  * @author Martin Desruisseaux (Geomatys)
  */
-class QualityElementToGT extends WrapperToGT implements Element {
+class QualityElementToGT<S extends org.opengis.metadata.quality.Element> extends WrapperToGT implements Element {
     /**
      * The GeoAPI implementation on which to delegate all methods.
      */
-    final org.opengis.metadata.quality.Element impl;
+    final S impl;
 
     /**
      * Creates a new wrapper for the given GeoAPI implementation.
      *
      * @param impl the GeoAPI implementation on which to delegate all methods
      */
-    QualityElementToGT(final org.opengis.metadata.quality.Element impl) {
+    QualityElementToGT(final S impl) {
         this.impl = impl;
     }
 
@@ -56,9 +58,9 @@ class QualityElementToGT extends WrapperToGT implements Element {
         switch (impl) {
             case null: return null;
             case Element c: return c;
-            case QualityElementFromGT c: return c.impl;
+            case QualityElementFromGT<?> c: return c.impl;
             case org.opengis.metadata.quality.PositionalAccuracy c: return PositionalAccuracyToGT.wrap(c);
-            default: return new QualityElementToGT(impl);
+            default: return new QualityElementToGT<>(impl);
         }
     }
 
