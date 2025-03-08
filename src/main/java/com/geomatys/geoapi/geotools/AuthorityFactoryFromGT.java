@@ -25,7 +25,7 @@ import org.opengis.util.InternationalString;
 
 
 /**
- * GeoAPI wrapper for an object from the GeoTools API.
+ * GeoAPI wrapper for an authority factory from the GeoTools API.
  *
  * @author Martin Desruisseaux (Geomatys)
  */
@@ -136,8 +136,9 @@ abstract class AuthorityFactoryFromGT extends WrapperFromGT implements Authority
     public Set<String> getAuthorityCodes(Class<? extends IdentifiedObject> type) throws FactoryException {
         Class<? extends org.geotools.api.referencing.IdentifiedObject> gt = null;
         if (type != null) {
-            for (int i = GEOAPI_INTERFACES.length; --i >= 0;) {
-                if (GEOAPI_INTERFACES[i].isAssignableFrom(type)) {
+            final var interfaces = GEOAPI_INTERFACES;
+            for (int i = interfaces.length; --i >= 0;) {
+                if (interfaces[i].isAssignableFrom(type)) {
                     gt = GEOTOOLS_INTERFACES[i];
                     break;
                 }

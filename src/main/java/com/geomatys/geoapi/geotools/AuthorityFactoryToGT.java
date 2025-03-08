@@ -31,86 +31,6 @@ import org.geotools.api.util.InternationalString;
  */
 abstract class AuthorityFactoryToGT extends WrapperToGT implements AuthorityFactory {
     /**
-     * GeoTools interfaces recognized by the factories.
-     * Most specialized interfaces (i.e., the ones having precedence when testing for a match) shall be last.
-     */
-    @SuppressWarnings({"rawtypes", "unchecked"})    // Generic array creation.
-    static final Class<? extends IdentifiedObject>[] GEOAPI_INTERFACES = new Class[] {
-        org.geotools.api.referencing.IdentifiedObject.class,
-        org.geotools.api.referencing.cs.CoordinateSystemAxis.class,
-        org.geotools.api.referencing.cs.CoordinateSystem.class,
-        org.geotools.api.referencing.cs.PolarCS.class,
-        org.geotools.api.referencing.cs.CylindricalCS.class,
-        org.geotools.api.referencing.cs.AffineCS.class,
-        org.geotools.api.referencing.cs.CartesianCS.class,
-        org.geotools.api.referencing.cs.SphericalCS.class,
-        org.geotools.api.referencing.cs.EllipsoidalCS.class,
-        org.geotools.api.referencing.cs.VerticalCS.class,
-        org.geotools.api.referencing.cs.TimeCS.class,
-        org.geotools.api.referencing.datum.Ellipsoid.class,
-        org.geotools.api.referencing.datum.PrimeMeridian.class,
-        org.geotools.api.referencing.datum.Datum.class,
-        org.geotools.api.referencing.datum.EngineeringDatum.class,
-        org.geotools.api.referencing.datum.ImageDatum.class,
-        org.geotools.api.referencing.datum.GeodeticDatum.class,
-        org.geotools.api.referencing.datum.VerticalDatum.class,
-        org.geotools.api.referencing.datum.TemporalDatum.class,
-        org.geotools.api.referencing.crs.CoordinateReferenceSystem.class,
-        org.geotools.api.referencing.crs.CompoundCRS.class,
-        org.geotools.api.referencing.crs.SingleCRS.class,
-        org.geotools.api.referencing.crs.GeocentricCRS.class,
-        org.geotools.api.referencing.crs.GeographicCRS.class,
-        org.geotools.api.referencing.crs.VerticalCRS.class,
-        org.geotools.api.referencing.crs.TemporalCRS.class,
-        org.geotools.api.referencing.crs.EngineeringCRS.class,
-        org.geotools.api.referencing.crs.ImageCRS.class,
-        org.geotools.api.referencing.crs.DerivedCRS.class,
-        org.geotools.api.referencing.crs.ProjectedCRS.class,
-        org.geotools.api.referencing.operation.OperationMethod.class,
-        org.geotools.api.referencing.operation.CoordinateOperation.class
-    };
-
-    /**
-     * GeoAPI interfaces for each GeoTools interfaces.
-     * The indexes much match with {@link #GEOAPI_INTERFACES}.
-     */
-    @SuppressWarnings({"rawtypes", "unchecked"})    // Generic array creation.
-    static final Class<? extends org.opengis.referencing.IdentifiedObject>[] GEOTOOLS_INTERFACES = new Class[] {
-        org.opengis.referencing.IdentifiedObject.class,
-        org.opengis.referencing.cs.CoordinateSystemAxis.class,
-        org.opengis.referencing.cs.CoordinateSystem.class,
-        org.opengis.referencing.cs.PolarCS.class,
-        org.opengis.referencing.cs.CylindricalCS.class,
-        org.opengis.referencing.cs.AffineCS.class,
-        org.opengis.referencing.cs.CartesianCS.class,
-        org.opengis.referencing.cs.SphericalCS.class,
-        org.opengis.referencing.cs.EllipsoidalCS.class,
-        org.opengis.referencing.cs.VerticalCS.class,
-        org.opengis.referencing.cs.TimeCS.class,
-        org.opengis.referencing.datum.Ellipsoid.class,
-        org.opengis.referencing.datum.PrimeMeridian.class,
-        org.opengis.referencing.datum.Datum.class,
-        org.opengis.referencing.datum.EngineeringDatum.class,
-        org.opengis.referencing.datum.ImageDatum.class,
-        org.opengis.referencing.datum.GeodeticDatum.class,
-        org.opengis.referencing.datum.VerticalDatum.class,
-        org.opengis.referencing.datum.TemporalDatum.class,
-        org.opengis.referencing.crs.CoordinateReferenceSystem.class,
-        org.opengis.referencing.crs.CompoundCRS.class,
-        org.opengis.referencing.crs.SingleCRS.class,
-        org.opengis.referencing.crs.GeocentricCRS.class,
-        org.opengis.referencing.crs.GeographicCRS.class,
-        org.opengis.referencing.crs.VerticalCRS.class,
-        org.opengis.referencing.crs.TemporalCRS.class,
-        org.opengis.referencing.crs.EngineeringCRS.class,
-        org.opengis.referencing.crs.ImageCRS.class,
-        org.opengis.referencing.crs.DerivedCRS.class,
-        org.opengis.referencing.crs.ProjectedCRS.class,
-        org.opengis.referencing.operation.OperationMethod.class,
-        org.opengis.referencing.operation.CoordinateOperation.class
-    };
-
-    /**
      * Creates a new wrapper for the given GeoAPI implementation.
      */
     AuthorityFactoryToGT() {
@@ -136,9 +56,10 @@ abstract class AuthorityFactoryToGT extends WrapperToGT implements AuthorityFact
     public Set<String> getAuthorityCodes(Class<? extends IdentifiedObject> type) throws FactoryException {
         Class<? extends org.opengis.referencing.IdentifiedObject> gt = null;
         if (type != null) {
-            for (int i = GEOAPI_INTERFACES.length; --i >= 0;) {
-                if (GEOAPI_INTERFACES[i].isAssignableFrom(type)) {
-                    gt = GEOTOOLS_INTERFACES[i];
+            final var interfaces = AuthorityFactoryFromGT.GEOTOOLS_INTERFACES;
+            for (int i = interfaces.length; --i >= 0;) {
+                if (interfaces[i].isAssignableFrom(type)) {
+                    gt = AuthorityFactoryFromGT.GEOAPI_INTERFACES[i];
                     break;
                 }
             }
