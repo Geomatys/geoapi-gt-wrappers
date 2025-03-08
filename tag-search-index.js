@@ -1,0 +1,1 @@
+tagSearchIndex = [{"l":"Dynamic determination of type","h":"class com.geomatys.geoapi.geotools.Wrappers","d":"Section","u":"com/geomatys/geoapi/geotools/Wrappers.html#dynamic-determination-of-type-heading"}];updateSearchResults();
