@@ -45,7 +45,7 @@ public class OperationFactoryProxy implements CoordinateOperationFactory {
      * Creates a new authority factory.
      * This is for compatibility with applications that put their dependencies on the class-path.
      *
-     * @throws FactoryException if the GeoTools {@link org.geotools.referencing.CRS} class has not been found.
+     * @throws FactoryException if the GeoTools {@code org.geotools.referencing.CRS} class has not been found.
      */
     public OperationFactoryProxy() throws FactoryException {
         factory = provider();
@@ -55,7 +55,7 @@ public class OperationFactoryProxy implements CoordinateOperationFactory {
      * {@return the operation factory to use}.
      * In a modular project, {@code ServiceLoadeer} invokes this method instead of the constructor.
      *
-     * @throws FactoryException if the GeoTools {@link org.geotools.referencing.CRS} class has not been found.
+     * @throws FactoryException if the GeoTools {@code org.geotools.referencing.CRS} class has not been found.
      */
     public static CoordinateOperationFactory provider() throws FactoryException {
         return Services.getCoordinateOperationFactory(false);

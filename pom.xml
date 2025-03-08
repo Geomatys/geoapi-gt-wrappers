@@ -122,14 +122,24 @@
           <charset>${project.build.sourceEncoding}</charset>
           <source>${maven.compiler.release}</source>
           <locale>en</locale>
+          <author>false</author>
           <noqualifier>all</noqualifier>
           <quiet>true</quiet>
           <breakiterator>true</breakiterator>
           <links>
             <link>https://www.geoapi.org/3.0/javadoc/</link>
           </links>
+          <excludePackageNames>com.geomatys.geoapi.geotools.spi</excludePackageNames>
         </configuration>
       </plugin>
     </plugins>
   </build>
+
+  <distributionManagement>
+    <repository>
+      <id>geotoolkit</id>
+      <name>Geotoolkit.org binaries</name>
+      <url>https://nexus.geomatys.com/repository/geotoolkit</url>
+    </repository>
+  </distributionManagement>
 </project>

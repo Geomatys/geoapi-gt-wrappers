@@ -52,7 +52,7 @@ public class AuthorityFactoryProxy implements CRSAuthorityFactory {
      * Creates a new authority factory.
      * This is for compatibility with applications that put their dependencies on the class-path.
      *
-     * @throws FactoryException if the GeoTools {@link org.geotools.referencing.CRS} class has not been found.
+     * @throws FactoryException if the GeoTools {@code org.geotools.referencing.CRS} class has not been found.
      */
     public AuthorityFactoryProxy() throws FactoryException {
         factory = provider();
@@ -62,7 +62,7 @@ public class AuthorityFactoryProxy implements CRSAuthorityFactory {
      * {@return the authority factory to use for <abbr>CRS</abbr> definitions}.
      * In a modular project, {@code ServiceLoadeer} invokes this method instead of the constructor.
      *
-     * @throws FactoryException if the GeoTools {@link org.geotools.referencing.CRS} class has not been found.
+     * @throws FactoryException if the GeoTools {@code org.geotools.referencing.CRS} class has not been found.
      */
     public static CRSAuthorityFactory provider() throws FactoryException {
         return Services.getAuthorityFactory(false);

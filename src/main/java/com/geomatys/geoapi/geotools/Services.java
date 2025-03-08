@@ -46,7 +46,7 @@ public final class Services {
      *
      * @param  method    {@code "getAuthorityFactory"} or {@code "getCoordinateOperationFactory"}.
      * @param  argument  the {@code longitudeFirst} or {@code lenient} argument, for CRS and operation factory respectively.
-     * @throws FactoryException if the GeoTools {@link org.geotools.referencing.CRS} class has not been found.
+     * @throws FactoryException if the GeoTools {@code org.geotools.referencing.CRS} class has not been found.
      */
     private static Object provider(final String method, final boolean argument) throws FactoryException {
         try {
@@ -61,7 +61,7 @@ public final class Services {
      * method of the same name in {@code org.geotools.referencing.CRS} and wraps the result.
      *
      * @param  longitudeFirst  whether to force (<var>longitude</var>, <var>latitude</var>) axis order.
-     * @throws FactoryException if the GeoTools {@link org.geotools.referencing.CRS} class has not been found.
+     * @throws FactoryException if the GeoTools {@code org.geotools.referencing.CRS} class has not been found.
      */
     public static CRSAuthorityFactory getAuthorityFactory(boolean longitudeFirst) throws FactoryException {
         final Object factory = provider("getAuthorityFactory", longitudeFirst);
@@ -73,7 +73,7 @@ public final class Services {
      * of the same name in {@code org.geotools.referencing.CRS} and wraps the result.
      *
      * @param  lenient  whether to be lenient about datum shifts without transformation parameters.
-     * @throws FactoryException if the GeoTools {@link org.geotools.referencing.CRS} class has not been found.
+     * @throws FactoryException if the GeoTools {@code org.geotools.referencing.CRS} class has not been found.
      */
     public static CoordinateOperationFactory getCoordinateOperationFactory(boolean lenient) throws FactoryException {
         final Object factory = provider("getCoordinateOperationFactory", lenient);
