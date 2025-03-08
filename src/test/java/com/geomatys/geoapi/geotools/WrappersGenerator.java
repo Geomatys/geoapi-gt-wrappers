@@ -87,19 +87,14 @@ public final class WrappersGenerator implements Consumer<Path> {
     private static final String CODE_LIST_SUFFIX = " // CodeList";
 
     /**
-     * The <abbr>API</abbr> to wrap (source) or resulting from the wrap (target).
+     * Suffix of Java class names to use as input.
      */
-    private final String sourceAPI, targetAPI;
-
-    /**
-     * The suffix of the implementation to parse.
-     */
-    private final String wrapperSuffix;
+    private static final String INPUT_CLASSNAME_SUFFIX = "FromGT";
 
     /**
      * Name of the class to generate.
      */
-    private final String outputClassName;
+    private static final String OUTPUT_CLASSNAME = "Wrappers";
 
     /**
      * The pattern for finding {@code wrap(…)} methods.
@@ -121,10 +116,6 @@ public final class WrappersGenerator implements Consumer<Path> {
      * Creates a new generator.
      */
     private WrappersGenerator() {
-        sourceAPI = "geotools";
-        targetAPI = "geoapi";
-        wrapperSuffix = "FromGT";
-        outputClassName = "Wrappers";
         wrapMethods = new TreeMap<>();
         finalClasses = new HashSet<>();
         wrapMethodPattern = Pattern.compile(".*static\\s+(\\w+)\\s+wrap\\s*\\(.+");
@@ -143,7 +134,7 @@ public final class WrappersGenerator implements Consumer<Path> {
             throw e.getCause();
         }
         CODE_LISTS.forEach(this::addCodeList);
-        try (final var out = Files.newBufferedWriter(directory.resolve(outputClassName + ".java"))) {
+        try (final var out = Files.newBufferedWriter(directory.resolve(OUTPUT_CLASSNAME + ".java"))) {
             out.write("package com.geomatys.geoapi.geotools;");
             out.newLine();
             out.newLine();
@@ -152,7 +143,7 @@ public final class WrappersGenerator implements Consumer<Path> {
                 out.newLine();
             }
             out.newLine();
-            out.append("public final class ").append(outputClassName).append(" {");
+            out.append("public final class ").append(OUTPUT_CLASSNAME).append(" {");
             out.newLine();
             for (final Map.Entry<String,String> entry : wrapMethods.entrySet()) {
                 appendWrapMethod(out, entry.getKey(), entry.getValue());
@@ -172,8 +163,8 @@ public final class WrappersGenerator implements Consumer<Path> {
     public void accept(final Path file) {
         String name = file.getFileName().toString();
         name = name.substring(0, name.lastIndexOf('.'));
-        if (!name.startsWith("Wrapper") && name.endsWith(wrapperSuffix)) try {
-            name = name.substring(0, name.length() - wrapperSuffix.length());
+        if (!name.startsWith("Wrapper") && name.endsWith(INPUT_CLASSNAME_SUFFIX)) try {
+            name = name.substring(0, name.length() - INPUT_CLASSNAME_SUFFIX.length());
             final Matcher matcher = wrapMethodPattern.matcher("");
             for (String line : Files.readAllLines(file)) {
                 if (line.startsWith("final class ")) {
@@ -184,8 +175,8 @@ public final class WrappersGenerator implements Consumer<Path> {
                     if (type.endsWith("Exception")) {
                         continue;
                     }
-                    if (type.endsWith(wrapperSuffix)) {
-                        line = line.replace(type, type = type.substring(0, type.length() - wrapperSuffix.length()));
+                    if (type.endsWith(INPUT_CLASSNAME_SUFFIX)) {
+                        line = line.replace(type, type = type.substring(0, type.length() - INPUT_CLASSNAME_SUFFIX.length()));
                     }
                     if (wrapMethods.put(type, line) != null) {
                         throw new RuntimeException("Collision for type " + type);
@@ -207,7 +198,7 @@ public final class WrappersGenerator implements Consumer<Path> {
         String sourceClass = codeList.getCanonicalName();
         sourceClass = sourceClass.replace("opengis", "geotools.api");
         String type = codeList.getSimpleName();
-        String decl = type + ' ' + targetAPI + '(' + sourceClass + ' ' + sourceAPI + ") {" + CODE_LIST_SUFFIX;
+        String decl = type + " geoapi(" + sourceClass + " geotools) {" + CODE_LIST_SUFFIX;
         if (wrapMethods.put(type, decl) != null) {
             throw new RuntimeException("Collision for type " + type);
         }
@@ -222,13 +213,14 @@ public final class WrappersGenerator implements Consumer<Path> {
      * @throws IOException if an error occurred while writing the method.
      */
     private void appendWrapMethod(final BufferedWriter out, String type, String decl) throws IOException {
+        final String wrapperType = GEOAPI_TO_WRAPPER.getOrDefault(type, type);
         final boolean isCodeList = decl.endsWith(CODE_LIST_SUFFIX);
         if (isCodeList) {
             decl = decl.substring(0, decl.length() - CODE_LIST_SUFFIX.length());
         } else {
-            decl = decl.replace(" wrap(final ", " wrap(")           // Uniformize the policy regarging `final`.
-                       .replace(" wrap(", ' ' + targetAPI + '(')    // Change method name.
-                       .replace(" impl)", ' ' + sourceAPI + ')');   // Change parameter name.
+            decl = decl.replace(" wrap(final ", " wrap(")   // Uniformize the policy regarging `final`.
+                       .replace(" wrap(", " geoapi(")       // Change method name.
+                       .replace(" impl)", " geotools)");    // Change parameter name.
         }
         out.newLine(); out.append("    /**");
         if (isCodeList) {
@@ -240,6 +232,8 @@ public final class WrappersGenerator implements Consumer<Path> {
             out.newLine(); out.append("     *   <li>If the given object is null, returns {@code null}.</li>");
             out.newLine(); out.append("     *   <li>If the given object already implements the GeoAPI {@code ").append(type).append('}');
             out.newLine(); out.append("     *       interface, returns that {@code impl} instance directly.</li>");
+            out.newLine(); out.append("     *   <li>If the given object was created by a {@code geotools(…)} method,");
+            out.newLine(); out.append("     *       unwraps and returns the backing implementation.</li>");
             if (!finalClasses.contains(type)) {
                 out.newLine(); out.append("     *   <li>If the given object implements a more specific GeoTools interface, behaves as if {@code impl}");
                 out.newLine(); out.append("     *       was cast to the most specific supported type before to invoke {@code wrap(…)}.</li>");
@@ -249,7 +243,7 @@ public final class WrappersGenerator implements Consumer<Path> {
             out.newLine(); out.append("     * </ol>");
         }
         out.newLine(); out.append("     *");
-        out.newLine(); out.append("     * @param ").append(sourceAPI).append(" the GeoTools object to view as a GeoAPI object, or {@code null}.");
+        out.newLine(); out.append("     * @param geotools the GeoTools object to view as a GeoAPI object, or {@code null}.");
         out.newLine(); out.append("     * @return the given implementation viewed as a GeoAPI object, or {@code null} if the given object was null.");
         out.newLine(); out.append("     */");
         out.newLine(); out.append("    public ").append(decl.strip());
@@ -257,10 +251,62 @@ public final class WrappersGenerator implements Consumer<Path> {
         if (isCodeList) {
             out.append("WrapperFromGT.wrap(geotools, ").append(type).append("::valueOf);");
         } else {
-            out.append(GEOAPI_TO_WRAPPER.getOrDefault(type, type)).append(wrapperSuffix).append(".wrap(").append(sourceAPI).append(");");
+            out.append(wrapperType).append("FromGT.wrap(geotools);");
         }
         out.newLine(); out.append("    }");
         out.newLine();
+        /*
+         * Reverse operation.
+         */
+        final String qualifiedGeoToolsType = qualifiedGeoToolsType(decl);
+        decl = swap(decl, qualifiedGeoToolsType, type);
+        decl = swap(decl, " geotools", " geoapi");      // Use space for distinguishing argument name from package name.
+        out.newLine(); out.append("    /**");
+        if (isCodeList) {
+            out.newLine(); out.append("     * Returns the given GeoAPI code list value as a GeoTools {@code ").append(type).append("}.");
+        } else {
+            out.newLine(); out.append("     * Views the given GeoAPI object as a GeoTools {@code ").append(type).append("}.");
+            out.newLine(); out.append("     * This method performs the same choice as {@code geoapi(").append(type).append(")},");
+            out.newLine(); out.append("     * but in the reverse direction.");
+        }
+        out.newLine(); out.append("     *");
+        out.newLine(); out.append("     * @param geoapi the GeoAPI object to view as a GeoTools object, or {@code null}.");
+        out.newLine(); out.append("     * @return the given implementation viewed as a GeoTools object, or {@code null} if the given object was null.");
+        out.newLine(); out.append("     */");
+        out.newLine(); out.append("    public ").append(decl.strip());
+        out.newLine(); out.append("        return ");
+        if (isCodeList) {
+            out.append("WrapperToGT.wrap(geoapi, ").append(qualifiedGeoToolsType).append("::valueOf);");
+        } else {
+            out.append(wrapperType).append("ToGT.wrap(geoapi);");
+        }
+        out.newLine(); out.append("    }");
+        out.newLine();
+    }
+
+    /**
+     * Extract the fully-qualified GeoTools type from the given method signature. For example, if {@code decl}
+     * is {@code "static Address geoapi(org.geotools.api.metadata.citation.Address geotools)"}, then this method
+     * returns {@code "org.geotools.api.metadata.citation.Address"}.
+     *
+     * @param  decl  method signature
+     * @return fully-qualified GeoTools type from the given method signature
+     */
+    private static String qualifiedGeoToolsType(final String decl) {
+        int s = decl.indexOf("org.geotools");
+        return decl.substring(s, decl.indexOf(' ', s));
+    }
+
+    /**
+     * Swaps the source and target in the given line. If there is a possibility that the
+     * larger string contains the smaller string, then the Larger string should be first.
+     */
+    private static String swap(String line, String large, String small) {
+        final String PLACEHOLDER = "#PLACEHOLDER#";
+        line = line.replace(large, PLACEHOLDER);
+        line = line.replace(small, large);
+        line = line.replace(PLACEHOLDER, small);
+        return line;
     }
 
     /**
