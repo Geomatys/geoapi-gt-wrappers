@@ -13,6 +13,8 @@ The latter should, in theory, allow the use of alternative referencing library
 such as [Apache SIS](https://sis.apache.org/) or [PROJ](https://github.com/OSGeo/PROJ-JNI) inside GeoTools.
 However, as of Mars 2025, it has not been tested.
 
+For more details, see [the Javadoc](https://geomatys.github.io/geoapi-gt-wrappers/).
+
 
 ## Usage
 This project provides only two public classes: `Wrappers` and `Services`.
