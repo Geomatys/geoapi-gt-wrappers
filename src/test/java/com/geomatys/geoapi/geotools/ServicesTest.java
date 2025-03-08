@@ -18,6 +18,7 @@ package com.geomatys.geoapi.geotools;
 import java.util.ServiceLoader;
 import org.opengis.util.FactoryException;
 import org.opengis.referencing.crs.CRSAuthorityFactory;
+import org.opengis.referencing.operation.CoordinateOperationFactory;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -37,27 +38,23 @@ public class ServicesTest {
     }
 
     /**
-     * Tests {@link Services#provider()}.
+     * Tests {@link Services#getAuthorityFactory(boolean)}.
      *
      * @throws FactoryException if the GeoTools {@link org.geotools.referencing.CRS} class has not been found.
      */
     @Test
-    public void testProvider() throws FactoryException {
-        assertNotNull(Services.provider());
+    public void testGetAuthorityFactory() throws FactoryException {
+        assertNotNull(Services.getAuthorityFactory(false));
     }
 
     /**
-     * Tests {@link Services#provider()} fetched through {@link ServiceLoader}.
+     * Tests {@link Services#getCoordinateOperationFactory(boolean)}.
      *
-     * @throws FactoryException if an error occurred while testing the creation of a <abbr>CRS</abbr>.
+     * @throws FactoryException if the GeoTools {@link org.geotools.referencing.CRS} class has not been found.
      */
     @Test
-    public void testServiceProvider() throws FactoryException {
-        var it = ServiceLoader.load(CRSAuthorityFactory.class).iterator();
-        assertTrue(it.hasNext());
-        CRSAuthorityFactory factory = it.next();
-        assertNotNull(factory.createGeographicCRS("EPSG:4326"));
-        assertFalse(it.hasNext());
+    public void testGetCoordinateOperationFactory() throws FactoryException {
+        assertNotNull(Services.getCoordinateOperationFactory(false));
     }
 
     /**
@@ -90,5 +87,68 @@ public class ServicesTest {
     @Test
     public void testCoordinateOperationAuthorityFactories() {
         assertTrue(Services.loadCoordinateOperationAuthorityFactories().iterator().hasNext());
+    }
+
+    /**
+     * Verifies that {@link Services#loadCRSFactories()} finds at least one factory.
+     */
+    @Test
+    public void testCRSFactories() {
+        assertTrue(Services.loadCRSFactories().iterator().hasNext());
+    }
+
+    /**
+     * Verifies that {@link Services#loadCSFactories()} finds at least one factory.
+     */
+    @Test
+    public void testCSFactories() {
+        assertTrue(Services.loadCSFactories().iterator().hasNext());
+    }
+
+    /**
+     * Verifies that {@link Services#loadDatumFactories()} finds at least one factory.
+     */
+    @Test
+    public void testDatumFactories() {
+        assertTrue(Services.loadDatumFactories().iterator().hasNext());
+    }
+
+    /**
+     * Verifies that {@link Services#loadCoordinateOperationFactories()} finds at least one factory.
+     */
+    @Test
+    public void testCoordinateOperationFactories() {
+        assertTrue(Services.loadCoordinateOperationFactories().iterator().hasNext());
+    }
+
+    /**
+     * Tests {@link Services#getAuthorityFactory(boolean)} fetched through {@link ServiceLoader}.
+     *
+     * @throws FactoryException if an error occurred while testing the creation of a <abbr>CRS</abbr>.
+     */
+    @Test
+    public void testAuthorityFactoryProxy() throws FactoryException {
+        var it = ServiceLoader.load(CRSAuthorityFactory.class).iterator();
+        assertTrue(it.hasNext());
+        CRSAuthorityFactory factory = it.next();
+        assertFalse(it.hasNext());
+
+        assertNotNull(factory.createGeographicCRS("EPSG:4326"));
+    }
+
+    /**
+     * Tests {@link Services#getCoordinateOperationFactory(boolean)} fetched through {@link ServiceLoader}.
+     *
+     * @throws FactoryException if an error occurred while testing the creation of an operation.
+     */
+    @Test
+    public void testOperationFactoryProxy() throws FactoryException {
+        var it = ServiceLoader.load(CoordinateOperationFactory.class).iterator();
+        assertTrue(it.hasNext());
+        CoordinateOperationFactory factory = it.next();
+        assertFalse(it.hasNext());
+
+        var crs = Services.getAuthorityFactory(false).createGeographicCRS("EPSG:4326");
+        assertTrue(factory.createOperation(crs, crs).getMathTransform().isIdentity());
     }
 }

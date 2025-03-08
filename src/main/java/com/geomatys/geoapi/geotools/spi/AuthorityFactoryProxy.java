@@ -38,7 +38,7 @@ import com.geomatys.geoapi.geotools.Services;
  * <abbr>CRS</abbr> authority factory that delegates its work to GeoTools.
  * This is a temporary class for compatibility with applications that put their dependencies on the class-path.
  * This class may be removed in a future version if only module-path is supported (in that latter case,
- * {@link java.util.ServiceLoader} would invoke {@link Services#provider()} directly).
+ * {@link java.util.ServiceLoader} would invoke {@link #provider()} directly).
  *
  * @author Martin Desruisseaux (Geomatys)
  */
@@ -50,11 +50,22 @@ public class AuthorityFactoryProxy implements CRSAuthorityFactory {
 
     /**
      * Creates a new authority factory.
+     * This is for compatibility with applications that put their dependencies on the class-path.
      *
      * @throws FactoryException if the GeoTools {@link org.geotools.referencing.CRS} class has not been found.
      */
     public AuthorityFactoryProxy() throws FactoryException {
-        factory = Services.provider();
+        factory = provider();
+    }
+
+    /**
+     * {@return the authority factory to use for <abbr>CRS</abbr> definitions}.
+     * In a modular project, {@code ServiceLoadeer} invokes this method instead of the constructor.
+     *
+     * @throws FactoryException if the GeoTools {@link org.geotools.referencing.CRS} class has not been found.
+     */
+    public static CRSAuthorityFactory provider() throws FactoryException {
+        return Services.getAuthorityFactory(false);
     }
 
     @Override

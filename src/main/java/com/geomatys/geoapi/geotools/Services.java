@@ -17,9 +17,13 @@ package com.geomatys.geoapi.geotools;
 
 import java.util.ServiceLoader;
 import org.opengis.util.FactoryException;
+import org.opengis.referencing.cs.CSFactory;
 import org.opengis.referencing.cs.CSAuthorityFactory;
+import org.opengis.referencing.crs.CRSFactory;
 import org.opengis.referencing.crs.CRSAuthorityFactory;
+import org.opengis.referencing.datum.DatumFactory;
 import org.opengis.referencing.datum.DatumAuthorityFactory;
+import org.opengis.referencing.operation.CoordinateOperationFactory;
 import org.opengis.referencing.operation.CoordinateOperationAuthorityFactory;
 
 
@@ -53,13 +57,27 @@ public final class Services {
     }
 
     /**
-     * {@return the default <abbr>CRS</abbr> authority factory with axis order as specified by the authority}.
+     * {@return the default <abbr>CRS</abbr> authority factory}. This method delegates to the
+     * method of the same name in {@code org.geotools.referencing.CRS} and wraps the result.
      *
+     * @param  longitudeFirst  whether to force (<var>longitude</var>, <var>latitude</var>) axis order.
      * @throws FactoryException if the GeoTools {@link org.geotools.referencing.CRS} class has not been found.
      */
-    public static CRSAuthorityFactory provider() throws FactoryException {
-        final Object factory = provider("getAuthorityFactory", false);
+    public static CRSAuthorityFactory getAuthorityFactory(boolean longitudeFirst) throws FactoryException {
+        final Object factory = provider("getAuthorityFactory", longitudeFirst);
         return CRSAuthorityFactoryFromGT.wrap((org.geotools.api.referencing.crs.CRSAuthorityFactory) factory);
+    }
+
+    /**
+     * {@return the default coordinate operation factory}. This method delegates to the method
+     * of the same name in {@code org.geotools.referencing.CRS} and wraps the result.
+     *
+     * @param  lenient  whether to be lenient about datum shifts without transformation parameters.
+     * @throws FactoryException if the GeoTools {@link org.geotools.referencing.CRS} class has not been found.
+     */
+    public static CoordinateOperationFactory getCoordinateOperationFactory(boolean lenient) throws FactoryException {
+        final Object factory = provider("getCoordinateOperationFactory", lenient);
+        return CoordinateOperationFactoryFromGT.wrap((org.geotools.api.referencing.operation.CoordinateOperationFactory) factory);
     }
 
     /**
@@ -101,5 +119,41 @@ public final class Services {
     public static Iterable<CoordinateOperationAuthorityFactory> loadCoordinateOperationAuthorityFactories() {
         return Wrapper.wrap(ServiceLoader.load(org.geotools.api.referencing.operation.CoordinateOperationAuthorityFactory.class),
                 CoordinateOperationAuthorityFactoryFromGT::wrap);
+    }
+
+    /**
+     * {@return all <abbr>CRS</abbr> object factories registered by GeoTools}.
+     * This method returns these factories in no particular order.
+     */
+    public static Iterable<CRSFactory> loadCRSFactories() {
+        return Wrapper.wrap(ServiceLoader.load(org.geotools.api.referencing.crs.CRSFactory.class),
+                CRSFactoryFromGT::wrap);
+    }
+
+    /**
+     * {@return all <abbr>CS</abbr> object factories registered by GeoTools}.
+     * This method returns these factories in no particular order.
+     */
+    public static Iterable<CSFactory> loadCSFactories() {
+        return Wrapper.wrap(ServiceLoader.load(org.geotools.api.referencing.cs.CSFactory.class),
+                CSFactoryFromGT::wrap);
+    }
+
+    /**
+     * {@return all datum object factories registered by GeoTools}.
+     * This method returns these factories in no particular order.
+     */
+    public static Iterable<DatumFactory> loadDatumFactories() {
+        return Wrapper.wrap(ServiceLoader.load(org.geotools.api.referencing.datum.DatumFactory.class),
+                DatumFactoryFromGT::wrap);
+    }
+
+    /**
+     * {@return all coordinate operation object factories registered by GeoTools}.
+     * This method returns these factories in no particular order.
+     */
+    public static Iterable<CoordinateOperationFactory> loadCoordinateOperationFactories() {
+        return Wrapper.wrap(ServiceLoader.load(org.geotools.api.referencing.operation.CoordinateOperationFactory.class),
+                CoordinateOperationFactoryFromGT::wrap);
     }
 }
