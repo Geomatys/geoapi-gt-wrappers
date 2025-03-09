@@ -46,14 +46,26 @@ class GeodeticCRSToGT<S extends org.opengis.referencing.crs.GeodeticCRS>
      * @return wrapper for the given implementation
      */
     static GeodeticCRS wrap(final org.opengis.referencing.crs.GeodeticCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case GeodeticCRS c: return c;
-            case GeodeticCRSFromGT<?> c: return c.impl;
-            case org.opengis.referencing.crs.GeographicCRS c: return new GeographicCRSToGT(c);
-            case org.opengis.referencing.crs.GeocentricCRS c: return new GeocentricCRSToGT(c);
-            default: return new GeodeticCRSToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof GeodeticCRS) {
+            var c = (GeodeticCRS) impl;
+            return c;
+        }
+        if (impl instanceof GeodeticCRSFromGT<?>) {
+            var c = (GeodeticCRSFromGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.referencing.crs.GeographicCRS) {
+            var c = (org.opengis.referencing.crs.GeographicCRS) impl;
+            return new GeographicCRSToGT(c);
+        }
+        if (impl instanceof org.opengis.referencing.crs.GeocentricCRS) {
+            var c = (org.opengis.referencing.crs.GeocentricCRS) impl;
+            return new GeocentricCRSToGT(c);
+        }
+        return new GeodeticCRSToGT<>(impl);
     }
 
     @Override

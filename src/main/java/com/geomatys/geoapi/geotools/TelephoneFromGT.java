@@ -47,12 +47,18 @@ final class TelephoneFromGT extends WrapperFromGT implements Telephone {
      * @return wrapper for the given implementation
      */
     static Telephone wrap(final org.geotools.api.metadata.citation.Telephone impl) {
-        switch (impl) {
-            case null: return null;
-            case Telephone c: return c;
-            case TelephoneToGT c: return c.impl;
-            default: return new TelephoneFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Telephone) {
+            var c = (Telephone) impl;
+            return c;
+        }
+        if (impl instanceof TelephoneToGT) {
+            var c = (TelephoneToGT) impl;
+            return c.impl;
+        }
+        return new TelephoneFromGT(impl);
     }
 
     /**

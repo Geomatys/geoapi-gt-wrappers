@@ -50,11 +50,14 @@ final class ParameterValueToGT<V> extends GeneralParameterValueToGT<org.opengis.
      * @return wrapper for the given implementation
      */
     static <V> ParameterValue<V> wrap(final org.opengis.parameter.ParameterValue<V> impl) {
-        switch (impl) {
-            case null: return null;
-            case ParameterValueFromGT<V> c: return c.impl;
-            default: return new ParameterValueToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof ParameterValueFromGT<?>) {
+            var c = (ParameterValueFromGT<V>) impl;
+            return c.impl;
+        }
+        return new ParameterValueToGT<>(impl);
     }
 
     @Override

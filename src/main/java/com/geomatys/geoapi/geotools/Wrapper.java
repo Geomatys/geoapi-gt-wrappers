@@ -117,11 +117,14 @@ abstract class Wrapper {
      * @return an iterable of wrappers around the elements of the source iterable.
      */
     static <S,T> Iterable<T> wrap(final Iterable<S> source, final Function<S,T> wrapper) {
-        switch (source) {
-            case null: return null;
-            case Collection<S> c: return wrap(c, wrapper);
-            default: return () -> wrap(source.iterator(), wrapper);
+        if (source == null) {
+            return null;
         }
+        if (source instanceof Collection<?>) {
+            var c = (Collection<S>) source;
+            return wrap(c, wrapper);
+        }
+        return () -> wrap(source.iterator(), wrapper);
     }
 
     /**
@@ -135,11 +138,18 @@ abstract class Wrapper {
      * @return a collection of wrappers around the elements of the source collection.
      */
     static <S,T> Collection<T> wrap(final Collection<S> source, final Function<S,T> wrapper) {
-        switch (source) {
-            case null:      return null;
-            case Set<S>  c: return wrap(c, wrapper);
-            case List<S> c: return wrap(c, wrapper);
-            default: return new AbstractCollection<T>() {
+        if (source == null) {
+            return null;
+        }
+        if (source instanceof Set<?>) {
+            var c = (Set<S>) source;
+            return wrap(c, wrapper);
+        }
+        if (source instanceof List<?>) {
+            var c = (List<S>) source;
+            return wrap(c, wrapper);
+        }
+        return new AbstractCollection<T>() {
                 @Override public int     size()             {return source.size();}
                 @Override public boolean isEmpty()          {return source.isEmpty();}
                 @Override public String  toString()         {return source.toString();}
@@ -148,7 +158,6 @@ abstract class Wrapper {
                 @Override public Iterator<T> iterator()     {return wrap(source.iterator(), wrapper);}
                 @Override public   Stream<T> stream()       {return source.stream().map(wrapper);}
             };
-        }
     }
 
     /**

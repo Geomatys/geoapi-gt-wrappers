@@ -55,14 +55,26 @@ class MathTransformFromGT<S extends org.geotools.api.referencing.operation.MathT
      * @return wrapper for the given implementation
      */
     static MathTransform wrap(final org.geotools.api.referencing.operation.MathTransform impl) {
-        switch (impl) {
-            case null: return null;
-            case MathTransform c: return c;
-            case MathTransformToGT<?> c: return c.impl;
-            case org.geotools.api.referencing.operation.MathTransform1D c: return new MathTransform1DFromGT(c);
-            case org.geotools.api.referencing.operation.MathTransform2D c: return new MathTransform2DFromGT(c);
-            default: return new MathTransformFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof MathTransform) {
+            var c = (MathTransform) impl;
+            return c;
+        }
+        if (impl instanceof MathTransformToGT<?>) {
+            var c = (MathTransformToGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.referencing.operation.MathTransform1D) {
+            var c = (org.geotools.api.referencing.operation.MathTransform1D) impl;
+            return new MathTransform1DFromGT(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.operation.MathTransform2D) {
+            var c = (org.geotools.api.referencing.operation.MathTransform2D) impl;
+            return new MathTransform2DFromGT(c);
+        }
+        return new MathTransformFromGT<>(impl);
     }
 
     /**

@@ -43,16 +43,20 @@ final class TypeNameFromGT extends LocalNameFromGT<org.geotools.api.util.TypeNam
      */
     @SuppressWarnings("fallthrough")
     static TypeNameFromGT wrap(final org.geotools.api.util.TypeName impl) {     // Need to return the wrapper class.
-        switch (impl) {
-            case null: return null;
-            case TypeNameToGT c: {
-                if (c.impl instanceof TypeNameFromGT g) {
+        if (impl == null) {
+            return null;
+        }
+        if (impl instanceof TypeNameToGT) {
+            var c = (TypeNameToGT) impl;
+            {
+        }
+                if (c.impl instanceof TypeNameFromGT) {
+                    var g = (TypeNameFromGT) c.impl;
                     return g;
                 }
                 // else fallthrough.
             }
-            default: return new TypeNameFromGT(impl);
-        }
+        return new TypeNameFromGT(impl);
     }
 
     @Override

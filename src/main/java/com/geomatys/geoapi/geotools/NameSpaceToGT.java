@@ -47,12 +47,18 @@ final class NameSpaceToGT extends WrapperToGT implements NameSpace {
      * @return wrapper for the given implementation
      */
     static NameSpace wrap(final org.opengis.util.NameSpace impl) {
-        switch (impl) {
-            case null: return null;
-            case NameSpace c: return c;
-            case NameSpaceFromGT c: return c.impl;
-            default: return new NameSpaceToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof NameSpace) {
+            var c = (NameSpace) impl;
+            return c;
+        }
+        if (impl instanceof NameSpaceFromGT) {
+            var c = (NameSpaceFromGT) impl;
+            return c.impl;
+        }
+        return new NameSpaceToGT(impl);
     }
 
     /**

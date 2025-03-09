@@ -52,10 +52,13 @@ final class TypeNameToGT extends LocalNameToGT<org.opengis.util.TypeName> implem
      * @return wrapper for the given implementation
      */
     static TypeName wrap(final org.opengis.util.TypeName impl) {
-        switch (impl) {
-            case null: return null;
-            case TypeNameFromGT c: return c.impl;
-            default: return new TypeNameToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof TypeNameFromGT) {
+            var c = (TypeNameFromGT) impl;
+            return c.impl;
+        }
+        return new TypeNameToGT(impl);
     }
 }

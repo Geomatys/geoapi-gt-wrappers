@@ -43,12 +43,18 @@ final class GeographicBoundingBoxFromGT extends GeographicExtentFromGT<org.geoto
      * @return wrapper for the given implementation
      */
     static GeographicBoundingBox wrap(final org.geotools.api.metadata.extent.GeographicBoundingBox impl) {
-        switch (impl) {
-            case null: return null;
-            case GeographicBoundingBox c: return c;
-            case GeographicBoundingBoxToGT c: return c.impl;
-            default: return new GeographicBoundingBoxFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof GeographicBoundingBox) {
+            var c = (GeographicBoundingBox) impl;
+            return c;
+        }
+        if (impl instanceof GeographicBoundingBoxToGT) {
+            var c = (GeographicBoundingBoxToGT) impl;
+            return c.impl;
+        }
+        return new GeographicBoundingBoxFromGT(impl);
     }
 
     @Override

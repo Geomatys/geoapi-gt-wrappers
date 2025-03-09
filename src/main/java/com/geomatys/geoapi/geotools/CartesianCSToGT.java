@@ -43,11 +43,17 @@ final class CartesianCSToGT extends AffineCSToGT<org.opengis.referencing.cs.Cart
      * @return wrapper for the given implementation
      */
     static CartesianCS wrap(final org.opengis.referencing.cs.CartesianCS impl) {
-        switch (impl) {
-            case null: return null;
-            case CartesianCS c: return c;
-            case CartesianCSFromGT c: return c.impl;
-            default: return new CartesianCSToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CartesianCS) {
+            var c = (CartesianCS) impl;
+            return c;
+        }
+        if (impl instanceof CartesianCSFromGT) {
+            var c = (CartesianCSFromGT) impl;
+            return c.impl;
+        }
+        return new CartesianCSToGT(impl);
     }
 }

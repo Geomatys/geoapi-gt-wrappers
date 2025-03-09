@@ -46,14 +46,26 @@ class CoordinateReferenceSystemFromGT<S extends org.geotools.api.referencing.crs
      * @return wrapper for the given implementation
      */
     static CoordinateReferenceSystem wrap(final org.geotools.api.referencing.crs.CoordinateReferenceSystem impl) {
-        switch (impl) {
-            case null: return null;
-            case CoordinateReferenceSystem c: return c;
-            case CoordinateReferenceSystemToGT<?> c: return c.impl;
-            case org.geotools.api.referencing.crs.SingleCRS c: return SingleCRSFromGT.wrap(c);
-            case org.geotools.api.referencing.crs.CompoundCRS c: return new CompoundCRSFromGT(c);
-            default: return new CoordinateReferenceSystemFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CoordinateReferenceSystem) {
+            var c = (CoordinateReferenceSystem) impl;
+            return c;
+        }
+        if (impl instanceof CoordinateReferenceSystemToGT<?>) {
+            var c = (CoordinateReferenceSystemToGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.referencing.crs.SingleCRS) {
+            var c = (org.geotools.api.referencing.crs.SingleCRS) impl;
+            return SingleCRSFromGT.wrap(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.crs.CompoundCRS) {
+            var c = (org.geotools.api.referencing.crs.CompoundCRS) impl;
+            return new CompoundCRSFromGT(c);
+        }
+        return new CoordinateReferenceSystemFromGT<>(impl);
     }
 
     @Override

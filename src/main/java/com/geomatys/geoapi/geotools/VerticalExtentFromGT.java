@@ -47,12 +47,18 @@ final class VerticalExtentFromGT extends WrapperFromGT implements VerticalExtent
      * @return wrapper for the given implementation
      */
     static VerticalExtent wrap(final org.geotools.api.metadata.extent.VerticalExtent impl) {
-        switch (impl) {
-            case null: return null;
-            case VerticalExtent c: return c;
-            case VerticalExtentToGT c: return c.impl;
-            default: return new VerticalExtentFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof VerticalExtent) {
+            var c = (VerticalExtent) impl;
+            return c;
+        }
+        if (impl instanceof VerticalExtentToGT) {
+            var c = (VerticalExtentToGT) impl;
+            return c.impl;
+        }
+        return new VerticalExtentFromGT(impl);
     }
 
     /**

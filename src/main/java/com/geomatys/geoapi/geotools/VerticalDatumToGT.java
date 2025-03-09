@@ -44,12 +44,18 @@ final class VerticalDatumToGT extends DatumToGT<org.opengis.referencing.datum.Ve
      * @return wrapper for the given implementation
      */
     static VerticalDatum wrap(final org.opengis.referencing.datum.VerticalDatum impl) {
-        switch (impl) {
-            case null: return null;
-            case VerticalDatum c: return c;
-            case VerticalDatumFromGT c: return c.impl;
-            default: return new VerticalDatumToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof VerticalDatum) {
+            var c = (VerticalDatum) impl;
+            return c;
+        }
+        if (impl instanceof VerticalDatumFromGT) {
+            var c = (VerticalDatumFromGT) impl;
+            return c.impl;
+        }
+        return new VerticalDatumToGT(impl);
     }
 
     @Override

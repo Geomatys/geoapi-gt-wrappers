@@ -48,11 +48,14 @@ final class ParameterValueGroupFromGT extends GeneralParameterValueFromGT<org.ge
      * @return wrapper for the given implementation
      */
     static <V> ParameterValueGroup wrap(final org.geotools.api.parameter.ParameterValueGroup impl) {
-        switch (impl) {
-            case null: return null;
-            case ParameterValueGroupToGT c: return c.impl;
-            default: return new ParameterValueGroupFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof ParameterValueGroupToGT) {
+            var c = (ParameterValueGroupToGT) impl;
+            return c.impl;
+        }
+        return new ParameterValueGroupFromGT(impl);
     }
 
     @Override

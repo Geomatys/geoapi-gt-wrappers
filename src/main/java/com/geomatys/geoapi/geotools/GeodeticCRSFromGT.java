@@ -46,14 +46,26 @@ class GeodeticCRSFromGT<S extends org.geotools.api.referencing.crs.GeodeticCRS>
      * @return wrapper for the given implementation
      */
     static GeodeticCRS wrap(final org.geotools.api.referencing.crs.GeodeticCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case GeodeticCRS c: return c;
-            case GeodeticCRSToGT<?> c: return c.impl;
-            case org.geotools.api.referencing.crs.GeographicCRS c: return new GeographicCRSFromGT(c);
-            case org.geotools.api.referencing.crs.GeocentricCRS c: return new GeocentricCRSFromGT(c);
-            default: return new GeodeticCRSFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof GeodeticCRS) {
+            var c = (GeodeticCRS) impl;
+            return c;
+        }
+        if (impl instanceof GeodeticCRSToGT<?>) {
+            var c = (GeodeticCRSToGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.referencing.crs.GeographicCRS) {
+            var c = (org.geotools.api.referencing.crs.GeographicCRS) impl;
+            return new GeographicCRSFromGT(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.crs.GeocentricCRS) {
+            var c = (org.geotools.api.referencing.crs.GeocentricCRS) impl;
+            return new GeocentricCRSFromGT(c);
+        }
+        return new GeodeticCRSFromGT<>(impl);
     }
 
     @Override

@@ -49,12 +49,18 @@ final class ResponsiblePartyToGT extends WrapperToGT implements ResponsibleParty
      * @return wrapper for the given implementation
      */
     static ResponsibleParty wrap(final org.opengis.metadata.citation.ResponsibleParty impl) {
-        switch (impl) {
-            case null: return null;
-            case ResponsibleParty c: return c;
-            case ResponsiblePartyFromGT c: return c.impl;
-            default: return new ResponsiblePartyToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof ResponsibleParty) {
+            var c = (ResponsibleParty) impl;
+            return c;
+        }
+        if (impl instanceof ResponsiblePartyFromGT) {
+            var c = (ResponsiblePartyFromGT) impl;
+            return c.impl;
+        }
+        return new ResponsiblePartyToGT(impl);
     }
 
     /**

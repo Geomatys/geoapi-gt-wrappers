@@ -44,12 +44,18 @@ final class EngineeringCRSFromGT extends CoordinateReferenceSystemFromGT<org.geo
      * @return wrapper for the given implementation
      */
     static EngineeringCRS wrap(final org.geotools.api.referencing.crs.EngineeringCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case EngineeringCRS c: return c;
-            case EngineeringCRSToGT c: return c.impl;
-            default: return new EngineeringCRSFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof EngineeringCRS) {
+            var c = (EngineeringCRS) impl;
+            return c;
+        }
+        if (impl instanceof EngineeringCRSToGT) {
+            var c = (EngineeringCRSToGT) impl;
+            return c.impl;
+        }
+        return new EngineeringCRSFromGT(impl);
     }
 
     @Override

@@ -43,11 +43,17 @@ final class GeocentricCRSFromGT extends GeodeticCRSFromGT<org.geotools.api.refer
      * @return wrapper for the given implementation
      */
     static GeocentricCRS wrap(final org.geotools.api.referencing.crs.GeocentricCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case GeocentricCRS c: return c;
-            case GeocentricCRSToGT c: return c.impl;
-            default: return new GeocentricCRSFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof GeocentricCRS) {
+            var c = (GeocentricCRS) impl;
+            return c;
+        }
+        if (impl instanceof GeocentricCRSToGT) {
+            var c = (GeocentricCRSToGT) impl;
+            return c.impl;
+        }
+        return new GeocentricCRSFromGT(impl);
     }
 }

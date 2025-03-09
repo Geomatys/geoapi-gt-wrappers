@@ -45,12 +45,21 @@ class ConversionToGT<S extends org.opengis.referencing.operation.Conversion>
      * @return wrapper for the given implementation
      */
     static Conversion wrap(final org.opengis.referencing.operation.Conversion impl) {
-        switch (impl) {
-            case null: return null;
-            case Conversion c: return c;
-            case ConversionFromGT<?> c: return c.impl;
-            case org.opengis.referencing.operation.Projection c: return ProjectionToGT.wrap(c);
-            default: return new ConversionToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Conversion) {
+            var c = (Conversion) impl;
+            return c;
+        }
+        if (impl instanceof ConversionFromGT<?>) {
+            var c = (ConversionFromGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.referencing.operation.Projection) {
+            var c = (org.opengis.referencing.operation.Projection) impl;
+            return ProjectionToGT.wrap(c);
+        }
+        return new ConversionToGT<>(impl);
     }
 }

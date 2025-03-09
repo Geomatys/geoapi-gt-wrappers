@@ -48,12 +48,18 @@ final class AddressFromGT extends WrapperFromGT implements Address {
      * @return wrapper for the given implementation
      */
     static Address wrap(final org.geotools.api.metadata.citation.Address impl) {
-        switch (impl) {
-            case null: return null;
-            case Address c: return c;
-            case AddressToGT c: return c.impl;
-            default: return new AddressFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Address) {
+            var c = (Address) impl;
+            return c;
+        }
+        if (impl instanceof AddressToGT) {
+            var c = (AddressToGT) impl;
+            return c.impl;
+        }
+        return new AddressFromGT(impl);
     }
 
     /**

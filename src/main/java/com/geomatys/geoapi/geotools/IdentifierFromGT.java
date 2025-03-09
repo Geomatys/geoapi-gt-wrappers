@@ -51,13 +51,22 @@ class IdentifierFromGT<S extends org.geotools.api.metadata.Identifier>
      * @return wrapper for the given implementation
      */
     static Identifier wrap(final org.geotools.api.metadata.Identifier impl) {
-        switch (impl) {
-            case null: return null;
-            case Identifier c: return c;
-            case IdentifierToGT<?> c: return c.impl;
-            case org.geotools.api.referencing.ReferenceIdentifier c: return new ReferenceIdentifierFromGT(c);
-            default: return new IdentifierFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Identifier) {
+            var c = (Identifier) impl;
+            return c;
+        }
+        if (impl instanceof IdentifierToGT<?>) {
+            var c = (IdentifierToGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.referencing.ReferenceIdentifier) {
+            var c = (org.geotools.api.referencing.ReferenceIdentifier) impl;
+            return new ReferenceIdentifierFromGT(c);
+        }
+        return new IdentifierFromGT<>(impl);
     }
 
     @Override

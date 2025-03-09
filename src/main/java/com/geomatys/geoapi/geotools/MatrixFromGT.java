@@ -46,12 +46,18 @@ final class MatrixFromGT extends WrapperFromGT implements Matrix {
      * @return wrapper for the given implementation
      */
     static Matrix wrap(final org.geotools.api.referencing.operation.Matrix impl) {
-        switch (impl) {
-            case null: return null;
-            case Matrix c: return c;
-            case MatrixToGT c: return c.impl;
-            default: return new MatrixFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Matrix) {
+            var c = (Matrix) impl;
+            return c;
+        }
+        if (impl instanceof MatrixToGT) {
+            var c = (MatrixToGT) impl;
+            return c.impl;
+        }
+        return new MatrixFromGT(impl);
     }
 
     /**

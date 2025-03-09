@@ -42,11 +42,14 @@ final class MemberNameToGT extends LocalNameToGT<org.opengis.util.MemberName> im
      * @return wrapper for the given implementation
      */
     static MemberName wrap(final org.opengis.util.MemberName impl) {
-        switch (impl) {
-            case null: return null;
-            case MemberNameFromGT c: return c.impl;
-            default: return new MemberNameToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof MemberNameFromGT) {
+            var c = (MemberNameFromGT) impl;
+            return c.impl;
+        }
+        return new MemberNameToGT(impl);
     }
 
     @Override

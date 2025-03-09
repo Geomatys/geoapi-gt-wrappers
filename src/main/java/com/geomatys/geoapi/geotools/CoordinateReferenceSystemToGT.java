@@ -46,14 +46,26 @@ class CoordinateReferenceSystemToGT<S extends org.opengis.referencing.crs.Coordi
      * @return wrapper for the given implementation
      */
     static CoordinateReferenceSystem wrap(final org.opengis.referencing.crs.CoordinateReferenceSystem impl) {
-        switch (impl) {
-            case null: return null;
-            case CoordinateReferenceSystem c: return c;
-            case CoordinateReferenceSystemFromGT<?> c: return c.impl;
-            case org.opengis.referencing.crs.SingleCRS c: return SingleCRSToGT.wrap(c);
-            case org.opengis.referencing.crs.CompoundCRS c: return new CompoundCRSToGT(c);
-            default: return new CoordinateReferenceSystemToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CoordinateReferenceSystem) {
+            var c = (CoordinateReferenceSystem) impl;
+            return c;
+        }
+        if (impl instanceof CoordinateReferenceSystemFromGT<?>) {
+            var c = (CoordinateReferenceSystemFromGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.referencing.crs.SingleCRS) {
+            var c = (org.opengis.referencing.crs.SingleCRS) impl;
+            return SingleCRSToGT.wrap(c);
+        }
+        if (impl instanceof org.opengis.referencing.crs.CompoundCRS) {
+            var c = (org.opengis.referencing.crs.CompoundCRS) impl;
+            return new CompoundCRSToGT(c);
+        }
+        return new CoordinateReferenceSystemToGT<>(impl);
     }
 
     @Override

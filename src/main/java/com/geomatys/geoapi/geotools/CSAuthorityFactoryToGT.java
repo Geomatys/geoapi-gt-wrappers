@@ -57,12 +57,18 @@ final class CSAuthorityFactoryToGT extends AuthorityFactoryToGT implements CSAut
      * @return wrapper for the given implementation
      */
     static CSAuthorityFactory wrap(final org.opengis.referencing.cs.CSAuthorityFactory impl) {
-        switch (impl) {
-            case null: return null;
-            case CSAuthorityFactory c: return c;
-            case CSAuthorityFactoryFromGT c: return c.impl;
-            default: return new CSAuthorityFactoryToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CSAuthorityFactory) {
+            var c = (CSAuthorityFactory) impl;
+            return c;
+        }
+        if (impl instanceof CSAuthorityFactoryFromGT) {
+            var c = (CSAuthorityFactoryFromGT) impl;
+            return c.impl;
+        }
+        return new CSAuthorityFactoryToGT(impl);
     }
 
     /**

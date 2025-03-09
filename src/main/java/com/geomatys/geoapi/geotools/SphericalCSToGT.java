@@ -43,11 +43,17 @@ final class SphericalCSToGT extends CoordinateSystemToGT<org.opengis.referencing
      * @return wrapper for the given implementation
      */
     static SphericalCS wrap(final org.opengis.referencing.cs.SphericalCS impl) {
-        switch (impl) {
-            case null: return null;
-            case SphericalCS c: return c;
-            case SphericalCSFromGT c: return c.impl;
-            default: return new SphericalCSToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof SphericalCS) {
+            var c = (SphericalCS) impl;
+            return c;
+        }
+        if (impl instanceof SphericalCSFromGT) {
+            var c = (SphericalCSFromGT) impl;
+            return c.impl;
+        }
+        return new SphericalCSToGT(impl);
     }
 }

@@ -47,13 +47,22 @@ class GeneralDerivedCRSFromGT<S extends org.geotools.api.referencing.crs.General
      * @return wrapper for the given implementation
      */
     static GeneralDerivedCRS wrap(final org.geotools.api.referencing.crs.GeneralDerivedCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case GeneralDerivedCRS c: return c;
-            case GeneralDerivedCRSToGT<?> c: return c.impl;
-            case org.geotools.api.referencing.crs.DerivedCRS c: return DerivedCRSFromGT.wrap(c);
-            default: return new GeneralDerivedCRSFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof GeneralDerivedCRS) {
+            var c = (GeneralDerivedCRS) impl;
+            return c;
+        }
+        if (impl instanceof GeneralDerivedCRSToGT<?>) {
+            var c = (GeneralDerivedCRSToGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.referencing.crs.DerivedCRS) {
+            var c = (org.geotools.api.referencing.crs.DerivedCRS) impl;
+            return DerivedCRSFromGT.wrap(c);
+        }
+        return new GeneralDerivedCRSFromGT<>(impl);
     }
 
     @Override

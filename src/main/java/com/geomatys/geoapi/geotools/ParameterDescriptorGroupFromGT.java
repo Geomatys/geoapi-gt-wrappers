@@ -47,11 +47,14 @@ final class ParameterDescriptorGroupFromGT extends GeneralParameterDescriptorFro
      * @return wrapper for the given implementation
      */
     static <V> ParameterDescriptorGroup wrap(final org.geotools.api.parameter.ParameterDescriptorGroup impl) {
-        switch (impl) {
-            case null: return null;
-            case ParameterDescriptorGroupToGT c: return c.impl;
-            default: return new ParameterDescriptorGroupFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof ParameterDescriptorGroupToGT) {
+            var c = (ParameterDescriptorGroupToGT) impl;
+            return c.impl;
+        }
+        return new ParameterDescriptorGroupFromGT(impl);
     }
 
     @Override

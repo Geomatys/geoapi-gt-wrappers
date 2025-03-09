@@ -44,12 +44,18 @@ final class TemporalDatumToGT extends DatumToGT<org.opengis.referencing.datum.Te
      * @return wrapper for the given implementation
      */
     static TemporalDatum wrap(final org.opengis.referencing.datum.TemporalDatum impl) {
-        switch (impl) {
-            case null: return null;
-            case TemporalDatum c: return c;
-            case TemporalDatumFromGT c: return c.impl;
-            default: return new TemporalDatumToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof TemporalDatum) {
+            var c = (TemporalDatum) impl;
+            return c;
+        }
+        if (impl instanceof TemporalDatumFromGT) {
+            var c = (TemporalDatumFromGT) impl;
+            return c.impl;
+        }
+        return new TemporalDatumToGT(impl);
     }
 
     @Override

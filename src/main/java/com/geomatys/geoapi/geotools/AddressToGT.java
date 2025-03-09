@@ -48,12 +48,18 @@ final class AddressToGT extends WrapperToGT implements Address {
      * @return wrapper for the given implementation
      */
     static Address wrap(final org.opengis.metadata.citation.Address impl) {
-        switch (impl) {
-            case null: return null;
-            case Address c: return c;
-            case AddressFromGT c: return c.impl;
-            default: return new AddressToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Address) {
+            var c = (Address) impl;
+            return c;
+        }
+        if (impl instanceof AddressFromGT) {
+            var c = (AddressFromGT) impl;
+            return c.impl;
+        }
+        return new AddressToGT(impl);
     }
 
     /**

@@ -57,12 +57,18 @@ final class CSAuthorityFactoryFromGT extends AuthorityFactoryFromGT implements C
      * @return wrapper for the given implementation
      */
     static CSAuthorityFactory wrap(final org.geotools.api.referencing.cs.CSAuthorityFactory impl) {
-        switch (impl) {
-            case null: return null;
-            case CSAuthorityFactory c: return c;
-            case CSAuthorityFactoryToGT c: return c.impl;
-            default: return new CSAuthorityFactoryFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CSAuthorityFactory) {
+            var c = (CSAuthorityFactory) impl;
+            return c;
+        }
+        if (impl instanceof CSAuthorityFactoryToGT) {
+            var c = (CSAuthorityFactoryToGT) impl;
+            return c.impl;
+        }
+        return new CSAuthorityFactoryFromGT(impl);
     }
 
     /**

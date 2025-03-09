@@ -47,12 +47,18 @@ final class DirectPositionFromGT extends WrapperFromGT implements DirectPosition
      * @return wrapper for the given implementation
      */
     static DirectPosition wrap(final org.geotools.api.geometry.Position impl) {
-        switch (impl) {
-            case null: return null;
-            case DirectPosition c: return c;
-            case DirectPositionToGT c: return c.impl;
-            default: return new DirectPositionFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof DirectPosition) {
+            var c = (DirectPosition) impl;
+            return c;
+        }
+        if (impl instanceof DirectPositionToGT) {
+            var c = (DirectPositionToGT) impl;
+            return c.impl;
+        }
+        return new DirectPositionFromGT(impl);
     }
 
     /**

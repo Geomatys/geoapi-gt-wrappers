@@ -43,11 +43,17 @@ final class UserDefinedCSFromGT extends CoordinateSystemFromGT<org.geotools.api.
      * @return wrapper for the given implementation
      */
     static UserDefinedCS wrap(final org.geotools.api.referencing.cs.UserDefinedCS impl) {
-        switch (impl) {
-            case null: return null;
-            case UserDefinedCS c: return c;
-            case UserDefinedCSToGT c: return c.impl;
-            default: return new UserDefinedCSFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof UserDefinedCS) {
+            var c = (UserDefinedCS) impl;
+            return c;
+        }
+        if (impl instanceof UserDefinedCSToGT) {
+            var c = (UserDefinedCSToGT) impl;
+            return c.impl;
+        }
+        return new UserDefinedCSFromGT(impl);
     }
 }

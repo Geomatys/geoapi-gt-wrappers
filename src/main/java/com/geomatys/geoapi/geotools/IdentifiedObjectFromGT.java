@@ -55,22 +55,58 @@ class IdentifiedObjectFromGT<S extends org.geotools.api.referencing.IdentifiedOb
      * @return wrapper for the given implementation
      */
     static IdentifiedObject wrap(final org.geotools.api.referencing.IdentifiedObject impl) {
-        switch (impl) {
-            case null: return null;
-            case IdentifiedObject c: return c;
-            case IdentifiedObjectToGT<?> c: return c.impl;
-            case org.geotools.api.referencing.operation.CoordinateOperation c: return CoordinateOperationFromGT.wrap(c);
-            case org.geotools.api.referencing.crs.CoordinateReferenceSystem c: return CoordinateReferenceSystemFromGT.wrap(c);
-            case org.geotools.api.referencing.ReferenceSystem c: return new ReferenceSystemFromGT<>(c);
-            case org.geotools.api.referencing.cs.CoordinateSystem c: return CoordinateSystemFromGT.wrap(c);
-            case org.geotools.api.referencing.cs.CoordinateSystemAxis c: return new CoordinateSystemAxisFromGT(c);
-            case org.geotools.api.referencing.datum.Datum c: return DatumFromGT.wrap(c);
-            case org.geotools.api.referencing.datum.Ellipsoid c: return new EllipsoidFromGT(c);
-            case org.geotools.api.referencing.datum.PrimeMeridian c: return new PrimeMeridianFromGT(c);
-            case org.geotools.api.referencing.operation.OperationMethod c: return new OperationMethodFromGT(c);
-            case org.geotools.api.parameter.GeneralParameterDescriptor c: return GeneralParameterDescriptorFromGT.wrap(c);
-            default: return new IdentifiedObjectFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof IdentifiedObject) {
+            var c = (IdentifiedObject) impl;
+            return c;
+        }
+        if (impl instanceof IdentifiedObjectToGT<?>) {
+            var c = (IdentifiedObjectToGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.referencing.operation.CoordinateOperation) {
+            var c = (org.geotools.api.referencing.operation.CoordinateOperation) impl;
+            return CoordinateOperationFromGT.wrap(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.crs.CoordinateReferenceSystem) {
+            var c = (org.geotools.api.referencing.crs.CoordinateReferenceSystem) impl;
+            return CoordinateReferenceSystemFromGT.wrap(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.ReferenceSystem) {
+            var c = (org.geotools.api.referencing.ReferenceSystem) impl;
+            return new ReferenceSystemFromGT<>(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.cs.CoordinateSystem) {
+            var c = (org.geotools.api.referencing.cs.CoordinateSystem) impl;
+            return CoordinateSystemFromGT.wrap(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.cs.CoordinateSystemAxis) {
+            var c = (org.geotools.api.referencing.cs.CoordinateSystemAxis) impl;
+            return new CoordinateSystemAxisFromGT(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.datum.Datum) {
+            var c = (org.geotools.api.referencing.datum.Datum) impl;
+            return DatumFromGT.wrap(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.datum.Ellipsoid) {
+            var c = (org.geotools.api.referencing.datum.Ellipsoid) impl;
+            return new EllipsoidFromGT(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.datum.PrimeMeridian) {
+            var c = (org.geotools.api.referencing.datum.PrimeMeridian) impl;
+            return new PrimeMeridianFromGT(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.operation.OperationMethod) {
+            var c = (org.geotools.api.referencing.operation.OperationMethod) impl;
+            return new OperationMethodFromGT(c);
+        }
+        if (impl instanceof org.geotools.api.parameter.GeneralParameterDescriptor) {
+            var c = (org.geotools.api.parameter.GeneralParameterDescriptor) impl;
+            return GeneralParameterDescriptorFromGT.wrap(c);
+        }
+        return new IdentifiedObjectFromGT<>(impl);
     }
 
     /**

@@ -51,14 +51,26 @@ class CoordinateOperationToGT<S extends org.opengis.referencing.operation.Coordi
      * @return wrapper for the given implementation
      */
     static CoordinateOperation wrap(final org.opengis.referencing.operation.CoordinateOperation impl) {
-        switch (impl) {
-            case null: return null;
-            case CoordinateOperation c: return c;
-            case CoordinateOperationFromGT<?> c: return c.impl;
-            case org.opengis.referencing.operation.SingleOperation c: return SingleOperationToGT.wrap(c);
-            case org.opengis.referencing.operation.ConcatenatedOperation c: return new ConcatenatedOperationToGT(c);
-            default: return new CoordinateOperationToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CoordinateOperation) {
+            var c = (CoordinateOperation) impl;
+            return c;
+        }
+        if (impl instanceof CoordinateOperationFromGT<?>) {
+            var c = (CoordinateOperationFromGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.referencing.operation.SingleOperation) {
+            var c = (org.opengis.referencing.operation.SingleOperation) impl;
+            return SingleOperationToGT.wrap(c);
+        }
+        if (impl instanceof org.opengis.referencing.operation.ConcatenatedOperation) {
+            var c = (org.opengis.referencing.operation.ConcatenatedOperation) impl;
+            return new ConcatenatedOperationToGT(c);
+        }
+        return new CoordinateOperationToGT<>(impl);
     }
 
     @Override

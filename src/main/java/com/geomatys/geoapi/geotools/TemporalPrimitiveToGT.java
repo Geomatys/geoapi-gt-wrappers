@@ -47,12 +47,18 @@ final class TemporalPrimitiveToGT extends WrapperToGT implements TemporalPrimiti
      * @return wrapper for the given implementation
      */
     static TemporalPrimitive wrap(final org.opengis.temporal.TemporalPrimitive impl) {
-        switch (impl) {
-            case null: return null;
-            case TemporalPrimitive c: return c;
-            case TemporalPrimitiveFromGT c: return c.impl;
-            default: return new TemporalPrimitiveToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof TemporalPrimitive) {
+            var c = (TemporalPrimitive) impl;
+            return c;
+        }
+        if (impl instanceof TemporalPrimitiveFromGT) {
+            var c = (TemporalPrimitiveFromGT) impl;
+            return c.impl;
+        }
+        return new TemporalPrimitiveToGT(impl);
     }
 
     /**

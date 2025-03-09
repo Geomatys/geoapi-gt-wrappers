@@ -49,12 +49,18 @@ final class CoordinateOperationAuthorityFactoryToGT extends AuthorityFactoryToGT
      * @return wrapper for the given implementation
      */
     static CoordinateOperationAuthorityFactory wrap(final org.opengis.referencing.operation.CoordinateOperationAuthorityFactory impl) {
-        switch (impl) {
-            case null: return null;
-            case CoordinateOperationAuthorityFactory c: return c;
-            case CoordinateOperationAuthorityFactoryFromGT c: return c.impl;
-            default: return new CoordinateOperationAuthorityFactoryToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CoordinateOperationAuthorityFactory) {
+            var c = (CoordinateOperationAuthorityFactory) impl;
+            return c;
+        }
+        if (impl instanceof CoordinateOperationAuthorityFactoryFromGT) {
+            var c = (CoordinateOperationAuthorityFactoryFromGT) impl;
+            return c.impl;
+        }
+        return new CoordinateOperationAuthorityFactoryToGT(impl);
     }
 
     /**

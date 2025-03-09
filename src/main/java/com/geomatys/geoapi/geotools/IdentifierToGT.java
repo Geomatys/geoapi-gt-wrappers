@@ -51,13 +51,22 @@ class IdentifierToGT<S extends org.opengis.metadata.Identifier>
      * @return wrapper for the given implementation
      */
     static Identifier wrap(final org.opengis.metadata.Identifier impl) {
-        switch (impl) {
-            case null: return null;
-            case Identifier c: return c;
-            case IdentifierFromGT<?> c: return c.impl;
-            case org.opengis.referencing.ReferenceIdentifier c: return new ReferenceIdentifierToGT(c);
-            default: return new IdentifierToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Identifier) {
+            var c = (Identifier) impl;
+            return c;
+        }
+        if (impl instanceof IdentifierFromGT<?>) {
+            var c = (IdentifierFromGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.referencing.ReferenceIdentifier) {
+            var c = (org.opengis.referencing.ReferenceIdentifier) impl;
+            return new ReferenceIdentifierToGT(c);
+        }
+        return new IdentifierToGT<>(impl);
     }
 
     @Override

@@ -47,13 +47,22 @@ class GeneralDerivedCRSToGT<S extends org.opengis.referencing.crs.GeneralDerived
      * @return wrapper for the given implementation
      */
     static GeneralDerivedCRS wrap(final org.opengis.referencing.crs.GeneralDerivedCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case GeneralDerivedCRS c: return c;
-            case GeneralDerivedCRSFromGT<?> c: return c.impl;
-            case org.opengis.referencing.crs.DerivedCRS c: return DerivedCRSToGT.wrap(c);
-            default: return new GeneralDerivedCRSToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof GeneralDerivedCRS) {
+            var c = (GeneralDerivedCRS) impl;
+            return c;
+        }
+        if (impl instanceof GeneralDerivedCRSFromGT<?>) {
+            var c = (GeneralDerivedCRSFromGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.referencing.crs.DerivedCRS) {
+            var c = (org.opengis.referencing.crs.DerivedCRS) impl;
+            return DerivedCRSToGT.wrap(c);
+        }
+        return new GeneralDerivedCRSToGT<>(impl);
     }
 
     @Override

@@ -47,13 +47,22 @@ class ReferenceSystemToGT<S extends org.opengis.referencing.ReferenceSystem> ext
      * @return wrapper for the given implementation
      */
     static ReferenceSystem wrap(final org.opengis.referencing.ReferenceSystem impl) {
-        switch (impl) {
-            case null: return null;
-            case ReferenceSystem c: return c;
-            case ReferenceSystemFromGT<?> c: return c.impl;
-            case org.opengis.referencing.crs.CoordinateReferenceSystem c: return CoordinateReferenceSystemToGT.wrap(c);
-            default: return new ReferenceSystemToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof ReferenceSystem) {
+            var c = (ReferenceSystem) impl;
+            return c;
+        }
+        if (impl instanceof ReferenceSystemFromGT<?>) {
+            var c = (ReferenceSystemFromGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.referencing.crs.CoordinateReferenceSystem) {
+            var c = (org.opengis.referencing.crs.CoordinateReferenceSystem) impl;
+            return CoordinateReferenceSystemToGT.wrap(c);
+        }
+        return new ReferenceSystemToGT<>(impl);
     }
 
     @Override

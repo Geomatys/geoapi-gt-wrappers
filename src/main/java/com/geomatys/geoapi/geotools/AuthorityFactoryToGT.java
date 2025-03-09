@@ -97,7 +97,8 @@ abstract class AuthorityFactoryToGT extends WrapperToGT implements AuthorityFact
      * @return the GeoTools exception.
      */
     static FactoryException wrap(org.opengis.util.FactoryException e) {
-        if (e instanceof org.opengis.referencing.NoSuchAuthorityCodeException c) {
+        if (e instanceof org.opengis.referencing.NoSuchAuthorityCodeException) {
+            var c = (org.opengis.referencing.NoSuchAuthorityCodeException) e;
             return (NoSuchAuthorityCodeException) new NoSuchAuthorityCodeException(
                     c.getMessage(), c.getAuthority(), c.getAuthorityCode()).initCause(c);
         }

@@ -43,11 +43,17 @@ final class EngineeringDatumToGT extends DatumToGT<org.opengis.referencing.datum
      * @return wrapper for the given implementation
      */
     static EngineeringDatum wrap(final org.opengis.referencing.datum.EngineeringDatum impl) {
-        switch (impl) {
-            case null: return null;
-            case EngineeringDatum c: return c;
-            case EngineeringDatumFromGT c: return c.impl;
-            default: return new EngineeringDatumToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof EngineeringDatum) {
+            var c = (EngineeringDatum) impl;
+            return c;
+        }
+        if (impl instanceof EngineeringDatumFromGT) {
+            var c = (EngineeringDatumFromGT) impl;
+            return c.impl;
+        }
+        return new EngineeringDatumToGT(impl);
     }
 }

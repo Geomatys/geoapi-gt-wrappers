@@ -47,12 +47,18 @@ final class TemporalExtentFromGT extends WrapperFromGT implements TemporalExtent
      * @return wrapper for the given implementation
      */
     static TemporalExtent wrap(final org.geotools.api.metadata.extent.TemporalExtent impl) {
-        switch (impl) {
-            case null: return null;
-            case TemporalExtent c: return c;
-            case TemporalExtentToGT c: return c.impl;
-            default: return new TemporalExtentFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof TemporalExtent) {
+            var c = (TemporalExtent) impl;
+            return c;
+        }
+        if (impl instanceof TemporalExtentToGT) {
+            var c = (TemporalExtentToGT) impl;
+            return c.impl;
+        }
+        return new TemporalExtentFromGT(impl);
     }
 
     /**

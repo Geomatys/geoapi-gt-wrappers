@@ -49,12 +49,18 @@ final class CSFactoryFromGT extends ObjectFactoryFromGT implements CSFactory {
      * @return wrapper for the given implementation
      */
     static CSFactory wrap(final org.geotools.api.referencing.cs.CSFactory impl) {
-        switch (impl) {
-            case null: return null;
-            case CSFactory c: return c;
-            case CSFactoryToGT c: return c.impl;
-            default: return new CSFactoryFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CSFactory) {
+            var c = (CSFactory) impl;
+            return c;
+        }
+        if (impl instanceof CSFactoryToGT) {
+            var c = (CSFactoryToGT) impl;
+            return c.impl;
+        }
+        return new CSFactoryFromGT(impl);
     }
 
     /**

@@ -43,11 +43,17 @@ final class PolarCSFromGT extends CoordinateSystemFromGT<org.geotools.api.refere
      * @return wrapper for the given implementation
      */
     static PolarCS wrap(final org.geotools.api.referencing.cs.PolarCS impl) {
-        switch (impl) {
-            case null: return null;
-            case PolarCS c: return c;
-            case PolarCSToGT c: return c.impl;
-            default: return new PolarCSFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof PolarCS) {
+            var c = (PolarCS) impl;
+            return c;
+        }
+        if (impl instanceof PolarCSToGT) {
+            var c = (PolarCSToGT) impl;
+            return c.impl;
+        }
+        return new PolarCSFromGT(impl);
     }
 }

@@ -48,17 +48,38 @@ class DatumFromGT<S extends org.geotools.api.referencing.datum.Datum>
      * @return wrapper for the given implementation
      */
     static Datum wrap(final org.geotools.api.referencing.datum.Datum impl) {
-        switch (impl) {
-            case null: return null;
-            case Datum c: return c;
-            case DatumToGT<?> c: return c.impl;
-            case org.geotools.api.referencing.datum.GeodeticDatum    c: return new GeodeticDatumFromGT(c);
-            case org.geotools.api.referencing.datum.VerticalDatum    c: return new VerticalDatumFromGT(c);
-            case org.geotools.api.referencing.datum.TemporalDatum    c: return new TemporalDatumFromGT(c);
-            case org.geotools.api.referencing.datum.EngineeringDatum c: return new EngineeringDatumFromGT(c);
-            case org.geotools.api.referencing.datum.ImageDatum       c: return new ImageDatumFromGT(c);
-            default: return new DatumFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Datum) {
+            var c = (Datum) impl;
+            return c;
+        }
+        if (impl instanceof DatumToGT<?>) {
+            var c = (DatumToGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.referencing.datum.GeodeticDatum) {
+            var c = (org.geotools.api.referencing.datum.GeodeticDatum) impl;
+            return new GeodeticDatumFromGT(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.datum.VerticalDatum) {
+            var c = (org.geotools.api.referencing.datum.VerticalDatum) impl;
+            return new VerticalDatumFromGT(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.datum.TemporalDatum) {
+            var c = (org.geotools.api.referencing.datum.TemporalDatum) impl;
+            return new TemporalDatumFromGT(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.datum.EngineeringDatum) {
+            var c = (org.geotools.api.referencing.datum.EngineeringDatum) impl;
+            return new EngineeringDatumFromGT(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.datum.ImageDatum) {
+            var c = (org.geotools.api.referencing.datum.ImageDatum) impl;
+            return new ImageDatumFromGT(c);
+        }
+        return new DatumFromGT<>(impl);
     }
 
     @Override

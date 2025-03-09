@@ -57,12 +57,18 @@ final class CRSAuthorityFactoryFromGT extends AuthorityFactoryFromGT implements 
      * @return wrapper for the given implementation
      */
     static CRSAuthorityFactory wrap(final org.geotools.api.referencing.crs.CRSAuthorityFactory impl) {
-        switch (impl) {
-            case null: return null;
-            case CRSAuthorityFactory c: return c;
-            case CRSAuthorityFactoryToGT c: return c.impl;
-            default: return new CRSAuthorityFactoryFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CRSAuthorityFactory) {
+            var c = (CRSAuthorityFactory) impl;
+            return c;
+        }
+        if (impl instanceof CRSAuthorityFactoryToGT) {
+            var c = (CRSAuthorityFactoryToGT) impl;
+            return c.impl;
+        }
+        return new CRSAuthorityFactoryFromGT(impl);
     }
 
     /**

@@ -43,12 +43,21 @@ class LocalNameToGT<S extends org.opengis.util.LocalName>
      * @return wrapper for the given implementation
      */
     static LocalName wrap(final org.opengis.util.LocalName impl) {
-        switch (impl) {
-            case null: return null;
-            case LocalNameFromGT<?> c: return c.impl;
-            case org.opengis.util.TypeName   c: return new TypeNameToGT(c);
-            case org.opengis.util.MemberName c: return new MemberNameToGT(c);
-            default: return new LocalNameToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof LocalNameFromGT<?>) {
+            var c = (LocalNameFromGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.util.TypeName) {
+            var c = (org.opengis.util.TypeName) impl;
+            return new TypeNameToGT(c);
+        }
+        if (impl instanceof org.opengis.util.MemberName) {
+            var c = (org.opengis.util.MemberName) impl;
+            return new MemberNameToGT(c);
+        }
+        return new LocalNameToGT<>(impl);
     }
 }

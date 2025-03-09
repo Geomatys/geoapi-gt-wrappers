@@ -44,12 +44,18 @@ final class ImageDatumToGT extends DatumToGT<org.opengis.referencing.datum.Image
      * @return wrapper for the given implementation
      */
     static ImageDatum wrap(final org.opengis.referencing.datum.ImageDatum impl) {
-        switch (impl) {
-            case null: return null;
-            case ImageDatum c: return c;
-            case ImageDatumFromGT c: return c.impl;
-            default: return new ImageDatumToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof ImageDatum) {
+            var c = (ImageDatum) impl;
+            return c;
+        }
+        if (impl instanceof ImageDatumFromGT) {
+            var c = (ImageDatumFromGT) impl;
+            return c.impl;
+        }
+        return new ImageDatumToGT(impl);
     }
 
     @Override

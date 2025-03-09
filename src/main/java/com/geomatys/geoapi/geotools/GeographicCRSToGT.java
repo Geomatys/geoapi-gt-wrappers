@@ -44,12 +44,18 @@ final class GeographicCRSToGT extends GeodeticCRSToGT<org.opengis.referencing.cr
      * @return wrapper for the given implementation
      */
     static GeographicCRS wrap(final org.opengis.referencing.crs.GeographicCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case GeographicCRS c: return c;
-            case GeographicCRSFromGT c: return c.impl;
-            default: return new GeographicCRSToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof GeographicCRS) {
+            var c = (GeographicCRS) impl;
+            return c;
+        }
+        if (impl instanceof GeographicCRSFromGT) {
+            var c = (GeographicCRSFromGT) impl;
+            return c.impl;
+        }
+        return new GeographicCRSToGT(impl);
     }
 
     @Override

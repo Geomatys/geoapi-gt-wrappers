@@ -45,12 +45,18 @@ final class ConcatenatedOperationFromGT extends CoordinateOperationFromGT<org.ge
      * @return wrapper for the given implementation
      */
     static ConcatenatedOperation wrap(final org.geotools.api.referencing.operation.ConcatenatedOperation impl) {
-        switch (impl) {
-            case null: return null;
-            case ConcatenatedOperation c: return c;
-            case ConcatenatedOperationToGT c: return c.impl;
-            default: return new ConcatenatedOperationFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof ConcatenatedOperation) {
+            var c = (ConcatenatedOperation) impl;
+            return c;
+        }
+        if (impl instanceof ConcatenatedOperationToGT) {
+            var c = (ConcatenatedOperationToGT) impl;
+            return c.impl;
+        }
+        return new ConcatenatedOperationFromGT(impl);
     }
 
     @Override

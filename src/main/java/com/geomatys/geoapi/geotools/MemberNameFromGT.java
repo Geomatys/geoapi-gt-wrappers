@@ -42,11 +42,14 @@ final class MemberNameFromGT extends LocalNameFromGT<org.geotools.api.util.Membe
      * @return wrapper for the given implementation
      */
     static MemberName wrap(final org.geotools.api.util.MemberName impl) {
-        switch (impl) {
-            case null: return null;
-            case MemberNameToGT c: return c.impl;
-            default: return new MemberNameFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof MemberNameToGT) {
+            var c = (MemberNameToGT) impl;
+            return c.impl;
+        }
+        return new MemberNameFromGT(impl);
     }
 
     @Override

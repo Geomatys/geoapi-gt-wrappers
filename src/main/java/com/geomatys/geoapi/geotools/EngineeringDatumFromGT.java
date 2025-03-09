@@ -43,11 +43,17 @@ final class EngineeringDatumFromGT extends DatumFromGT<org.geotools.api.referenc
      * @return wrapper for the given implementation
      */
     static EngineeringDatum wrap(final org.geotools.api.referencing.datum.EngineeringDatum impl) {
-        switch (impl) {
-            case null: return null;
-            case EngineeringDatum c: return c;
-            case EngineeringDatumToGT c: return c.impl;
-            default: return new EngineeringDatumFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof EngineeringDatum) {
+            var c = (EngineeringDatum) impl;
+            return c;
+        }
+        if (impl instanceof EngineeringDatumToGT) {
+            var c = (EngineeringDatumToGT) impl;
+            return c.impl;
+        }
+        return new EngineeringDatumFromGT(impl);
     }
 }

@@ -50,13 +50,22 @@ class GeographicExtentToGT<S extends org.opengis.metadata.extent.GeographicExten
      * @return wrapper for the given implementation
      */
     static GeographicExtent wrap(final org.opengis.metadata.extent.GeographicExtent impl) {
-        switch (impl) {
-            case null: return null;
-            case GeographicExtent c: return c;
-            case GeographicExtentFromGT<?> c: return c.impl;
-            case org.opengis.metadata.extent.GeographicBoundingBox c: return new GeographicBoundingBoxToGT(c);
-            default: return new GeographicExtentToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof GeographicExtent) {
+            var c = (GeographicExtent) impl;
+            return c;
+        }
+        if (impl instanceof GeographicExtentFromGT<?>) {
+            var c = (GeographicExtentFromGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.metadata.extent.GeographicBoundingBox) {
+            var c = (org.opengis.metadata.extent.GeographicBoundingBox) impl;
+            return new GeographicBoundingBoxToGT(c);
+        }
+        return new GeographicExtentToGT<>(impl);
     }
 
     /**

@@ -45,12 +45,21 @@ class PositionalAccuracyToGT<S extends org.opengis.metadata.quality.PositionalAc
      * @return wrapper for the given implementation
      */
     static PositionalAccuracy wrap(final org.opengis.metadata.quality.PositionalAccuracy impl) {
-        switch (impl) {
-            case null: return null;
-            case PositionalAccuracy c: return c;
-            case PositionalAccuracyFromGT<?> c: return c.impl;
-            case org.opengis.metadata.quality.AbsoluteExternalPositionalAccuracy c: return new AbsoluteExternalPositionalAccuracyToGT(c);
-            default: return new PositionalAccuracyToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof PositionalAccuracy) {
+            var c = (PositionalAccuracy) impl;
+            return c;
+        }
+        if (impl instanceof PositionalAccuracyFromGT<?>) {
+            var c = (PositionalAccuracyFromGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.metadata.quality.AbsoluteExternalPositionalAccuracy) {
+            var c = (org.opengis.metadata.quality.AbsoluteExternalPositionalAccuracy) impl;
+            return new AbsoluteExternalPositionalAccuracyToGT(c);
+        }
+        return new PositionalAccuracyToGT<>(impl);
     }
 }

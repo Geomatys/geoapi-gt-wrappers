@@ -46,12 +46,18 @@ final class MatrixToGT extends WrapperToGT implements Matrix {
      * @return wrapper for the given implementation
      */
     static Matrix wrap(final org.opengis.referencing.operation.Matrix impl) {
-        switch (impl) {
-            case null: return null;
-            case Matrix c: return c;
-            case MatrixFromGT c: return c.impl;
-            default: return new MatrixToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Matrix) {
+            var c = (Matrix) impl;
+            return c;
+        }
+        if (impl instanceof MatrixFromGT) {
+            var c = (MatrixFromGT) impl;
+            return c.impl;
+        }
+        return new MatrixToGT(impl);
     }
 
     /**

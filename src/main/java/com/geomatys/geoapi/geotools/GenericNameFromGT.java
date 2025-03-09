@@ -55,13 +55,22 @@ class GenericNameFromGT<S extends org.geotools.api.util.GenericName>
      * @return wrapper for the given implementation
      */
     static GenericName wrap(final org.geotools.api.util.GenericName impl) {
-        switch (impl) {
-            case null: return null;
-            case GenericNameToGT<?> c: return c.impl;
-            case org.geotools.api.util.LocalName  c: return LocalNameFromGT.wrap(c);
-            case org.geotools.api.util.ScopedName c: return new ScopedNameFromGT(c);
-            default: return new GenericNameFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof GenericNameToGT<?>) {
+            var c = (GenericNameToGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.util.LocalName) {
+            var c = (org.geotools.api.util.LocalName) impl;
+            return LocalNameFromGT.wrap(c);
+        }
+        if (impl instanceof org.geotools.api.util.ScopedName) {
+            var c = (org.geotools.api.util.ScopedName) impl;
+            return new ScopedNameFromGT(c);
+        }
+        return new GenericNameFromGT<>(impl);
     }
 
     /**

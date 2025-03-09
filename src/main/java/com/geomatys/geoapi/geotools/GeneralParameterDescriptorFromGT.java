@@ -46,14 +46,26 @@ class GeneralParameterDescriptorFromGT<S extends org.geotools.api.parameter.Gene
      * @return wrapper for the given implementation
      */
     static GeneralParameterDescriptor wrap(final org.geotools.api.parameter.GeneralParameterDescriptor impl) {
-        switch (impl) {
-            case null: return null;
-            case GeneralParameterDescriptor c: return c;
-            case GeneralParameterDescriptorToGT<?> c: return c.impl;
-            case org.geotools.api.parameter.ParameterDescriptor<?> c: return new ParameterDescriptorFromGT<>(c);
-            case org.geotools.api.parameter.ParameterDescriptorGroup c: return new ParameterDescriptorGroupFromGT(c);
-            default: return new GeneralParameterDescriptorFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof GeneralParameterDescriptor) {
+            var c = (GeneralParameterDescriptor) impl;
+            return c;
+        }
+        if (impl instanceof GeneralParameterDescriptorToGT<?>) {
+            var c = (GeneralParameterDescriptorToGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.parameter.ParameterDescriptor<?>) {
+            var c = (org.geotools.api.parameter.ParameterDescriptor<?>) impl;
+            return new ParameterDescriptorFromGT<>(c);
+        }
+        if (impl instanceof org.geotools.api.parameter.ParameterDescriptorGroup) {
+            var c = (org.geotools.api.parameter.ParameterDescriptorGroup) impl;
+            return new ParameterDescriptorGroupFromGT(c);
+        }
+        return new GeneralParameterDescriptorFromGT<>(impl);
     }
 
     @Override

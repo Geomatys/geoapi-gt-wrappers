@@ -44,12 +44,18 @@ final class VerticalDatumFromGT extends DatumFromGT<org.geotools.api.referencing
      * @return wrapper for the given implementation
      */
     static VerticalDatum wrap(final org.geotools.api.referencing.datum.VerticalDatum impl) {
-        switch (impl) {
-            case null: return null;
-            case VerticalDatum c: return c;
-            case VerticalDatumToGT c: return c.impl;
-            default: return new VerticalDatumFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof VerticalDatum) {
+            var c = (VerticalDatum) impl;
+            return c;
+        }
+        if (impl instanceof VerticalDatumToGT) {
+            var c = (VerticalDatumToGT) impl;
+            return c.impl;
+        }
+        return new VerticalDatumFromGT(impl);
     }
 
     @Override

@@ -51,12 +51,18 @@ final class CRSFactoryToGT extends ObjectFactoryToGT implements CRSFactory {
      * @return wrapper for the given implementation
      */
     static CRSFactory wrap(final org.opengis.referencing.crs.CRSFactory impl) {
-        switch (impl) {
-            case null: return null;
-            case CRSFactory c: return c;
-            case CRSFactoryFromGT c: return c.impl;
-            default: return new CRSFactoryToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CRSFactory) {
+            var c = (CRSFactory) impl;
+            return c;
+        }
+        if (impl instanceof CRSFactoryFromGT) {
+            var c = (CRSFactoryFromGT) impl;
+            return c.impl;
+        }
+        return new CRSFactoryToGT(impl);
     }
 
     /**

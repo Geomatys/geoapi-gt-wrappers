@@ -49,12 +49,18 @@ final class OnlineResourceToGT extends WrapperToGT implements OnLineResource {
      * @return wrapper for the given implementation
      */
     static OnLineResource wrap(final org.opengis.metadata.citation.OnlineResource impl) {
-        switch (impl) {
-            case null: return null;
-            case OnLineResource c: return c;
-            case OnlineResourceFromGT c: return c.impl;
-            default: return new OnlineResourceToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof OnLineResource) {
+            var c = (OnLineResource) impl;
+            return c;
+        }
+        if (impl instanceof OnlineResourceFromGT) {
+            var c = (OnlineResourceFromGT) impl;
+            return c.impl;
+        }
+        return new OnlineResourceToGT(impl);
     }
 
     /**

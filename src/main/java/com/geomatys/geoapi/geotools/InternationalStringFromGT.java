@@ -48,11 +48,14 @@ final class InternationalStringFromGT extends WrapperFromGT implements Internati
      * @return wrapper for the given implementation
      */
     static InternationalString wrap(final org.geotools.api.util.InternationalString impl) {
-        switch (impl) {
-            case null: return null;
-            case InternationalStringToGT c: return c.impl;
-            default: return new InternationalStringFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof InternationalStringToGT) {
+            var c = (InternationalStringToGT) impl;
+            return c.impl;
+        }
+        return new InternationalStringFromGT(impl);
     }
 
     /**
@@ -61,11 +64,6 @@ final class InternationalStringFromGT extends WrapperFromGT implements Internati
     @Override
     final Object implementation() {
         return impl;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return impl.isEmpty();
     }
 
     @Override
@@ -100,7 +98,8 @@ final class InternationalStringFromGT extends WrapperFromGT implements Internati
 
     @Override
     public int compareTo(final InternationalString o) {
-        if (o instanceof InternationalStringFromGT i18n) {
+        if (o instanceof InternationalStringFromGT) {
+            var i18n = (InternationalStringFromGT) o;
             return impl.compareTo(i18n.impl);
         } else {
             return toString().compareTo(o.toString());

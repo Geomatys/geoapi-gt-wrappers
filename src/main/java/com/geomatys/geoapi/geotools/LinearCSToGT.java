@@ -43,11 +43,17 @@ final class LinearCSToGT extends CoordinateSystemToGT<org.opengis.referencing.cs
      * @return wrapper for the given implementation
      */
     static LinearCS wrap(final org.opengis.referencing.cs.LinearCS impl) {
-        switch (impl) {
-            case null: return null;
-            case LinearCS c: return c;
-            case LinearCSFromGT c: return c.impl;
-            default: return new LinearCSToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof LinearCS) {
+            var c = (LinearCS) impl;
+            return c;
+        }
+        if (impl instanceof LinearCSFromGT) {
+            var c = (LinearCSFromGT) impl;
+            return c.impl;
+        }
+        return new LinearCSToGT(impl);
     }
 }

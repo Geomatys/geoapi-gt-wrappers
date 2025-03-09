@@ -49,12 +49,18 @@ final class OnlineResourceFromGT extends WrapperFromGT implements OnlineResource
      * @return wrapper for the given implementation
      */
     static OnlineResource wrap(final org.geotools.api.metadata.citation.OnLineResource impl) {
-        switch (impl) {
-            case null: return null;
-            case OnlineResource c: return c;
-            case OnlineResourceToGT c: return c.impl;
-            default: return new OnlineResourceFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof OnlineResource) {
+            var c = (OnlineResource) impl;
+            return c;
+        }
+        if (impl instanceof OnlineResourceToGT) {
+            var c = (OnlineResourceToGT) impl;
+            return c.impl;
+        }
+        return new OnlineResourceFromGT(impl);
     }
 
     /**

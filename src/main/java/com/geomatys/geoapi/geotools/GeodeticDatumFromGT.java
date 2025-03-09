@@ -45,12 +45,18 @@ final class GeodeticDatumFromGT extends DatumFromGT<org.geotools.api.referencing
      * @return wrapper for the given implementation
      */
     static GeodeticDatum wrap(final org.geotools.api.referencing.datum.GeodeticDatum impl) {
-        switch (impl) {
-            case null: return null;
-            case GeodeticDatum c: return c;
-            case GeodeticDatumToGT c: return c.impl;
-            default: return new GeodeticDatumFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof GeodeticDatum) {
+            var c = (GeodeticDatum) impl;
+            return c;
+        }
+        if (impl instanceof GeodeticDatumToGT) {
+            var c = (GeodeticDatumToGT) impl;
+            return c.impl;
+        }
+        return new GeodeticDatumFromGT(impl);
     }
 
     @Override

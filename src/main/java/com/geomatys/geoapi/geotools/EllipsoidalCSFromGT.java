@@ -43,11 +43,17 @@ final class EllipsoidalCSFromGT extends CoordinateSystemFromGT<org.geotools.api.
      * @return wrapper for the given implementation
      */
     static EllipsoidalCS wrap(final org.geotools.api.referencing.cs.EllipsoidalCS impl) {
-        switch (impl) {
-            case null: return null;
-            case EllipsoidalCS c: return c;
-            case EllipsoidalCSToGT c: return c.impl;
-            default: return new EllipsoidalCSFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof EllipsoidalCS) {
+            var c = (EllipsoidalCS) impl;
+            return c;
+        }
+        if (impl instanceof EllipsoidalCSToGT) {
+            var c = (EllipsoidalCSToGT) impl;
+            return c.impl;
+        }
+        return new EllipsoidalCSFromGT(impl);
     }
 }

@@ -51,15 +51,27 @@ class CoordinateOperationFromGT<S extends org.geotools.api.referencing.operation
      * @return wrapper for the given implementation
      */
     static CoordinateOperation wrap(final org.geotools.api.referencing.operation.CoordinateOperation impl) {
-        switch (impl) {
-            case null: return null;
-            case CoordinateOperation c: return c;
-            case CoordinateOperationToGT<?> c: return c.impl;
-            // The following case intentionally excludes the GeoTools `SingleOperation` interface.
-            case org.geotools.api.referencing.operation.Operation c: return SingleOperationFromGT.wrap(c);
-            case org.geotools.api.referencing.operation.ConcatenatedOperation c: return new ConcatenatedOperationFromGT(c);
-            default: return new CoordinateOperationFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CoordinateOperation) {
+            var c = (CoordinateOperation) impl;
+            return c;
+        }
+        if (impl instanceof CoordinateOperationToGT<?>) {
+            var c = (CoordinateOperationToGT<?>) impl;
+            return c.impl;
+        }
+            // The following case intentionally excludes the GeoTools `SingleOperation` interface.
+        if (impl instanceof org.geotools.api.referencing.operation.Operation) {
+            var c = (org.geotools.api.referencing.operation.Operation) impl;
+            return SingleOperationFromGT.wrap(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.operation.ConcatenatedOperation) {
+            var c = (org.geotools.api.referencing.operation.ConcatenatedOperation) impl;
+            return new ConcatenatedOperationFromGT(c);
+        }
+        return new CoordinateOperationFromGT<>(impl);
     }
 
     @Override

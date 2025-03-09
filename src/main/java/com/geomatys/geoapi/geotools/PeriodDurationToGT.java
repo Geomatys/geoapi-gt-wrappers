@@ -47,12 +47,18 @@ final class PeriodDurationToGT extends WrapperToGT implements PeriodDuration {
      * @return wrapper for the given implementation
      */
     static PeriodDuration wrap(final org.opengis.temporal.PeriodDuration impl) {
-        switch (impl) {
-            case null: return null;
-            case PeriodDuration c: return c;
-            case PeriodDurationFromGT c: return c.impl;
-            default: return new PeriodDurationToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof PeriodDuration) {
+            var c = (PeriodDuration) impl;
+            return c;
+        }
+        if (impl instanceof PeriodDurationFromGT) {
+            var c = (PeriodDurationFromGT) impl;
+            return c.impl;
+        }
+        return new PeriodDurationToGT(impl);
     }
 
     /**

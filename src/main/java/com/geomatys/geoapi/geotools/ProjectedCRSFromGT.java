@@ -47,12 +47,18 @@ final class ProjectedCRSFromGT extends GeneralDerivedCRSFromGT<org.geotools.api.
      * @return wrapper for the given implementation
      */
     static ProjectedCRS wrap(final org.geotools.api.referencing.crs.ProjectedCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case ProjectedCRS c: return c;
-            case ProjectedCRSToGT c: return c.impl;
-            default: return new ProjectedCRSFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof ProjectedCRS) {
+            var c = (ProjectedCRS) impl;
+            return c;
+        }
+        if (impl instanceof ProjectedCRSToGT) {
+            var c = (ProjectedCRSToGT) impl;
+            return c.impl;
+        }
+        return new ProjectedCRSFromGT(impl);
     }
 
     @Override

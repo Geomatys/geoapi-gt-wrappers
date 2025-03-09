@@ -49,12 +49,18 @@ final class CSFactoryToGT extends ObjectFactoryToGT implements CSFactory {
      * @return wrapper for the given implementation
      */
     static CSFactory wrap(final org.opengis.referencing.cs.CSFactory impl) {
-        switch (impl) {
-            case null: return null;
-            case CSFactory c: return c;
-            case CSFactoryFromGT c: return c.impl;
-            default: return new CSFactoryToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CSFactory) {
+            var c = (CSFactory) impl;
+            return c;
+        }
+        if (impl instanceof CSFactoryFromGT) {
+            var c = (CSFactoryFromGT) impl;
+            return c.impl;
+        }
+        return new CSFactoryToGT(impl);
     }
 
     /**

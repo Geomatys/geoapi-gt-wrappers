@@ -48,12 +48,18 @@ final class QuantitativeResultFromGT extends QualityResultFromGT<org.geotools.ap
      * @return wrapper for the given implementation
      */
     static QuantitativeResult wrap(final org.geotools.api.metadata.quality.QuantitativeResult impl) {
-        switch (impl) {
-            case null: return null;
-            case QuantitativeResult c: return c;
-            case QuantitativeResultToGT c: return c.impl;
-            default: return new QuantitativeResultFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof QuantitativeResult) {
+            var c = (QuantitativeResult) impl;
+            return c;
+        }
+        if (impl instanceof QuantitativeResultToGT) {
+            var c = (QuantitativeResultToGT) impl;
+            return c.impl;
+        }
+        return new QuantitativeResultFromGT(impl);
     }
 
     @Override

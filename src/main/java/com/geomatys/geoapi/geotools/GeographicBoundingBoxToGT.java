@@ -43,12 +43,18 @@ final class GeographicBoundingBoxToGT extends GeographicExtentToGT<org.opengis.m
      * @return wrapper for the given implementation
      */
     static GeographicBoundingBox wrap(final org.opengis.metadata.extent.GeographicBoundingBox impl) {
-        switch (impl) {
-            case null: return null;
-            case GeographicBoundingBox c: return c;
-            case GeographicBoundingBoxFromGT c: return c.impl;
-            default: return new GeographicBoundingBoxToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof GeographicBoundingBox) {
+            var c = (GeographicBoundingBox) impl;
+            return c;
+        }
+        if (impl instanceof GeographicBoundingBoxFromGT) {
+            var c = (GeographicBoundingBoxFromGT) impl;
+            return c.impl;
+        }
+        return new GeographicBoundingBoxToGT(impl);
     }
 
     @Override

@@ -46,22 +46,58 @@ class CoordinateSystemFromGT<S extends org.geotools.api.referencing.cs.Coordinat
      * @return wrapper for the given implementation
      */
     static CoordinateSystem wrap(final org.geotools.api.referencing.cs.CoordinateSystem impl) {
-        switch (impl) {
-            case null: return null;
-            case CoordinateSystem c: return c;
-            case CoordinateSystemToGT<?> c: return c.impl;
-            case org.geotools.api.referencing.cs.EllipsoidalCS c: return new EllipsoidalCSFromGT(c);
-            case org.geotools.api.referencing.cs.SphericalCS   c: return new SphericalCSFromGT  (c);
-            case org.geotools.api.referencing.cs.CartesianCS   c: return new CartesianCSFromGT  (c);
-            case org.geotools.api.referencing.cs.AffineCS      c: return new AffineCSFromGT<>   (c);
-            case org.geotools.api.referencing.cs.CylindricalCS c: return new CylindricalCSFromGT(c);
-            case org.geotools.api.referencing.cs.PolarCS       c: return new PolarCSFromGT      (c);
-            case org.geotools.api.referencing.cs.VerticalCS    c: return new VerticalCSFromGT   (c);
-            case org.geotools.api.referencing.cs.LinearCS      c: return new LinearCSFromGT     (c);
-            case org.geotools.api.referencing.cs.TimeCS        c: return new TimeCSFromGT       (c);
-            case org.geotools.api.referencing.cs.UserDefinedCS c: return new UserDefinedCSFromGT(c);
-            default: return new CoordinateSystemFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CoordinateSystem) {
+            var c = (CoordinateSystem) impl;
+            return c;
+        }
+        if (impl instanceof CoordinateSystemToGT<?>) {
+            var c = (CoordinateSystemToGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.referencing.cs.EllipsoidalCS) {
+            var c = (org.geotools.api.referencing.cs.EllipsoidalCS) impl;
+            return new EllipsoidalCSFromGT(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.cs.SphericalCS) {
+            var c = (org.geotools.api.referencing.cs.SphericalCS) impl;
+            return new SphericalCSFromGT  (c);
+        }
+        if (impl instanceof org.geotools.api.referencing.cs.CartesianCS) {
+            var c = (org.geotools.api.referencing.cs.CartesianCS) impl;
+            return new CartesianCSFromGT  (c);
+        }
+        if (impl instanceof org.geotools.api.referencing.cs.AffineCS) {
+            var c = (org.geotools.api.referencing.cs.AffineCS) impl;
+            return new AffineCSFromGT<>   (c);
+        }
+        if (impl instanceof org.geotools.api.referencing.cs.CylindricalCS) {
+            var c = (org.geotools.api.referencing.cs.CylindricalCS) impl;
+            return new CylindricalCSFromGT(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.cs.PolarCS) {
+            var c = (org.geotools.api.referencing.cs.PolarCS) impl;
+            return new PolarCSFromGT      (c);
+        }
+        if (impl instanceof org.geotools.api.referencing.cs.VerticalCS) {
+            var c = (org.geotools.api.referencing.cs.VerticalCS) impl;
+            return new VerticalCSFromGT   (c);
+        }
+        if (impl instanceof org.geotools.api.referencing.cs.LinearCS) {
+            var c = (org.geotools.api.referencing.cs.LinearCS) impl;
+            return new LinearCSFromGT     (c);
+        }
+        if (impl instanceof org.geotools.api.referencing.cs.TimeCS) {
+            var c = (org.geotools.api.referencing.cs.TimeCS) impl;
+            return new TimeCSFromGT       (c);
+        }
+        if (impl instanceof org.geotools.api.referencing.cs.UserDefinedCS) {
+            var c = (org.geotools.api.referencing.cs.UserDefinedCS) impl;
+            return new UserDefinedCSFromGT(c);
+        }
+        return new CoordinateSystemFromGT<>(impl);
     }
 
     @Override

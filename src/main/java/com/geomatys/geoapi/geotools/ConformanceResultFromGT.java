@@ -45,12 +45,18 @@ final class ConformanceResultFromGT extends QualityResultFromGT<org.geotools.api
      * @return wrapper for the given implementation
      */
     static ConformanceResult wrap(final org.geotools.api.metadata.quality.ConformanceResult impl) {
-        switch (impl) {
-            case null: return null;
-            case ConformanceResult c: return c;
-            case ConformanceResultToGT c: return c.impl;
-            default: return new ConformanceResultFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof ConformanceResult) {
+            var c = (ConformanceResult) impl;
+            return c;
+        }
+        if (impl instanceof ConformanceResultToGT) {
+            var c = (ConformanceResultToGT) impl;
+            return c.impl;
+        }
+        return new ConformanceResultFromGT(impl);
     }
 
     @Override

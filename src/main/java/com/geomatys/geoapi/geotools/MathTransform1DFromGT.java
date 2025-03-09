@@ -45,12 +45,18 @@ final class MathTransform1DFromGT extends MathTransformFromGT<org.geotools.api.r
      * @return wrapper for the given implementation
      */
     static MathTransform1D wrap(final org.geotools.api.referencing.operation.MathTransform1D impl) {
-        switch (impl) {
-            case null: return null;
-            case MathTransform1D c: return c;
-            case MathTransform1DToGT c: return c.impl;
-            default: return new MathTransform1DFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof MathTransform1D) {
+            var c = (MathTransform1D) impl;
+            return c;
+        }
+        if (impl instanceof MathTransform1DToGT) {
+            var c = (MathTransform1DToGT) impl;
+            return c.impl;
+        }
+        return new MathTransform1DFromGT(impl);
     }
 
     @Override

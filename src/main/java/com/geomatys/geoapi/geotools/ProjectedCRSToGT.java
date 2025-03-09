@@ -47,12 +47,18 @@ final class ProjectedCRSToGT extends GeneralDerivedCRSToGT<org.opengis.referenci
      * @return wrapper for the given implementation
      */
     static ProjectedCRS wrap(final org.opengis.referencing.crs.ProjectedCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case ProjectedCRS c: return c;
-            case ProjectedCRSFromGT c: return c.impl;
-            default: return new ProjectedCRSToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof ProjectedCRS) {
+            var c = (ProjectedCRS) impl;
+            return c;
+        }
+        if (impl instanceof ProjectedCRSFromGT) {
+            var c = (ProjectedCRSFromGT) impl;
+            return c.impl;
+        }
+        return new ProjectedCRSToGT(impl);
     }
 
     @Override

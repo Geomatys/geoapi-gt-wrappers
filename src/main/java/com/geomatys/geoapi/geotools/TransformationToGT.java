@@ -43,11 +43,17 @@ final class TransformationToGT extends SingleOperationToGT<org.opengis.referenci
      * @return wrapper for the given implementation
      */
     static Transformation wrap(final org.opengis.referencing.operation.Transformation impl) {
-        switch (impl) {
-            case null: return null;
-            case Transformation c: return c;
-            case TransformationFromGT c: return c.impl;
-            default: return new TransformationToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Transformation) {
+            var c = (Transformation) impl;
+            return c;
+        }
+        if (impl instanceof TransformationFromGT) {
+            var c = (TransformationFromGT) impl;
+            return c.impl;
+        }
+        return new TransformationToGT(impl);
     }
 }

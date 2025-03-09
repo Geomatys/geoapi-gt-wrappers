@@ -44,12 +44,18 @@ final class TemporalDatumFromGT extends DatumFromGT<org.geotools.api.referencing
      * @return wrapper for the given implementation
      */
     static TemporalDatum wrap(final org.geotools.api.referencing.datum.TemporalDatum impl) {
-        switch (impl) {
-            case null: return null;
-            case TemporalDatum c: return c;
-            case TemporalDatumToGT c: return c.impl;
-            default: return new TemporalDatumFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof TemporalDatum) {
+            var c = (TemporalDatum) impl;
+            return c;
+        }
+        if (impl instanceof TemporalDatumToGT) {
+            var c = (TemporalDatumToGT) impl;
+            return c.impl;
+        }
+        return new TemporalDatumFromGT(impl);
     }
 
     @Override

@@ -51,14 +51,26 @@ class GeneralParameterValueFromGT<S extends org.geotools.api.parameter.GeneralPa
      * @return wrapper for the given implementation
      */
     static GeneralParameterValue wrap(final org.geotools.api.parameter.GeneralParameterValue impl) {
-        switch (impl) {
-            case null: return null;
-            case GeneralParameterValue c: return c;
-            case GeneralParameterValueToGT<?> c: return c.impl;
-            case org.geotools.api.parameter.ParameterValue<?> c: return new ParameterValueFromGT<>(c);
-            case org.geotools.api.parameter.ParameterValueGroup c: return new ParameterValueGroupFromGT(c);
-            default: return new GeneralParameterValueFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof GeneralParameterValue) {
+            var c = (GeneralParameterValue) impl;
+            return c;
+        }
+        if (impl instanceof GeneralParameterValueToGT<?>) {
+            var c = (GeneralParameterValueToGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.parameter.ParameterValue<?>) {
+            var c = (org.geotools.api.parameter.ParameterValue<?>) impl;
+            return new ParameterValueFromGT<>(c);
+        }
+        if (impl instanceof org.geotools.api.parameter.ParameterValueGroup) {
+            var c = (org.geotools.api.parameter.ParameterValueGroup) impl;
+            return new ParameterValueGroupFromGT(c);
+        }
+        return new GeneralParameterValueFromGT<>(impl);
     }
 
     /**

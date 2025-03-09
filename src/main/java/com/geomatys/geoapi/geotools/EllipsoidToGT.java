@@ -45,12 +45,18 @@ final class EllipsoidToGT extends IdentifiedObjectToGT<org.opengis.referencing.d
      * @return wrapper for the given implementation
      */
     static Ellipsoid wrap(final org.opengis.referencing.datum.Ellipsoid impl) {
-        switch (impl) {
-            case null: return null;
-            case Ellipsoid c: return c;
-            case EllipsoidFromGT c: return c.impl;
-            default: return new EllipsoidToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Ellipsoid) {
+            var c = (Ellipsoid) impl;
+            return c;
+        }
+        if (impl instanceof EllipsoidFromGT) {
+            var c = (EllipsoidFromGT) impl;
+            return c.impl;
+        }
+        return new EllipsoidToGT(impl);
     }
 
     @Override

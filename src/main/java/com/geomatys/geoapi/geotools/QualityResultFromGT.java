@@ -48,14 +48,26 @@ class QualityResultFromGT<S extends org.geotools.api.metadata.quality.Result> ex
      * @return wrapper for the given implementation
      */
     static Result wrap(final org.geotools.api.metadata.quality.Result impl) {
-        switch (impl) {
-            case null: return null;
-            case Result c: return c;
-            case QualityResultToGT<?> c: return c.impl;
-            case org.geotools.api.metadata.quality.ConformanceResult  c: return new ConformanceResultFromGT (c);
-            case org.geotools.api.metadata.quality.QuantitativeResult c: return new QuantitativeResultFromGT(c);
-            default: return new QualityResultFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Result) {
+            var c = (Result) impl;
+            return c;
+        }
+        if (impl instanceof QualityResultToGT<?>) {
+            var c = (QualityResultToGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.metadata.quality.ConformanceResult) {
+            var c = (org.geotools.api.metadata.quality.ConformanceResult) impl;
+            return new ConformanceResultFromGT (c);
+        }
+        if (impl instanceof org.geotools.api.metadata.quality.QuantitativeResult) {
+            var c = (org.geotools.api.metadata.quality.QuantitativeResult) impl;
+            return new QuantitativeResultFromGT(c);
+        }
+        return new QualityResultFromGT<>(impl);
     }
 
     /**

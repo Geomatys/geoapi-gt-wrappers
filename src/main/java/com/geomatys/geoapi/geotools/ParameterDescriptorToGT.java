@@ -49,11 +49,14 @@ final class ParameterDescriptorToGT<V> extends GeneralParameterDescriptorToGT<or
      * @return wrapper for the given implementation
      */
     static <V> ParameterDescriptor<V> wrap(final org.opengis.parameter.ParameterDescriptor<V> impl) {
-        switch (impl) {
-            case null: return null;
-            case ParameterDescriptorFromGT<V> c: return c.impl;
-            default: return new ParameterDescriptorToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof ParameterDescriptorFromGT<?>) {
+            var c = (ParameterDescriptorFromGT<V>) impl;
+            return c.impl;
+        }
+        return new ParameterDescriptorToGT<>(impl);
     }
 
     @Override

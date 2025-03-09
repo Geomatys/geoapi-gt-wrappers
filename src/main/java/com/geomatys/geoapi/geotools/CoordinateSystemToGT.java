@@ -46,22 +46,58 @@ class CoordinateSystemToGT<S extends org.opengis.referencing.cs.CoordinateSystem
      * @return wrapper for the given implementation
      */
     static CoordinateSystem wrap(final org.opengis.referencing.cs.CoordinateSystem impl) {
-        switch (impl) {
-            case null: return null;
-            case CoordinateSystem c: return c;
-            case CoordinateSystemFromGT<?> c: return c.impl;
-            case org.opengis.referencing.cs.EllipsoidalCS c: return new EllipsoidalCSToGT(c);
-            case org.opengis.referencing.cs.SphericalCS   c: return new SphericalCSToGT  (c);
-            case org.opengis.referencing.cs.CartesianCS   c: return new CartesianCSToGT  (c);
-            case org.opengis.referencing.cs.AffineCS      c: return new AffineCSToGT<>   (c);
-            case org.opengis.referencing.cs.CylindricalCS c: return new CylindricalCSToGT(c);
-            case org.opengis.referencing.cs.PolarCS       c: return new PolarCSToGT      (c);
-            case org.opengis.referencing.cs.VerticalCS    c: return new VerticalCSToGT   (c);
-            case org.opengis.referencing.cs.LinearCS      c: return new LinearCSToGT     (c);
-            case org.opengis.referencing.cs.TimeCS        c: return new TimeCSToGT       (c);
-            case org.opengis.referencing.cs.UserDefinedCS c: return new UserDefinedCSToGT(c);
-            default: return new CoordinateSystemToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CoordinateSystem) {
+            var c = (CoordinateSystem) impl;
+            return c;
+        }
+        if (impl instanceof CoordinateSystemFromGT<?>) {
+            var c = (CoordinateSystemFromGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.referencing.cs.EllipsoidalCS) {
+            var c = (org.opengis.referencing.cs.EllipsoidalCS) impl;
+            return new EllipsoidalCSToGT(c);
+        }
+        if (impl instanceof org.opengis.referencing.cs.SphericalCS) {
+            var c = (org.opengis.referencing.cs.SphericalCS) impl;
+            return new SphericalCSToGT  (c);
+        }
+        if (impl instanceof org.opengis.referencing.cs.CartesianCS) {
+            var c = (org.opengis.referencing.cs.CartesianCS) impl;
+            return new CartesianCSToGT  (c);
+        }
+        if (impl instanceof org.opengis.referencing.cs.AffineCS) {
+            var c = (org.opengis.referencing.cs.AffineCS) impl;
+            return new AffineCSToGT<>   (c);
+        }
+        if (impl instanceof org.opengis.referencing.cs.CylindricalCS) {
+            var c = (org.opengis.referencing.cs.CylindricalCS) impl;
+            return new CylindricalCSToGT(c);
+        }
+        if (impl instanceof org.opengis.referencing.cs.PolarCS) {
+            var c = (org.opengis.referencing.cs.PolarCS) impl;
+            return new PolarCSToGT      (c);
+        }
+        if (impl instanceof org.opengis.referencing.cs.VerticalCS) {
+            var c = (org.opengis.referencing.cs.VerticalCS) impl;
+            return new VerticalCSToGT   (c);
+        }
+        if (impl instanceof org.opengis.referencing.cs.LinearCS) {
+            var c = (org.opengis.referencing.cs.LinearCS) impl;
+            return new LinearCSToGT     (c);
+        }
+        if (impl instanceof org.opengis.referencing.cs.TimeCS) {
+            var c = (org.opengis.referencing.cs.TimeCS) impl;
+            return new TimeCSToGT       (c);
+        }
+        if (impl instanceof org.opengis.referencing.cs.UserDefinedCS) {
+            var c = (org.opengis.referencing.cs.UserDefinedCS) impl;
+            return new UserDefinedCSToGT(c);
+        }
+        return new CoordinateSystemToGT<>(impl);
     }
 
     @Override

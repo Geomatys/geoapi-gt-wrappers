@@ -46,12 +46,18 @@ final class CoordinateSystemAxisFromGT extends IdentifiedObjectFromGT<org.geotoo
      * @return wrapper for the given implementation
      */
     static CoordinateSystemAxis wrap(final org.geotools.api.referencing.cs.CoordinateSystemAxis impl) {
-        switch (impl) {
-            case null: return null;
-            case CoordinateSystemAxis c: return c;
-            case CoordinateSystemAxisToGT c: return c.impl;
-            default: return new CoordinateSystemAxisFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CoordinateSystemAxis) {
+            var c = (CoordinateSystemAxis) impl;
+            return c;
+        }
+        if (impl instanceof CoordinateSystemAxisToGT) {
+            var c = (CoordinateSystemAxisToGT) impl;
+            return c.impl;
+        }
+        return new CoordinateSystemAxisFromGT(impl);
     }
 
     @Override

@@ -46,19 +46,46 @@ class SingleCRSFromGT<S extends org.geotools.api.referencing.crs.SingleCRS>
      * @return wrapper for the given implementation
      */
     static SingleCRS wrap(final org.geotools.api.referencing.crs.SingleCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case SingleCRS c: return c;
-            case SingleCRSToGT<?> c: return c.impl;
-            case org.geotools.api.referencing.crs.ProjectedCRS      c: return new ProjectedCRSFromGT(c);
-            case org.geotools.api.referencing.crs.GeneralDerivedCRS c: return GeneralDerivedCRSFromGT.wrap(c);
-            case org.geotools.api.referencing.crs.GeodeticCRS       c: return GeodeticCRSFromGT.wrap(c);
-            case org.geotools.api.referencing.crs.VerticalCRS       c: return new VerticalCRSFromGT(c);
-            case org.geotools.api.referencing.crs.TemporalCRS       c: return new TemporalCRSFromGT(c);
-            case org.geotools.api.referencing.crs.EngineeringCRS    c: return new EngineeringCRSFromGT(c);
-            case org.geotools.api.referencing.crs.ImageCRS          c: return new ImageCRSFromGT(c);
-            default: return new SingleCRSFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof SingleCRS) {
+            var c = (SingleCRS) impl;
+            return c;
+        }
+        if (impl instanceof SingleCRSToGT<?>) {
+            var c = (SingleCRSToGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.referencing.crs.ProjectedCRS) {
+            var c = (org.geotools.api.referencing.crs.ProjectedCRS) impl;
+            return new ProjectedCRSFromGT(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.crs.GeneralDerivedCRS) {
+            var c = (org.geotools.api.referencing.crs.GeneralDerivedCRS) impl;
+            return GeneralDerivedCRSFromGT.wrap(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.crs.GeodeticCRS) {
+            var c = (org.geotools.api.referencing.crs.GeodeticCRS) impl;
+            return GeodeticCRSFromGT.wrap(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.crs.VerticalCRS) {
+            var c = (org.geotools.api.referencing.crs.VerticalCRS) impl;
+            return new VerticalCRSFromGT(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.crs.TemporalCRS) {
+            var c = (org.geotools.api.referencing.crs.TemporalCRS) impl;
+            return new TemporalCRSFromGT(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.crs.EngineeringCRS) {
+            var c = (org.geotools.api.referencing.crs.EngineeringCRS) impl;
+            return new EngineeringCRSFromGT(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.crs.ImageCRS) {
+            var c = (org.geotools.api.referencing.crs.ImageCRS) impl;
+            return new ImageCRSFromGT(c);
+        }
+        return new SingleCRSFromGT<>(impl);
     }
 
     @Override

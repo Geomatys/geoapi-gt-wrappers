@@ -44,11 +44,17 @@ final class AbsoluteExternalPositionalAccuracyToGT
      * @return wrapper for the given implementation
      */
     static AbsoluteExternalPositionalAccuracy wrap(final org.opengis.metadata.quality.AbsoluteExternalPositionalAccuracy impl) {
-        switch (impl) {
-            case null: return null;
-            case AbsoluteExternalPositionalAccuracy c: return c;
-            case AbsoluteExternalPositionalAccuracyFromGT c: return c.impl;
-            default: return new AbsoluteExternalPositionalAccuracyToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof AbsoluteExternalPositionalAccuracy) {
+            var c = (AbsoluteExternalPositionalAccuracy) impl;
+            return c;
+        }
+        if (impl instanceof AbsoluteExternalPositionalAccuracyFromGT) {
+            var c = (AbsoluteExternalPositionalAccuracyFromGT) impl;
+            return c.impl;
+        }
+        return new AbsoluteExternalPositionalAccuracyToGT(impl);
     }
 }

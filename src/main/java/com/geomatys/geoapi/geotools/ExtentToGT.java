@@ -51,12 +51,18 @@ final class ExtentToGT extends WrapperToGT implements Extent {
      * @return wrapper for the given implementation
      */
     static Extent wrap(final org.opengis.metadata.extent.Extent impl) {
-        switch (impl) {
-            case null: return null;
-            case Extent c: return c;
-            case ExtentFromGT c: return c.impl;
-            default: return new ExtentToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Extent) {
+            var c = (Extent) impl;
+            return c;
+        }
+        if (impl instanceof ExtentFromGT) {
+            var c = (ExtentFromGT) impl;
+            return c.impl;
+        }
+        return new ExtentToGT(impl);
     }
 
     /**

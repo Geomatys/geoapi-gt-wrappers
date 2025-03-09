@@ -45,12 +45,21 @@ class ConversionFromGT<S extends org.geotools.api.referencing.operation.Conversi
      * @return wrapper for the given implementation
      */
     static Conversion wrap(final org.geotools.api.referencing.operation.Conversion impl) {
-        switch (impl) {
-            case null: return null;
-            case Conversion c: return c;
-            case ConversionToGT<?> c: return c.impl;
-            case org.geotools.api.referencing.operation.Projection c: return ProjectionFromGT.wrap(c);
-            default: return new ConversionFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Conversion) {
+            var c = (Conversion) impl;
+            return c;
+        }
+        if (impl instanceof ConversionToGT<?>) {
+            var c = (ConversionToGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.referencing.operation.Projection) {
+            var c = (org.geotools.api.referencing.operation.Projection) impl;
+            return ProjectionFromGT.wrap(c);
+        }
+        return new ConversionFromGT<>(impl);
     }
 }

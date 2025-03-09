@@ -49,12 +49,18 @@ final class ResponsiblePartyFromGT extends WrapperFromGT implements ResponsibleP
      * @return wrapper for the given implementation
      */
     static ResponsibleParty wrap(final org.geotools.api.metadata.citation.ResponsibleParty impl) {
-        switch (impl) {
-            case null: return null;
-            case ResponsibleParty c: return c;
-            case ResponsiblePartyToGT c: return c.impl;
-            default: return new ResponsiblePartyFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof ResponsibleParty) {
+            var c = (ResponsibleParty) impl;
+            return c;
+        }
+        if (impl instanceof ResponsiblePartyToGT) {
+            var c = (ResponsiblePartyToGT) impl;
+            return c.impl;
+        }
+        return new ResponsiblePartyFromGT(impl);
     }
 
     /**

@@ -47,12 +47,18 @@ final class VerticalExtentToGT extends WrapperToGT implements VerticalExtent {
      * @return wrapper for the given implementation
      */
     static VerticalExtent wrap(final org.opengis.metadata.extent.VerticalExtent impl) {
-        switch (impl) {
-            case null: return null;
-            case VerticalExtent c: return c;
-            case VerticalExtentFromGT c: return c.impl;
-            default: return new VerticalExtentToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof VerticalExtent) {
+            var c = (VerticalExtent) impl;
+            return c;
+        }
+        if (impl instanceof VerticalExtentFromGT) {
+            var c = (VerticalExtentFromGT) impl;
+            return c.impl;
+        }
+        return new VerticalExtentToGT(impl);
     }
 
     /**

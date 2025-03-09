@@ -45,12 +45,18 @@ final class ConformanceResultToGT extends QualityResultToGT<org.opengis.metadata
      * @return wrapper for the given implementation
      */
     static ConformanceResult wrap(final org.opengis.metadata.quality.ConformanceResult impl) {
-        switch (impl) {
-            case null: return null;
-            case ConformanceResult c: return c;
-            case ConformanceResultFromGT c: return c.impl;
-            default: return new ConformanceResultToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof ConformanceResult) {
+            var c = (ConformanceResult) impl;
+            return c;
+        }
+        if (impl instanceof ConformanceResultFromGT) {
+            var c = (ConformanceResultFromGT) impl;
+            return c.impl;
+        }
+        return new ConformanceResultToGT(impl);
     }
 
     @Override

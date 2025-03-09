@@ -47,12 +47,18 @@ final class TelephoneToGT extends WrapperToGT implements Telephone {
      * @return wrapper for the given implementation
      */
     static Telephone wrap(final org.opengis.metadata.citation.Telephone impl) {
-        switch (impl) {
-            case null: return null;
-            case Telephone c: return c;
-            case TelephoneFromGT c: return c.impl;
-            default: return new TelephoneToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Telephone) {
+            var c = (Telephone) impl;
+            return c;
+        }
+        if (impl instanceof TelephoneFromGT) {
+            var c = (TelephoneFromGT) impl;
+            return c.impl;
+        }
+        return new TelephoneToGT(impl);
     }
 
     /**

@@ -45,12 +45,21 @@ class AffineCSToGT<S extends org.opengis.referencing.cs.AffineCS>
      * @return wrapper for the given implementation
      */
     static AffineCS wrap(final org.opengis.referencing.cs.AffineCS impl) {
-        switch (impl) {
-            case null: return null;
-            case AffineCS c: return c;
-            case AffineCSFromGT<?> c: return c.impl;
-            case org.opengis.referencing.cs.CartesianCS c: return new CartesianCSToGT(c);
-            default: return new AffineCSToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof AffineCS) {
+            var c = (AffineCS) impl;
+            return c;
+        }
+        if (impl instanceof AffineCSFromGT<?>) {
+            var c = (AffineCSFromGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.referencing.cs.CartesianCS) {
+            var c = (org.opengis.referencing.cs.CartesianCS) impl;
+            return new CartesianCSToGT(c);
+        }
+        return new AffineCSToGT<>(impl);
     }
 }

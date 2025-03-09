@@ -177,7 +177,8 @@ abstract class AuthorityFactoryFromGT extends WrapperFromGT implements Authority
      * @return the GeoAPI exception.
      */
     static FactoryException wrap(org.geotools.api.referencing.FactoryException e) {
-        if (e instanceof org.geotools.api.referencing.NoSuchAuthorityCodeException c) {
+        if (e instanceof org.geotools.api.referencing.NoSuchAuthorityCodeException) {
+            var c = (org.geotools.api.referencing.NoSuchAuthorityCodeException) e;
             return (NoSuchAuthorityCodeException) new NoSuchAuthorityCodeException(
                     c.getMessage(), c.getAuthority(), c.getAuthorityCode()).initCause(c);
         }

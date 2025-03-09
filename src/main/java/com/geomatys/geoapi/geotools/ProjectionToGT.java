@@ -43,14 +43,29 @@ class ProjectionToGT extends ConversionToGT<org.opengis.referencing.operation.Pr
      * @return wrapper for the given implementation
      */
     static Projection wrap(final org.opengis.referencing.operation.Projection impl) {
-        switch (impl) {
-            case null: return null;
-            case Projection c: return c;
-            case ProjectionFromGT c: return c.impl;
-            case org.opengis.referencing.operation.ConicProjection c:       return new ConicProjectionToGT(c);
-            case org.opengis.referencing.operation.PlanarProjection c:      return new PlanarProjectionToGT(c);
-            case org.opengis.referencing.operation.CylindricalProjection c: return new CylindricalProjectionToGT(c);
-            default: return new ProjectionToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Projection) {
+            var c = (Projection) impl;
+            return c;
+        }
+        if (impl instanceof ProjectionFromGT) {
+            var c = (ProjectionFromGT) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.referencing.operation.ConicProjection) {
+            var c = (org.opengis.referencing.operation.ConicProjection) impl;
+            return new ConicProjectionToGT(c);
+        }
+        if (impl instanceof org.opengis.referencing.operation.PlanarProjection) {
+            var c = (org.opengis.referencing.operation.PlanarProjection) impl;
+            return new PlanarProjectionToGT(c);
+        }
+        if (impl instanceof org.opengis.referencing.operation.CylindricalProjection) {
+            var c = (org.opengis.referencing.operation.CylindricalProjection) impl;
+            return new CylindricalProjectionToGT(c);
+        }
+        return new ProjectionToGT(impl);
     }
 }

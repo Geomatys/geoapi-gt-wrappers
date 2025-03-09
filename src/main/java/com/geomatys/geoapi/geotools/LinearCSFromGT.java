@@ -43,11 +43,17 @@ final class LinearCSFromGT extends CoordinateSystemFromGT<org.geotools.api.refer
      * @return wrapper for the given implementation
      */
     static LinearCS wrap(final org.geotools.api.referencing.cs.LinearCS impl) {
-        switch (impl) {
-            case null: return null;
-            case LinearCS c: return c;
-            case LinearCSToGT c: return c.impl;
-            default: return new LinearCSFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof LinearCS) {
+            var c = (LinearCS) impl;
+            return c;
+        }
+        if (impl instanceof LinearCSToGT) {
+            var c = (LinearCSToGT) impl;
+            return c.impl;
+        }
+        return new LinearCSFromGT(impl);
     }
 }

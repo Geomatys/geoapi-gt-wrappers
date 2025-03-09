@@ -52,12 +52,18 @@ final class CitationToGT extends WrapperToGT implements Citation {
      * @return wrapper for the given implementation
      */
     static Citation wrap(final org.opengis.metadata.citation.Citation impl) {
-        switch (impl) {
-            case null: return null;
-            case Citation c: return c;
-            case CitationFromGT c: return c.impl;
-            default: return new CitationToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Citation) {
+            var c = (Citation) impl;
+            return c;
+        }
+        if (impl instanceof CitationFromGT) {
+            var c = (CitationFromGT) impl;
+            return c.impl;
+        }
+        return new CitationToGT(impl);
     }
 
     /**

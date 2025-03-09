@@ -50,12 +50,18 @@ final class CoordinateOperationFactoryFromGT extends ObjectFactoryFromGT impleme
      * @return wrapper for the given implementation
      */
     static CoordinateOperationFactory wrap(final org.geotools.api.referencing.operation.CoordinateOperationFactory impl) {
-        switch (impl) {
-            case null: return null;
-            case CoordinateOperationFactory c: return c;
-            case CoordinateOperationFactoryToGT c: return c.impl;
-            default: return new CoordinateOperationFactoryFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CoordinateOperationFactory) {
+            var c = (CoordinateOperationFactory) impl;
+            return c;
+        }
+        if (impl instanceof CoordinateOperationFactoryToGT) {
+            var c = (CoordinateOperationFactoryToGT) impl;
+            return c.impl;
+        }
+        return new CoordinateOperationFactoryFromGT(impl);
     }
 
     /**

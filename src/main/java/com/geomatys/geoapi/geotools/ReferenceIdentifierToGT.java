@@ -43,12 +43,18 @@ final class ReferenceIdentifierToGT extends IdentifierToGT<org.opengis.referenci
      * @return wrapper for the given implementation
      */
     static ReferenceIdentifier wrap(final org.opengis.referencing.ReferenceIdentifier impl) {
-        switch (impl) {
-            case null: return null;
-            case ReferenceIdentifier c: return c;
-            case ReferenceIdentifierFromGT c: return c.impl;
-            default: return new ReferenceIdentifierToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof ReferenceIdentifier) {
+            var c = (ReferenceIdentifier) impl;
+            return c;
+        }
+        if (impl instanceof ReferenceIdentifierFromGT) {
+            var c = (ReferenceIdentifierFromGT) impl;
+            return c.impl;
+        }
+        return new ReferenceIdentifierToGT(impl);
     }
 
     @Override

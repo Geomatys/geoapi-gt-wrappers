@@ -45,12 +45,18 @@ final class OperationMethodToGT extends IdentifiedObjectToGT<org.opengis.referen
      * @return wrapper for the given implementation
      */
     static OperationMethod wrap(final org.opengis.referencing.operation.OperationMethod impl) {
-        switch (impl) {
-            case null: return null;
-            case OperationMethod c: return c;
-            case OperationMethodFromGT c: return c.impl;
-            default: return new OperationMethodToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof OperationMethod) {
+            var c = (OperationMethod) impl;
+            return c;
+        }
+        if (impl instanceof OperationMethodFromGT) {
+            var c = (OperationMethodFromGT) impl;
+            return c.impl;
+        }
+        return new OperationMethodToGT(impl);
     }
 
     @Override

@@ -45,12 +45,18 @@ final class PrimeMeridianFromGT extends IdentifiedObjectFromGT<org.geotools.api.
      * @return wrapper for the given implementation
      */
     static PrimeMeridian wrap(final org.geotools.api.referencing.datum.PrimeMeridian impl) {
-        switch (impl) {
-            case null: return null;
-            case PrimeMeridian c: return c;
-            case PrimeMeridianToGT c: return c.impl;
-            default: return new PrimeMeridianFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof PrimeMeridian) {
+            var c = (PrimeMeridian) impl;
+            return c;
+        }
+        if (impl instanceof PrimeMeridianToGT) {
+            var c = (PrimeMeridianToGT) impl;
+            return c.impl;
+        }
+        return new PrimeMeridianFromGT(impl);
     }
 
     @Override

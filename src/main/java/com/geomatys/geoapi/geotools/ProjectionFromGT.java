@@ -43,14 +43,29 @@ class ProjectionFromGT extends ConversionFromGT<org.geotools.api.referencing.ope
      * @return wrapper for the given implementation
      */
     static Projection wrap(final org.geotools.api.referencing.operation.Projection impl) {
-        switch (impl) {
-            case null: return null;
-            case Projection c: return c;
-            case ProjectionToGT c: return c.impl;
-            case org.geotools.api.referencing.operation.ConicProjection c:       return new ConicProjectionFromGT(c);
-            case org.geotools.api.referencing.operation.PlanarProjection c:      return new PlanarProjectionFromGT(c);
-            case org.geotools.api.referencing.operation.CylindricalProjection c: return new CylindricalProjectionFromGT(c);
-            default: return new ProjectionFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Projection) {
+            var c = (Projection) impl;
+            return c;
+        }
+        if (impl instanceof ProjectionToGT) {
+            var c = (ProjectionToGT) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.referencing.operation.ConicProjection) {
+            var c = (org.geotools.api.referencing.operation.ConicProjection) impl;
+            return new ConicProjectionFromGT(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.operation.PlanarProjection) {
+            var c = (org.geotools.api.referencing.operation.PlanarProjection) impl;
+            return new PlanarProjectionFromGT(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.operation.CylindricalProjection) {
+            var c = (org.geotools.api.referencing.operation.CylindricalProjection) impl;
+            return new CylindricalProjectionFromGT(c);
+        }
+        return new ProjectionFromGT(impl);
     }
 }

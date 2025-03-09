@@ -48,17 +48,38 @@ class DatumToGT<S extends org.opengis.referencing.datum.Datum>
      * @return wrapper for the given implementation
      */
     static Datum wrap(final org.opengis.referencing.datum.Datum impl) {
-        switch (impl) {
-            case null: return null;
-            case Datum c: return c;
-            case DatumFromGT<?> c: return c.impl;
-            case org.opengis.referencing.datum.GeodeticDatum    c: return new GeodeticDatumToGT(c);
-            case org.opengis.referencing.datum.VerticalDatum    c: return new VerticalDatumToGT(c);
-            case org.opengis.referencing.datum.TemporalDatum    c: return new TemporalDatumToGT(c);
-            case org.opengis.referencing.datum.EngineeringDatum c: return new EngineeringDatumToGT(c);
-            case org.opengis.referencing.datum.ImageDatum       c: return new ImageDatumToGT(c);
-            default: return new DatumToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Datum) {
+            var c = (Datum) impl;
+            return c;
+        }
+        if (impl instanceof DatumFromGT<?>) {
+            var c = (DatumFromGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.referencing.datum.GeodeticDatum) {
+            var c = (org.opengis.referencing.datum.GeodeticDatum) impl;
+            return new GeodeticDatumToGT(c);
+        }
+        if (impl instanceof org.opengis.referencing.datum.VerticalDatum) {
+            var c = (org.opengis.referencing.datum.VerticalDatum) impl;
+            return new VerticalDatumToGT(c);
+        }
+        if (impl instanceof org.opengis.referencing.datum.TemporalDatum) {
+            var c = (org.opengis.referencing.datum.TemporalDatum) impl;
+            return new TemporalDatumToGT(c);
+        }
+        if (impl instanceof org.opengis.referencing.datum.EngineeringDatum) {
+            var c = (org.opengis.referencing.datum.EngineeringDatum) impl;
+            return new EngineeringDatumToGT(c);
+        }
+        if (impl instanceof org.opengis.referencing.datum.ImageDatum) {
+            var c = (org.opengis.referencing.datum.ImageDatum) impl;
+            return new ImageDatumToGT(c);
+        }
+        return new DatumToGT<>(impl);
     }
 
     @Override

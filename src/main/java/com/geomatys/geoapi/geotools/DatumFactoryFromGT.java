@@ -52,12 +52,18 @@ final class DatumFactoryFromGT extends ObjectFactoryFromGT implements DatumFacto
      * @return wrapper for the given implementation
      */
     static DatumFactory wrap(final org.geotools.api.referencing.datum.DatumFactory impl) {
-        switch (impl) {
-            case null: return null;
-            case DatumFactory c: return c;
-            case DatumFactoryToGT c: return c.impl;
-            default: return new DatumFactoryFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof DatumFactory) {
+            var c = (DatumFactory) impl;
+            return c;
+        }
+        if (impl instanceof DatumFactoryToGT) {
+            var c = (DatumFactoryToGT) impl;
+            return c.impl;
+        }
+        return new DatumFactoryFromGT(impl);
     }
 
     /**

@@ -55,22 +55,58 @@ class IdentifiedObjectToGT<S extends org.opengis.referencing.IdentifiedObject>
      * @return wrapper for the given implementation
      */
     static IdentifiedObject wrap(final org.opengis.referencing.IdentifiedObject impl) {
-        switch (impl) {
-            case null: return null;
-            case IdentifiedObject c: return c;
-            case IdentifiedObjectFromGT<?> c: return c.impl;
-            case org.opengis.referencing.operation.CoordinateOperation c: return CoordinateOperationToGT.wrap(c);
-            case org.opengis.referencing.crs.CoordinateReferenceSystem c: return CoordinateReferenceSystemToGT.wrap(c);
-            case org.opengis.referencing.ReferenceSystem c: return new ReferenceSystemToGT<>(c);
-            case org.opengis.referencing.cs.CoordinateSystem c: return CoordinateSystemToGT.wrap(c);
-            case org.opengis.referencing.cs.CoordinateSystemAxis c: return new CoordinateSystemAxisToGT(c);
-            case org.opengis.referencing.datum.Datum c: return DatumToGT.wrap(c);
-            case org.opengis.referencing.datum.Ellipsoid c: return new EllipsoidToGT(c);
-            case org.opengis.referencing.datum.PrimeMeridian c: return new PrimeMeridianToGT(c);
-            case org.opengis.referencing.operation.OperationMethod c: return new OperationMethodToGT(c);
-            case org.opengis.parameter.GeneralParameterDescriptor c: return GeneralParameterDescriptorToGT.wrap(c);
-            default: return new IdentifiedObjectToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof IdentifiedObject) {
+            var c = (IdentifiedObject) impl;
+            return c;
+        }
+        if (impl instanceof IdentifiedObjectFromGT<?>) {
+            var c = (IdentifiedObjectFromGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.referencing.operation.CoordinateOperation) {
+            var c = (org.opengis.referencing.operation.CoordinateOperation) impl;
+            return CoordinateOperationToGT.wrap(c);
+        }
+        if (impl instanceof org.opengis.referencing.crs.CoordinateReferenceSystem) {
+            var c = (org.opengis.referencing.crs.CoordinateReferenceSystem) impl;
+            return CoordinateReferenceSystemToGT.wrap(c);
+        }
+        if (impl instanceof org.opengis.referencing.ReferenceSystem) {
+            var c = (org.opengis.referencing.ReferenceSystem) impl;
+            return new ReferenceSystemToGT<>(c);
+        }
+        if (impl instanceof org.opengis.referencing.cs.CoordinateSystem) {
+            var c = (org.opengis.referencing.cs.CoordinateSystem) impl;
+            return CoordinateSystemToGT.wrap(c);
+        }
+        if (impl instanceof org.opengis.referencing.cs.CoordinateSystemAxis) {
+            var c = (org.opengis.referencing.cs.CoordinateSystemAxis) impl;
+            return new CoordinateSystemAxisToGT(c);
+        }
+        if (impl instanceof org.opengis.referencing.datum.Datum) {
+            var c = (org.opengis.referencing.datum.Datum) impl;
+            return DatumToGT.wrap(c);
+        }
+        if (impl instanceof org.opengis.referencing.datum.Ellipsoid) {
+            var c = (org.opengis.referencing.datum.Ellipsoid) impl;
+            return new EllipsoidToGT(c);
+        }
+        if (impl instanceof org.opengis.referencing.datum.PrimeMeridian) {
+            var c = (org.opengis.referencing.datum.PrimeMeridian) impl;
+            return new PrimeMeridianToGT(c);
+        }
+        if (impl instanceof org.opengis.referencing.operation.OperationMethod) {
+            var c = (org.opengis.referencing.operation.OperationMethod) impl;
+            return new OperationMethodToGT(c);
+        }
+        if (impl instanceof org.opengis.parameter.GeneralParameterDescriptor) {
+            var c = (org.opengis.parameter.GeneralParameterDescriptor) impl;
+            return GeneralParameterDescriptorToGT.wrap(c);
+        }
+        return new IdentifiedObjectToGT<>(impl);
     }
 
     /**

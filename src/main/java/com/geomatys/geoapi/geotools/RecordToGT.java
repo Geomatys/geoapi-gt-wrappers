@@ -50,12 +50,18 @@ final class RecordToGT extends WrapperToGT implements Record {
      * @return wrapper for the given implementation
      */
     static Record wrap(final org.opengis.util.Record impl) {
-        switch (impl) {
-            case null: return null;
-            case Record c: return c;
-            case RecordFromGT c: return c.impl;
-            default: return new RecordToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Record) {
+            var c = (Record) impl;
+            return c;
+        }
+        if (impl instanceof RecordFromGT) {
+            var c = (RecordFromGT) impl;
+            return c.impl;
+        }
+        return new RecordToGT(impl);
     }
 
     /**

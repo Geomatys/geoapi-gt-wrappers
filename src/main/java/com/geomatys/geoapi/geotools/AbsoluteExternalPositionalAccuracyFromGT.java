@@ -44,11 +44,17 @@ final class AbsoluteExternalPositionalAccuracyFromGT
      * @return wrapper for the given implementation
      */
     static AbsoluteExternalPositionalAccuracy wrap(final org.geotools.api.metadata.quality.AbsoluteExternalPositionalAccuracy impl) {
-        switch (impl) {
-            case null: return null;
-            case AbsoluteExternalPositionalAccuracy c: return c;
-            case AbsoluteExternalPositionalAccuracyToGT c: return c.impl;
-            default: return new AbsoluteExternalPositionalAccuracyFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof AbsoluteExternalPositionalAccuracy) {
+            var c = (AbsoluteExternalPositionalAccuracy) impl;
+            return c;
+        }
+        if (impl instanceof AbsoluteExternalPositionalAccuracyToGT) {
+            var c = (AbsoluteExternalPositionalAccuracyToGT) impl;
+            return c.impl;
+        }
+        return new AbsoluteExternalPositionalAccuracyFromGT(impl);
     }
 }

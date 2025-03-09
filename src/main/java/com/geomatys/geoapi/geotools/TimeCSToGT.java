@@ -43,11 +43,17 @@ final class TimeCSToGT extends CoordinateSystemToGT<org.opengis.referencing.cs.T
      * @return wrapper for the given implementation
      */
     static TimeCS wrap(final org.opengis.referencing.cs.TimeCS impl) {
-        switch (impl) {
-            case null: return null;
-            case TimeCS c: return c;
-            case TimeCSFromGT c: return c.impl;
-            default: return new TimeCSToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof TimeCS) {
+            var c = (TimeCS) impl;
+            return c;
+        }
+        if (impl instanceof TimeCSFromGT) {
+            var c = (TimeCSFromGT) impl;
+            return c.impl;
+        }
+        return new TimeCSToGT(impl);
     }
 }

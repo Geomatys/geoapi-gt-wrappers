@@ -46,14 +46,26 @@ class GeneralParameterDescriptorToGT<S extends org.opengis.parameter.GeneralPara
      * @return wrapper for the given implementation
      */
     static GeneralParameterDescriptor wrap(final org.opengis.parameter.GeneralParameterDescriptor impl) {
-        switch (impl) {
-            case null: return null;
-            case GeneralParameterDescriptor c: return c;
-            case GeneralParameterDescriptorFromGT<?> c: return c.impl;
-            case org.opengis.parameter.ParameterDescriptor<?> c: return new ParameterDescriptorToGT<>(c);
-            case org.opengis.parameter.ParameterDescriptorGroup c: return new ParameterDescriptorGroupToGT(c);
-            default: return new GeneralParameterDescriptorToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof GeneralParameterDescriptor) {
+            var c = (GeneralParameterDescriptor) impl;
+            return c;
+        }
+        if (impl instanceof GeneralParameterDescriptorFromGT<?>) {
+            var c = (GeneralParameterDescriptorFromGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.parameter.ParameterDescriptor<?>) {
+            var c = (org.opengis.parameter.ParameterDescriptor<?>) impl;
+            return new ParameterDescriptorToGT<>(c);
+        }
+        if (impl instanceof org.opengis.parameter.ParameterDescriptorGroup) {
+            var c = (org.opengis.parameter.ParameterDescriptorGroup) impl;
+            return new ParameterDescriptorGroupToGT(c);
+        }
+        return new GeneralParameterDescriptorToGT<>(impl);
     }
 
     @Override

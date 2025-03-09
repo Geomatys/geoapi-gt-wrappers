@@ -43,11 +43,17 @@ final class VerticalCSFromGT extends CoordinateSystemFromGT<org.geotools.api.ref
      * @return wrapper for the given implementation
      */
     static VerticalCS wrap(final org.geotools.api.referencing.cs.VerticalCS impl) {
-        switch (impl) {
-            case null: return null;
-            case VerticalCS c: return c;
-            case VerticalCSToGT c: return c.impl;
-            default: return new VerticalCSFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof VerticalCS) {
+            var c = (VerticalCS) impl;
+            return c;
+        }
+        if (impl instanceof VerticalCSToGT) {
+            var c = (VerticalCSToGT) impl;
+            return c.impl;
+        }
+        return new VerticalCSFromGT(impl);
     }
 }

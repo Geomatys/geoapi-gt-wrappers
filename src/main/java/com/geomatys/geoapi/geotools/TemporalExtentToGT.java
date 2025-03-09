@@ -47,12 +47,18 @@ final class TemporalExtentToGT extends WrapperToGT implements TemporalExtent {
      * @return wrapper for the given implementation
      */
     static TemporalExtent wrap(final org.opengis.metadata.extent.TemporalExtent impl) {
-        switch (impl) {
-            case null: return null;
-            case TemporalExtent c: return c;
-            case TemporalExtentFromGT c: return c.impl;
-            default: return new TemporalExtentToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof TemporalExtent) {
+            var c = (TemporalExtent) impl;
+            return c;
+        }
+        if (impl instanceof TemporalExtentFromGT) {
+            var c = (TemporalExtentFromGT) impl;
+            return c.impl;
+        }
+        return new TemporalExtentToGT(impl);
     }
 
     /**

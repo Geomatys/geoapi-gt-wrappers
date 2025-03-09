@@ -44,12 +44,18 @@ final class GeographicCRSFromGT extends GeodeticCRSFromGT<org.geotools.api.refer
      * @return wrapper for the given implementation
      */
     static GeographicCRS wrap(final org.geotools.api.referencing.crs.GeographicCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case GeographicCRS c: return c;
-            case GeographicCRSToGT c: return c.impl;
-            default: return new GeographicCRSFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof GeographicCRS) {
+            var c = (GeographicCRS) impl;
+            return c;
+        }
+        if (impl instanceof GeographicCRSToGT) {
+            var c = (GeographicCRSToGT) impl;
+            return c.impl;
+        }
+        return new GeographicCRSFromGT(impl);
     }
 
     @Override

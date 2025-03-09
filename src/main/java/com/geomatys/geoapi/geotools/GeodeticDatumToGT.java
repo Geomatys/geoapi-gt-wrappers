@@ -45,12 +45,18 @@ final class GeodeticDatumToGT extends DatumToGT<org.opengis.referencing.datum.Ge
      * @return wrapper for the given implementation
      */
     static GeodeticDatum wrap(final org.opengis.referencing.datum.GeodeticDatum impl) {
-        switch (impl) {
-            case null: return null;
-            case GeodeticDatum c: return c;
-            case GeodeticDatumFromGT c: return c.impl;
-            default: return new GeodeticDatumToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof GeodeticDatum) {
+            var c = (GeodeticDatum) impl;
+            return c;
+        }
+        if (impl instanceof GeodeticDatumFromGT) {
+            var c = (GeodeticDatumFromGT) impl;
+            return c.impl;
+        }
+        return new GeodeticDatumToGT(impl);
     }
 
     @Override

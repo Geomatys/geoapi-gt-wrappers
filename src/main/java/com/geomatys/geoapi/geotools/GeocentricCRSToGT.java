@@ -43,11 +43,17 @@ final class GeocentricCRSToGT extends GeodeticCRSToGT<org.opengis.referencing.cr
      * @return wrapper for the given implementation
      */
     static GeocentricCRS wrap(final org.opengis.referencing.crs.GeocentricCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case GeocentricCRS c: return c;
-            case GeocentricCRSFromGT c: return c.impl;
-            default: return new GeocentricCRSToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof GeocentricCRS) {
+            var c = (GeocentricCRS) impl;
+            return c;
+        }
+        if (impl instanceof GeocentricCRSFromGT) {
+            var c = (GeocentricCRSFromGT) impl;
+            return c.impl;
+        }
+        return new GeocentricCRSToGT(impl);
     }
 }

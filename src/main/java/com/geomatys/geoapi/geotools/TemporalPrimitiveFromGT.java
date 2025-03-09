@@ -46,12 +46,18 @@ final class TemporalPrimitiveFromGT extends WrapperFromGT implements TemporalPri
      * @return wrapper for the given implementation
      */
     static TemporalPrimitive wrap(final org.geotools.api.temporal.TemporalPrimitive impl) {
-        switch (impl) {
-            case null: return null;
-            case TemporalPrimitive c: return c;
-            case TemporalPrimitiveToGT c: return c.impl;
-            default: return new TemporalPrimitiveFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof TemporalPrimitive) {
+            var c = (TemporalPrimitive) impl;
+            return c;
+        }
+        if (impl instanceof TemporalPrimitiveToGT) {
+            var c = (TemporalPrimitiveToGT) impl;
+            return c.impl;
+        }
+        return new TemporalPrimitiveFromGT(impl);
     }
 
     /**

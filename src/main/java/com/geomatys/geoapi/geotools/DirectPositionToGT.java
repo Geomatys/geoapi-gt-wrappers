@@ -47,12 +47,18 @@ final class DirectPositionToGT extends WrapperToGT implements Position {
      * @return wrapper for the given implementation
      */
     static Position wrap(final org.opengis.geometry.DirectPosition impl) {
-        switch (impl) {
-            case null: return null;
-            case Position c: return c;
-            case DirectPositionFromGT c: return c.impl;
-            default: return new DirectPositionToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Position) {
+            var c = (Position) impl;
+            return c;
+        }
+        if (impl instanceof DirectPositionFromGT) {
+            var c = (DirectPositionFromGT) impl;
+            return c.impl;
+        }
+        return new DirectPositionToGT(impl);
     }
 
     /**

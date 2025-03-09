@@ -45,12 +45,18 @@ final class ImageCRSFromGT extends CoordinateReferenceSystemFromGT<org.geotools.
      * @return wrapper for the given implementation
      */
     static ImageCRS wrap(final org.geotools.api.referencing.crs.ImageCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case ImageCRS c: return c;
-            case ImageCRSToGT c: return c.impl;
-            default: return new ImageCRSFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof ImageCRS) {
+            var c = (ImageCRS) impl;
+            return c;
+        }
+        if (impl instanceof ImageCRSToGT) {
+            var c = (ImageCRSToGT) impl;
+            return c.impl;
+        }
+        return new ImageCRSFromGT(impl);
     }
 
     @Override

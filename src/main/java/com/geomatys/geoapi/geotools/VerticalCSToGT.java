@@ -43,11 +43,17 @@ final class VerticalCSToGT extends CoordinateSystemToGT<org.opengis.referencing.
      * @return wrapper for the given implementation
      */
     static VerticalCS wrap(final org.opengis.referencing.cs.VerticalCS impl) {
-        switch (impl) {
-            case null: return null;
-            case VerticalCS c: return c;
-            case VerticalCSFromGT c: return c.impl;
-            default: return new VerticalCSToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof VerticalCS) {
+            var c = (VerticalCS) impl;
+            return c;
+        }
+        if (impl instanceof VerticalCSFromGT) {
+            var c = (VerticalCSFromGT) impl;
+            return c.impl;
+        }
+        return new VerticalCSToGT(impl);
     }
 }

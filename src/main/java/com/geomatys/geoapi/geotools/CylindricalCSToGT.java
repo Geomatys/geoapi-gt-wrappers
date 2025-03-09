@@ -43,11 +43,17 @@ final class CylindricalCSToGT extends CoordinateSystemToGT<org.opengis.referenci
      * @return wrapper for the given implementation
      */
     static CylindricalCS wrap(final org.opengis.referencing.cs.CylindricalCS impl) {
-        switch (impl) {
-            case null: return null;
-            case CylindricalCS c: return c;
-            case CylindricalCSFromGT c: return c.impl;
-            default: return new CylindricalCSToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CylindricalCS) {
+            var c = (CylindricalCS) impl;
+            return c;
+        }
+        if (impl instanceof CylindricalCSFromGT) {
+            var c = (CylindricalCSFromGT) impl;
+            return c.impl;
+        }
+        return new CylindricalCSToGT(impl);
     }
 }

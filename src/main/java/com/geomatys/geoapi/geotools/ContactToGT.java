@@ -50,12 +50,18 @@ final class ContactToGT extends WrapperToGT implements Contact {
      * @return wrapper for the given implementation
      */
     static Contact wrap(final org.opengis.metadata.citation.Contact impl) {
-        switch (impl) {
-            case null: return null;
-            case Contact c: return c;
-            case ContactFromGT c: return c.impl;
-            default: return new ContactToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Contact) {
+            var c = (Contact) impl;
+            return c;
+        }
+        if (impl instanceof ContactFromGT) {
+            var c = (ContactFromGT) impl;
+            return c.impl;
+        }
+        return new ContactToGT(impl);
     }
 
     /**

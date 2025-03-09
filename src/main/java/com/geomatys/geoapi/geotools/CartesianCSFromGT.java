@@ -43,11 +43,17 @@ final class CartesianCSFromGT extends AffineCSFromGT<org.geotools.api.referencin
      * @return wrapper for the given implementation
      */
     static CartesianCS wrap(final org.geotools.api.referencing.cs.CartesianCS impl) {
-        switch (impl) {
-            case null: return null;
-            case CartesianCS c: return c;
-            case CartesianCSToGT c: return c.impl;
-            default: return new CartesianCSFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CartesianCS) {
+            var c = (CartesianCS) impl;
+            return c;
+        }
+        if (impl instanceof CartesianCSToGT) {
+            var c = (CartesianCSToGT) impl;
+            return c.impl;
+        }
+        return new CartesianCSFromGT(impl);
     }
 }

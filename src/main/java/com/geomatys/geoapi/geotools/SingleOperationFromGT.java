@@ -54,14 +54,26 @@ class SingleOperationFromGT<S extends org.geotools.api.referencing.operation.Sin
      * @return wrapper for the given implementation
      */
     static SingleOperation wrap(final org.geotools.api.referencing.operation.SingleOperation impl) {
-        switch (impl) {
-            case null: return null;
-            case SingleOperation c: return c;
-            case SingleOperationToGT<?> c: return c.impl;
-            case org.geotools.api.referencing.operation.Transformation c: return new TransformationFromGT(c);
-            case org.geotools.api.referencing.operation.Conversion c: return ConversionFromGT.wrap(c);
-            default: return new SingleOperationFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof SingleOperation) {
+            var c = (SingleOperation) impl;
+            return c;
+        }
+        if (impl instanceof SingleOperationToGT<?>) {
+            var c = (SingleOperationToGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.referencing.operation.Transformation) {
+            var c = (org.geotools.api.referencing.operation.Transformation) impl;
+            return new TransformationFromGT(c);
+        }
+        if (impl instanceof org.geotools.api.referencing.operation.Conversion) {
+            var c = (org.geotools.api.referencing.operation.Conversion) impl;
+            return ConversionFromGT.wrap(c);
+        }
+        return new SingleOperationFromGT<>(impl);
     }
 
     /**
@@ -72,7 +84,8 @@ class SingleOperationFromGT<S extends org.geotools.api.referencing.operation.Sin
      */
     @Override
     public OperationMethod getMethod() {
-        if (impl instanceof Operation op) {
+        if (impl instanceof Operation) {
+            var op = (Operation) impl;
             return OperationMethodFromGT.wrap(op.getMethod());
         }
         return null;
@@ -80,7 +93,8 @@ class SingleOperationFromGT<S extends org.geotools.api.referencing.operation.Sin
 
     @Override
     public ParameterValueGroup getParameterValues() {
-        if (impl instanceof Operation op) {
+        if (impl instanceof Operation) {
+            var op = (Operation) impl;
             return ParameterValueGroupFromGT.wrap(op.getParameterValues());
         }
         return null;

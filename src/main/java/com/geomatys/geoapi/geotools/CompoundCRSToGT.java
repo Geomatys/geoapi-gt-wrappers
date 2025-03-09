@@ -45,12 +45,18 @@ final class CompoundCRSToGT extends CoordinateReferenceSystemToGT<org.opengis.re
      * @return wrapper for the given implementation
      */
     static CompoundCRS wrap(final org.opengis.referencing.crs.CompoundCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case CompoundCRS c: return c;
-            case CompoundCRSFromGT c: return c.impl;
-            default: return new CompoundCRSToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CompoundCRS) {
+            var c = (CompoundCRS) impl;
+            return c;
+        }
+        if (impl instanceof CompoundCRSFromGT) {
+            var c = (CompoundCRSFromGT) impl;
+            return c.impl;
+        }
+        return new CompoundCRSToGT(impl);
     }
 
     @Override

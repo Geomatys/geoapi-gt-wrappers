@@ -51,14 +51,26 @@ class GeneralParameterValueToGT<S extends org.opengis.parameter.GeneralParameter
      * @return wrapper for the given implementation
      */
     static GeneralParameterValue wrap(final org.opengis.parameter.GeneralParameterValue impl) {
-        switch (impl) {
-            case null: return null;
-            case GeneralParameterValue c: return c;
-            case GeneralParameterValueFromGT<?> c: return c.impl;
-            case org.opengis.parameter.ParameterValue<?> c: return new ParameterValueToGT<>(c);
-            case org.opengis.parameter.ParameterValueGroup c: return new ParameterValueGroupToGT(c);
-            default: return new GeneralParameterValueToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof GeneralParameterValue) {
+            var c = (GeneralParameterValue) impl;
+            return c;
+        }
+        if (impl instanceof GeneralParameterValueFromGT<?>) {
+            var c = (GeneralParameterValueFromGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.parameter.ParameterValue<?>) {
+            var c = (org.opengis.parameter.ParameterValue<?>) impl;
+            return new ParameterValueToGT<>(c);
+        }
+        if (impl instanceof org.opengis.parameter.ParameterValueGroup) {
+            var c = (org.opengis.parameter.ParameterValueGroup) impl;
+            return new ParameterValueGroupToGT(c);
+        }
+        return new GeneralParameterValueToGT<>(impl);
     }
 
     /**

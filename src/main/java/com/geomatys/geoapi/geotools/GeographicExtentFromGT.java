@@ -50,13 +50,22 @@ class GeographicExtentFromGT<S extends org.geotools.api.metadata.extent.Geograph
      * @return wrapper for the given implementation
      */
     static GeographicExtent wrap(final org.geotools.api.metadata.extent.GeographicExtent impl) {
-        switch (impl) {
-            case null: return null;
-            case GeographicExtent c: return c;
-            case GeographicExtentToGT<?> c: return c.impl;
-            case org.geotools.api.metadata.extent.GeographicBoundingBox c: return new GeographicBoundingBoxFromGT(c);
-            default: return new GeographicExtentFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof GeographicExtent) {
+            var c = (GeographicExtent) impl;
+            return c;
+        }
+        if (impl instanceof GeographicExtentToGT<?>) {
+            var c = (GeographicExtentToGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.metadata.extent.GeographicBoundingBox) {
+            var c = (org.geotools.api.metadata.extent.GeographicBoundingBox) impl;
+            return new GeographicBoundingBoxFromGT(c);
+        }
+        return new GeographicExtentFromGT<>(impl);
     }
 
     /**

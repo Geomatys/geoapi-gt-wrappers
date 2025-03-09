@@ -51,12 +51,18 @@ final class CRSFactoryFromGT extends ObjectFactoryFromGT implements CRSFactory {
      * @return wrapper for the given implementation
      */
     static CRSFactory wrap(final org.geotools.api.referencing.crs.CRSFactory impl) {
-        switch (impl) {
-            case null: return null;
-            case CRSFactory c: return c;
-            case CRSFactoryToGT c: return c.impl;
-            default: return new CRSFactoryFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CRSFactory) {
+            var c = (CRSFactory) impl;
+            return c;
+        }
+        if (impl instanceof CRSFactoryToGT) {
+            var c = (CRSFactoryToGT) impl;
+            return c.impl;
+        }
+        return new CRSFactoryFromGT(impl);
     }
 
     /**

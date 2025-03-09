@@ -48,12 +48,18 @@ final class MathTransform2DFromGT extends MathTransformFromGT<org.geotools.api.r
      * @return wrapper for the given implementation
      */
     static MathTransform2D wrap(final org.geotools.api.referencing.operation.MathTransform2D impl) {
-        switch (impl) {
-            case null: return null;
-            case MathTransform2D c: return c;
-            case MathTransform2DToGT c: return c.impl;
-            default: return new MathTransform2DFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof MathTransform2D) {
+            var c = (MathTransform2D) impl;
+            return c;
+        }
+        if (impl instanceof MathTransform2DToGT) {
+            var c = (MathTransform2DToGT) impl;
+            return c.impl;
+        }
+        return new MathTransform2DFromGT(impl);
     }
 
     @Override

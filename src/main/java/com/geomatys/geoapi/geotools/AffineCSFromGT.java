@@ -45,12 +45,21 @@ class AffineCSFromGT<S extends org.geotools.api.referencing.cs.AffineCS>
      * @return wrapper for the given implementation
      */
     static AffineCS wrap(final org.geotools.api.referencing.cs.AffineCS impl) {
-        switch (impl) {
-            case null: return null;
-            case AffineCS c: return c;
-            case AffineCSToGT<?> c: return c.impl;
-            case org.geotools.api.referencing.cs.CartesianCS c: return new CartesianCSFromGT(c);
-            default: return new AffineCSFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof AffineCS) {
+            var c = (AffineCS) impl;
+            return c;
+        }
+        if (impl instanceof AffineCSToGT<?>) {
+            var c = (AffineCSToGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.referencing.cs.CartesianCS) {
+            var c = (org.geotools.api.referencing.cs.CartesianCS) impl;
+            return new CartesianCSFromGT(c);
+        }
+        return new AffineCSFromGT<>(impl);
     }
 }

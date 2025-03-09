@@ -48,12 +48,18 @@ final class QuantitativeResultToGT extends QualityResultToGT<org.opengis.metadat
      * @return wrapper for the given implementation
      */
     static QuantitativeResult wrap(final org.opengis.metadata.quality.QuantitativeResult impl) {
-        switch (impl) {
-            case null: return null;
-            case QuantitativeResult c: return c;
-            case QuantitativeResultFromGT c: return c.impl;
-            default: return new QuantitativeResultToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof QuantitativeResult) {
+            var c = (QuantitativeResult) impl;
+            return c;
+        }
+        if (impl instanceof QuantitativeResultFromGT) {
+            var c = (QuantitativeResultFromGT) impl;
+            return c.impl;
+        }
+        return new QuantitativeResultToGT(impl);
     }
 
     @Override

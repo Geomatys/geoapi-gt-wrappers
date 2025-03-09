@@ -47,13 +47,22 @@ class ReferenceSystemFromGT<S extends org.geotools.api.referencing.ReferenceSyst
      * @return wrapper for the given implementation
      */
     static ReferenceSystem wrap(final org.geotools.api.referencing.ReferenceSystem impl) {
-        switch (impl) {
-            case null: return null;
-            case ReferenceSystem c: return c;
-            case ReferenceSystemToGT<?> c: return c.impl;
-            case org.geotools.api.referencing.crs.CoordinateReferenceSystem c: return CoordinateReferenceSystemFromGT.wrap(c);
-            default: return new ReferenceSystemFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof ReferenceSystem) {
+            var c = (ReferenceSystem) impl;
+            return c;
+        }
+        if (impl instanceof ReferenceSystemToGT<?>) {
+            var c = (ReferenceSystemToGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.referencing.crs.CoordinateReferenceSystem) {
+            var c = (org.geotools.api.referencing.crs.CoordinateReferenceSystem) impl;
+            return CoordinateReferenceSystemFromGT.wrap(c);
+        }
+        return new ReferenceSystemFromGT<>(impl);
     }
 
     @Override

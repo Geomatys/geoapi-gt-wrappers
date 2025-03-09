@@ -45,12 +45,18 @@ final class ConcatenatedOperationToGT extends CoordinateOperationToGT<org.opengi
      * @return wrapper for the given implementation
      */
     static ConcatenatedOperation wrap(final org.opengis.referencing.operation.ConcatenatedOperation impl) {
-        switch (impl) {
-            case null: return null;
-            case ConcatenatedOperation c: return c;
-            case ConcatenatedOperationFromGT c: return c.impl;
-            default: return new ConcatenatedOperationToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof ConcatenatedOperation) {
+            var c = (ConcatenatedOperation) impl;
+            return c;
+        }
+        if (impl instanceof ConcatenatedOperationFromGT) {
+            var c = (ConcatenatedOperationFromGT) impl;
+            return c.impl;
+        }
+        return new ConcatenatedOperationToGT(impl);
     }
 
     @Override

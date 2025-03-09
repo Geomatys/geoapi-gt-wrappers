@@ -51,12 +51,18 @@ final class CoordinateOperationFactoryToGT extends ObjectFactoryToGT implements 
      * @return wrapper for the given implementation
      */
     static CoordinateOperationFactory wrap(final org.opengis.referencing.operation.CoordinateOperationFactory impl) {
-        switch (impl) {
-            case null: return null;
-            case CoordinateOperationFactory c: return c;
-            case CoordinateOperationFactoryFromGT c: return c.impl;
-            default: return new CoordinateOperationFactoryToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CoordinateOperationFactory) {
+            var c = (CoordinateOperationFactory) impl;
+            return c;
+        }
+        if (impl instanceof CoordinateOperationFactoryFromGT) {
+            var c = (CoordinateOperationFactoryFromGT) impl;
+            return c.impl;
+        }
+        return new CoordinateOperationFactoryToGT(impl);
     }
 
     /**

@@ -43,11 +43,17 @@ final class TimeCSFromGT extends CoordinateSystemFromGT<org.geotools.api.referen
      * @return wrapper for the given implementation
      */
     static TimeCS wrap(final org.geotools.api.referencing.cs.TimeCS impl) {
-        switch (impl) {
-            case null: return null;
-            case TimeCS c: return c;
-            case TimeCSToGT c: return c.impl;
-            default: return new TimeCSFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof TimeCS) {
+            var c = (TimeCS) impl;
+            return c;
+        }
+        if (impl instanceof TimeCSToGT) {
+            var c = (TimeCSToGT) impl;
+            return c.impl;
+        }
+        return new TimeCSFromGT(impl);
     }
 }

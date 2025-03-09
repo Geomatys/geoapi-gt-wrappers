@@ -46,12 +46,18 @@ final class CoordinateSystemAxisToGT extends IdentifiedObjectToGT<org.opengis.re
      * @return wrapper for the given implementation
      */
     static CoordinateSystemAxis wrap(final org.opengis.referencing.cs.CoordinateSystemAxis impl) {
-        switch (impl) {
-            case null: return null;
-            case CoordinateSystemAxis c: return c;
-            case CoordinateSystemAxisFromGT c: return c.impl;
-            default: return new CoordinateSystemAxisToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CoordinateSystemAxis) {
+            var c = (CoordinateSystemAxis) impl;
+            return c;
+        }
+        if (impl instanceof CoordinateSystemAxisFromGT) {
+            var c = (CoordinateSystemAxisFromGT) impl;
+            return c.impl;
+        }
+        return new CoordinateSystemAxisToGT(impl);
     }
 
     @Override

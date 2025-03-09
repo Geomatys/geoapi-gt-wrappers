@@ -43,11 +43,17 @@ final class UserDefinedCSToGT extends CoordinateSystemToGT<org.opengis.referenci
      * @return wrapper for the given implementation
      */
     static UserDefinedCS wrap(final org.opengis.referencing.cs.UserDefinedCS impl) {
-        switch (impl) {
-            case null: return null;
-            case UserDefinedCS c: return c;
-            case UserDefinedCSFromGT c: return c.impl;
-            default: return new UserDefinedCSToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof UserDefinedCS) {
+            var c = (UserDefinedCS) impl;
+            return c;
+        }
+        if (impl instanceof UserDefinedCSFromGT) {
+            var c = (UserDefinedCSFromGT) impl;
+            return c.impl;
+        }
+        return new UserDefinedCSToGT(impl);
     }
 }

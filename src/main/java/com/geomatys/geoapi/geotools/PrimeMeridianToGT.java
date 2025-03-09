@@ -45,12 +45,18 @@ final class PrimeMeridianToGT extends IdentifiedObjectToGT<org.opengis.referenci
      * @return wrapper for the given implementation
      */
     static PrimeMeridian wrap(final org.opengis.referencing.datum.PrimeMeridian impl) {
-        switch (impl) {
-            case null: return null;
-            case PrimeMeridian c: return c;
-            case PrimeMeridianFromGT c: return c.impl;
-            default: return new PrimeMeridianToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof PrimeMeridian) {
+            var c = (PrimeMeridian) impl;
+            return c;
+        }
+        if (impl instanceof PrimeMeridianFromGT) {
+            var c = (PrimeMeridianFromGT) impl;
+            return c.impl;
+        }
+        return new PrimeMeridianToGT(impl);
     }
 
     @Override

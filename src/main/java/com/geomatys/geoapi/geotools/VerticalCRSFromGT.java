@@ -45,12 +45,18 @@ final class VerticalCRSFromGT extends CoordinateReferenceSystemFromGT<org.geotoo
      * @return wrapper for the given implementation
      */
     static VerticalCRS wrap(final org.geotools.api.referencing.crs.VerticalCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case VerticalCRS c: return c;
-            case VerticalCRSToGT c: return c.impl;
-            default: return new VerticalCRSFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof VerticalCRS) {
+            var c = (VerticalCRS) impl;
+            return c;
+        }
+        if (impl instanceof VerticalCRSToGT) {
+            var c = (VerticalCRSToGT) impl;
+            return c.impl;
+        }
+        return new VerticalCRSFromGT(impl);
     }
 
     @Override

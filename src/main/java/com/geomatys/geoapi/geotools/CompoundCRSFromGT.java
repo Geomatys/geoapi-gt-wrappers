@@ -45,12 +45,18 @@ final class CompoundCRSFromGT extends CoordinateReferenceSystemFromGT<org.geotoo
      * @return wrapper for the given implementation
      */
     static CompoundCRS wrap(final org.geotools.api.referencing.crs.CompoundCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case CompoundCRS c: return c;
-            case CompoundCRSToGT c: return c.impl;
-            default: return new CompoundCRSFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CompoundCRS) {
+            var c = (CompoundCRS) impl;
+            return c;
+        }
+        if (impl instanceof CompoundCRSToGT) {
+            var c = (CompoundCRSToGT) impl;
+            return c.impl;
+        }
+        return new CompoundCRSFromGT(impl);
     }
 
     @Override

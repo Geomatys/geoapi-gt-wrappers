@@ -55,12 +55,18 @@ final class DatumAuthorityFactoryToGT extends AuthorityFactoryToGT implements Da
      * @return wrapper for the given implementation
      */
     static DatumAuthorityFactory wrap(final org.opengis.referencing.datum.DatumAuthorityFactory impl) {
-        switch (impl) {
-            case null: return null;
-            case DatumAuthorityFactory c: return c;
-            case DatumAuthorityFactoryFromGT c: return c.impl;
-            default: return new DatumAuthorityFactoryToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof DatumAuthorityFactory) {
+            var c = (DatumAuthorityFactory) impl;
+            return c;
+        }
+        if (impl instanceof DatumAuthorityFactoryFromGT) {
+            var c = (DatumAuthorityFactoryFromGT) impl;
+            return c.impl;
+        }
+        return new DatumAuthorityFactoryToGT(impl);
     }
 
     /**

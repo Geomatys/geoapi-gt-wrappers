@@ -47,12 +47,18 @@ final class OperationMethodFromGT extends IdentifiedObjectFromGT<org.geotools.ap
      * @return wrapper for the given implementation
      */
     static OperationMethod wrap(final org.geotools.api.referencing.operation.OperationMethod impl) {
-        switch (impl) {
-            case null: return null;
-            case OperationMethod c: return c;
-            case OperationMethodToGT c: return c.impl;
-            default: return new OperationMethodFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof OperationMethod) {
+            var c = (OperationMethod) impl;
+            return c;
+        }
+        if (impl instanceof OperationMethodToGT) {
+            var c = (OperationMethodToGT) impl;
+            return c.impl;
+        }
+        return new OperationMethodFromGT(impl);
     }
 
     @Override

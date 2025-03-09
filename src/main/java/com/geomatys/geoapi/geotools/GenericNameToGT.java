@@ -55,13 +55,22 @@ class GenericNameToGT<S extends org.opengis.util.GenericName>
      * @return wrapper for the given implementation
      */
     static GenericName wrap(final org.opengis.util.GenericName impl) {
-        switch (impl) {
-            case null: return null;
-            case GenericNameFromGT<?> c: return c.impl;
-            case org.opengis.util.LocalName  c: return LocalNameToGT.wrap(c);
-            case org.opengis.util.ScopedName c: return new ScopedNameToGT(c);
-            default: return new GenericNameToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof GenericNameFromGT<?>) {
+            var c = (GenericNameFromGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.util.LocalName) {
+            var c = (org.opengis.util.LocalName) impl;
+            return LocalNameToGT.wrap(c);
+        }
+        if (impl instanceof org.opengis.util.ScopedName) {
+            var c = (org.opengis.util.ScopedName) impl;
+            return new ScopedNameToGT(c);
+        }
+        return new GenericNameToGT<>(impl);
     }
 
     /**

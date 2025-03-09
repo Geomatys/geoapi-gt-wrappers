@@ -45,12 +45,18 @@ final class ImageCRSToGT extends CoordinateReferenceSystemToGT<org.opengis.refer
      * @return wrapper for the given implementation
      */
     static ImageCRS wrap(final org.opengis.referencing.crs.ImageCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case ImageCRS c: return c;
-            case ImageCRSFromGT c: return c.impl;
-            default: return new ImageCRSToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof ImageCRS) {
+            var c = (ImageCRS) impl;
+            return c;
+        }
+        if (impl instanceof ImageCRSFromGT) {
+            var c = (ImageCRSFromGT) impl;
+            return c.impl;
+        }
+        return new ImageCRSToGT(impl);
     }
 
     @Override

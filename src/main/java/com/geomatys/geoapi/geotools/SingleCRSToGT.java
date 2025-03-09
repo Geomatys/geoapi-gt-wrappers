@@ -46,19 +46,46 @@ class SingleCRSToGT<S extends org.opengis.referencing.crs.SingleCRS>
      * @return wrapper for the given implementation
      */
     static SingleCRS wrap(final org.opengis.referencing.crs.SingleCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case SingleCRS c: return c;
-            case SingleCRSFromGT<?> c: return c.impl;
-            case org.opengis.referencing.crs.ProjectedCRS      c: return new ProjectedCRSToGT(c);
-            case org.opengis.referencing.crs.GeneralDerivedCRS c: return GeneralDerivedCRSToGT.wrap(c);
-            case org.opengis.referencing.crs.GeodeticCRS       c: return GeodeticCRSToGT.wrap(c);
-            case org.opengis.referencing.crs.VerticalCRS       c: return new VerticalCRSToGT(c);
-            case org.opengis.referencing.crs.TemporalCRS       c: return new TemporalCRSToGT(c);
-            case org.opengis.referencing.crs.EngineeringCRS    c: return new EngineeringCRSToGT(c);
-            case org.opengis.referencing.crs.ImageCRS          c: return new ImageCRSToGT(c);
-            default: return new SingleCRSToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof SingleCRS) {
+            var c = (SingleCRS) impl;
+            return c;
+        }
+        if (impl instanceof SingleCRSFromGT<?>) {
+            var c = (SingleCRSFromGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.referencing.crs.ProjectedCRS) {
+            var c = (org.opengis.referencing.crs.ProjectedCRS) impl;
+            return new ProjectedCRSToGT(c);
+        }
+        if (impl instanceof org.opengis.referencing.crs.GeneralDerivedCRS) {
+            var c = (org.opengis.referencing.crs.GeneralDerivedCRS) impl;
+            return GeneralDerivedCRSToGT.wrap(c);
+        }
+        if (impl instanceof org.opengis.referencing.crs.GeodeticCRS) {
+            var c = (org.opengis.referencing.crs.GeodeticCRS) impl;
+            return GeodeticCRSToGT.wrap(c);
+        }
+        if (impl instanceof org.opengis.referencing.crs.VerticalCRS) {
+            var c = (org.opengis.referencing.crs.VerticalCRS) impl;
+            return new VerticalCRSToGT(c);
+        }
+        if (impl instanceof org.opengis.referencing.crs.TemporalCRS) {
+            var c = (org.opengis.referencing.crs.TemporalCRS) impl;
+            return new TemporalCRSToGT(c);
+        }
+        if (impl instanceof org.opengis.referencing.crs.EngineeringCRS) {
+            var c = (org.opengis.referencing.crs.EngineeringCRS) impl;
+            return new EngineeringCRSToGT(c);
+        }
+        if (impl instanceof org.opengis.referencing.crs.ImageCRS) {
+            var c = (org.opengis.referencing.crs.ImageCRS) impl;
+            return new ImageCRSToGT(c);
+        }
+        return new SingleCRSToGT<>(impl);
     }
 
     @Override

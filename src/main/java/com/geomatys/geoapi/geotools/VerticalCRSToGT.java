@@ -45,12 +45,18 @@ final class VerticalCRSToGT extends CoordinateReferenceSystemToGT<org.opengis.re
      * @return wrapper for the given implementation
      */
     static VerticalCRS wrap(final org.opengis.referencing.crs.VerticalCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case VerticalCRS c: return c;
-            case VerticalCRSFromGT c: return c.impl;
-            default: return new VerticalCRSToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof VerticalCRS) {
+            var c = (VerticalCRS) impl;
+            return c;
+        }
+        if (impl instanceof VerticalCRSFromGT) {
+            var c = (VerticalCRSFromGT) impl;
+            return c.impl;
+        }
+        return new VerticalCRSToGT(impl);
     }
 
     @Override

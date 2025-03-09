@@ -53,18 +53,29 @@ class SingleOperationToGT<S extends org.opengis.referencing.operation.SingleOper
      * @return wrapper for the given implementation
      */
     static Operation wrap(final org.opengis.referencing.operation.SingleOperation impl) {
-        if (impl instanceof SingleOperationFromGT<?> c) {
-            if (c.impl instanceof Operation op) {
+        if (impl instanceof SingleOperationFromGT<?>) {
+            var c = (SingleOperationFromGT<?>) impl;
+            if (c.impl instanceof Operation) {
+                var op = (Operation) c.impl;
                 return op;
             }
         }
-        switch (impl) {
-            case null: return null;
-            case Operation c: return c;
-            case org.opengis.referencing.operation.Transformation c: return new TransformationToGT(c);
-            case org.opengis.referencing.operation.Conversion c: return ConversionToGT.wrap(c);
-            default: return new SingleOperationToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Operation) {
+            var c = (Operation) impl;
+            return c;
+        }
+        if (impl instanceof org.opengis.referencing.operation.Transformation) {
+            var c = (org.opengis.referencing.operation.Transformation) impl;
+            return new TransformationToGT(c);
+        }
+        if (impl instanceof org.opengis.referencing.operation.Conversion) {
+            var c = (org.opengis.referencing.operation.Conversion) impl;
+            return ConversionToGT.wrap(c);
+        }
+        return new SingleOperationToGT<>(impl);
     }
 
     /**

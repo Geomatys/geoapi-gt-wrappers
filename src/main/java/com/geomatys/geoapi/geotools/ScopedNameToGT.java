@@ -42,11 +42,14 @@ final class ScopedNameToGT extends GenericNameToGT<org.opengis.util.ScopedName> 
      * @return wrapper for the given implementation
      */
     static ScopedName wrap(final org.opengis.util.ScopedName impl) {
-        switch (impl) {
-            case null: return null;
-            case ScopedNameFromGT c: return c.impl;
-            default: return new ScopedNameToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof ScopedNameFromGT) {
+            var c = (ScopedNameFromGT) impl;
+            return c.impl;
+        }
+        return new ScopedNameToGT(impl);
     }
 
     @Override

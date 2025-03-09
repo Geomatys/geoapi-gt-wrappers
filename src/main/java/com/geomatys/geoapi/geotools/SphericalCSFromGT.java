@@ -43,11 +43,17 @@ final class SphericalCSFromGT extends CoordinateSystemFromGT<org.geotools.api.re
      * @return wrapper for the given implementation
      */
     static SphericalCS wrap(final org.geotools.api.referencing.cs.SphericalCS impl) {
-        switch (impl) {
-            case null: return null;
-            case SphericalCS c: return c;
-            case SphericalCSToGT c: return c.impl;
-            default: return new SphericalCSFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof SphericalCS) {
+            var c = (SphericalCS) impl;
+            return c;
+        }
+        if (impl instanceof SphericalCSToGT) {
+            var c = (SphericalCSToGT) impl;
+            return c.impl;
+        }
+        return new SphericalCSFromGT(impl);
     }
 }

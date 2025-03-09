@@ -53,12 +53,18 @@ final class RecordTypeFromGT extends WrapperFromGT implements RecordType {
      * @return wrapper for the given implementation
      */
     static RecordType wrap(final org.geotools.api.util.RecordType impl) {
-        switch (impl) {
-            case null: return null;
-            case RecordType c: return c;
-            case RecordTypeToGT c: return c.impl;
-            default: return new RecordTypeFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof RecordType) {
+            var c = (RecordType) impl;
+            return c;
+        }
+        if (impl instanceof RecordTypeToGT) {
+            var c = (RecordTypeToGT) impl;
+            return c.impl;
+        }
+        return new RecordTypeFromGT(impl);
     }
 
     /**

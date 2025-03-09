@@ -48,12 +48,18 @@ final class MathTransform2DToGT extends MathTransformToGT<org.opengis.referencin
      * @return wrapper for the given implementation
      */
     static MathTransform2D wrap(final org.opengis.referencing.operation.MathTransform2D impl) {
-        switch (impl) {
-            case null: return null;
-            case MathTransform2D c: return c;
-            case MathTransform2DFromGT c: return c.impl;
-            default: return new MathTransform2DToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof MathTransform2D) {
+            var c = (MathTransform2D) impl;
+            return c;
+        }
+        if (impl instanceof MathTransform2DFromGT) {
+            var c = (MathTransform2DFromGT) impl;
+            return c.impl;
+        }
+        return new MathTransform2DToGT(impl);
     }
 
     @Override

@@ -56,17 +56,38 @@ class DerivedCRSToGT extends GeneralDerivedCRSToGT<org.opengis.referencing.crs.D
      */
     @SuppressWarnings("unused")
     static DerivedCRS wrap(final org.opengis.referencing.crs.DerivedCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case DerivedCRS c: return c;
-            case DerivedCRSFromGT c: return c.impl;
-            case org.opengis.referencing.crs.GeographicCRS  c: return new Geographic (impl);
-            case org.opengis.referencing.crs.GeodeticCRS    c: return new Geodetic   (impl);
-            case org.opengis.referencing.crs.VerticalCRS    c: return new Vertical   (impl);
-            case org.opengis.referencing.crs.TemporalCRS    c: return new Temporal   (impl);
-            case org.opengis.referencing.crs.EngineeringCRS c: return new Engineering(impl);
-            default: return new DerivedCRSToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof DerivedCRS) {
+            var c = (DerivedCRS) impl;
+            return c;
+        }
+        if (impl instanceof DerivedCRSFromGT) {
+            var c = (DerivedCRSFromGT) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.referencing.crs.GeographicCRS) {
+            var c = (org.opengis.referencing.crs.GeographicCRS) impl;
+            return new Geographic (impl);
+        }
+        if (impl instanceof org.opengis.referencing.crs.GeodeticCRS) {
+            var c = (org.opengis.referencing.crs.GeodeticCRS) impl;
+            return new Geodetic   (impl);
+        }
+        if (impl instanceof org.opengis.referencing.crs.VerticalCRS) {
+            var c = (org.opengis.referencing.crs.VerticalCRS) impl;
+            return new Vertical   (impl);
+        }
+        if (impl instanceof org.opengis.referencing.crs.TemporalCRS) {
+            var c = (org.opengis.referencing.crs.TemporalCRS) impl;
+            return new Temporal   (impl);
+        }
+        if (impl instanceof org.opengis.referencing.crs.EngineeringCRS) {
+            var c = (org.opengis.referencing.crs.EngineeringCRS) impl;
+            return new Engineering(impl);
+        }
+        return new DerivedCRSToGT(impl);
     }
 
     /**

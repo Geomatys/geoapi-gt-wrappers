@@ -45,12 +45,18 @@ final class TemporalCRSFromGT extends CoordinateReferenceSystemFromGT<org.geotoo
      * @return wrapper for the given implementation
      */
     static TemporalCRS wrap(final org.geotools.api.referencing.crs.TemporalCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case TemporalCRS c: return c;
-            case TemporalCRSToGT c: return c.impl;
-            default: return new TemporalCRSFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof TemporalCRS) {
+            var c = (TemporalCRS) impl;
+            return c;
+        }
+        if (impl instanceof TemporalCRSToGT) {
+            var c = (TemporalCRSToGT) impl;
+            return c.impl;
+        }
+        return new TemporalCRSFromGT(impl);
     }
 
     @Override

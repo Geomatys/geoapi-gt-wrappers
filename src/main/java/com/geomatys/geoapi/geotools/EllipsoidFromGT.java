@@ -45,12 +45,18 @@ final class EllipsoidFromGT extends IdentifiedObjectFromGT<org.geotools.api.refe
      * @return wrapper for the given implementation
      */
     static Ellipsoid wrap(final org.geotools.api.referencing.datum.Ellipsoid impl) {
-        switch (impl) {
-            case null: return null;
-            case Ellipsoid c: return c;
-            case EllipsoidToGT c: return c.impl;
-            default: return new EllipsoidFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Ellipsoid) {
+            var c = (Ellipsoid) impl;
+            return c;
+        }
+        if (impl instanceof EllipsoidToGT) {
+            var c = (EllipsoidToGT) impl;
+            return c.impl;
+        }
+        return new EllipsoidFromGT(impl);
     }
 
     @Override

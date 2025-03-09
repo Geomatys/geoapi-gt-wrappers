@@ -57,12 +57,18 @@ final class CRSAuthorityFactoryToGT extends AuthorityFactoryToGT implements CRSA
      * @return wrapper for the given implementation
      */
     static CRSAuthorityFactory wrap(final org.opengis.referencing.crs.CRSAuthorityFactory impl) {
-        switch (impl) {
-            case null: return null;
-            case CRSAuthorityFactory c: return c;
-            case CRSAuthorityFactoryFromGT c: return c.impl;
-            default: return new CRSAuthorityFactoryToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CRSAuthorityFactory) {
+            var c = (CRSAuthorityFactory) impl;
+            return c;
+        }
+        if (impl instanceof CRSAuthorityFactoryFromGT) {
+            var c = (CRSAuthorityFactoryFromGT) impl;
+            return c.impl;
+        }
+        return new CRSAuthorityFactoryToGT(impl);
     }
 
     /**

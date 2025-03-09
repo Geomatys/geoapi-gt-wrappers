@@ -45,12 +45,18 @@ final class TemporalCRSToGT extends CoordinateReferenceSystemToGT<org.opengis.re
      * @return wrapper for the given implementation
      */
     static TemporalCRS wrap(final org.opengis.referencing.crs.TemporalCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case TemporalCRS c: return c;
-            case TemporalCRSFromGT c: return c.impl;
-            default: return new TemporalCRSToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof TemporalCRS) {
+            var c = (TemporalCRS) impl;
+            return c;
+        }
+        if (impl instanceof TemporalCRSFromGT) {
+            var c = (TemporalCRSFromGT) impl;
+            return c.impl;
+        }
+        return new TemporalCRSToGT(impl);
     }
 
     @Override

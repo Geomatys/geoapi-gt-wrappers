@@ -52,12 +52,18 @@ final class DatumFactoryToGT extends ObjectFactoryToGT implements DatumFactory {
      * @return wrapper for the given implementation
      */
     static DatumFactory wrap(final org.opengis.referencing.datum.DatumFactory impl) {
-        switch (impl) {
-            case null: return null;
-            case DatumFactory c: return c;
-            case DatumFactoryFromGT c: return c.impl;
-            default: return new DatumFactoryToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof DatumFactory) {
+            var c = (DatumFactory) impl;
+            return c;
+        }
+        if (impl instanceof DatumFactoryFromGT) {
+            var c = (DatumFactoryFromGT) impl;
+            return c.impl;
+        }
+        return new DatumFactoryToGT(impl);
     }
 
     /**

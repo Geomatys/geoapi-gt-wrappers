@@ -45,12 +45,21 @@ class PositionalAccuracyFromGT<S extends org.geotools.api.metadata.quality.Posit
      * @return wrapper for the given implementation
      */
     static PositionalAccuracy wrap(final org.geotools.api.metadata.quality.PositionalAccuracy impl) {
-        switch (impl) {
-            case null: return null;
-            case PositionalAccuracy c: return c;
-            case PositionalAccuracyToGT<?> c: return c.impl;
-            case org.geotools.api.metadata.quality.AbsoluteExternalPositionalAccuracy c: return new AbsoluteExternalPositionalAccuracyFromGT(c);
-            default: return new PositionalAccuracyFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof PositionalAccuracy) {
+            var c = (PositionalAccuracy) impl;
+            return c;
+        }
+        if (impl instanceof PositionalAccuracyToGT<?>) {
+            var c = (PositionalAccuracyToGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.metadata.quality.AbsoluteExternalPositionalAccuracy) {
+            var c = (org.geotools.api.metadata.quality.AbsoluteExternalPositionalAccuracy) impl;
+            return new AbsoluteExternalPositionalAccuracyFromGT(c);
+        }
+        return new PositionalAccuracyFromGT<>(impl);
     }
 }

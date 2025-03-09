@@ -50,11 +50,14 @@ final class ParameterValueFromGT<V> extends GeneralParameterValueFromGT<org.geot
      * @return wrapper for the given implementation
      */
     static <V> ParameterValue<V> wrap(final org.geotools.api.parameter.ParameterValue<V> impl) {
-        switch (impl) {
-            case null: return null;
-            case ParameterValueToGT<V> c: return c.impl;
-            default: return new ParameterValueFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof ParameterValueToGT<?>) {
+            var c = (ParameterValueToGT<V>) impl;
+            return c.impl;
+        }
+        return new ParameterValueFromGT<>(impl);
     }
 
     @Override

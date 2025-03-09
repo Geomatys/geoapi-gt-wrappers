@@ -43,11 +43,17 @@ final class CylindricalCSFromGT extends CoordinateSystemFromGT<org.geotools.api.
      * @return wrapper for the given implementation
      */
     static CylindricalCS wrap(final org.geotools.api.referencing.cs.CylindricalCS impl) {
-        switch (impl) {
-            case null: return null;
-            case CylindricalCS c: return c;
-            case CylindricalCSToGT c: return c.impl;
-            default: return new CylindricalCSFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CylindricalCS) {
+            var c = (CylindricalCS) impl;
+            return c;
+        }
+        if (impl instanceof CylindricalCSToGT) {
+            var c = (CylindricalCSToGT) impl;
+            return c.impl;
+        }
+        return new CylindricalCSFromGT(impl);
     }
 }

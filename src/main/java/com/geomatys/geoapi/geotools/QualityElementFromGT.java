@@ -55,13 +55,22 @@ class QualityElementFromGT<S extends org.geotools.api.metadata.quality.Element> 
      * @return wrapper for the given implementation
      */
     static Element wrap(final org.geotools.api.metadata.quality.Element impl) {
-        switch (impl) {
-            case null: return null;
-            case Element c: return c;
-            case QualityElementToGT<?> c: return c.impl;
-            case org.geotools.api.metadata.quality.PositionalAccuracy c: return PositionalAccuracyFromGT.wrap(c);
-            default: return new QualityElementFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Element) {
+            var c = (Element) impl;
+            return c;
+        }
+        if (impl instanceof QualityElementToGT<?>) {
+            var c = (QualityElementToGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.metadata.quality.PositionalAccuracy) {
+            var c = (org.geotools.api.metadata.quality.PositionalAccuracy) impl;
+            return PositionalAccuracyFromGT.wrap(c);
+        }
+        return new QualityElementFromGT<>(impl);
     }
 
     /**

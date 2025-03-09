@@ -43,12 +43,21 @@ class LocalNameFromGT<S extends org.geotools.api.util.LocalName>
      * @return wrapper for the given implementation
      */
     static LocalName wrap(final org.geotools.api.util.LocalName impl) {
-        switch (impl) {
-            case null: return null;
-            case LocalNameToGT<?> c: return c.impl;
-            case org.geotools.api.util.TypeName   c: return new TypeNameFromGT(c);
-            case org.geotools.api.util.MemberName c: return new MemberNameFromGT(c);
-            default: return new LocalNameFromGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof LocalNameToGT<?>) {
+            var c = (LocalNameToGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.util.TypeName) {
+            var c = (org.geotools.api.util.TypeName) impl;
+            return new TypeNameFromGT(c);
+        }
+        if (impl instanceof org.geotools.api.util.MemberName) {
+            var c = (org.geotools.api.util.MemberName) impl;
+            return new MemberNameFromGT(c);
+        }
+        return new LocalNameFromGT<>(impl);
     }
 }

@@ -43,11 +43,17 @@ final class PolarCSToGT extends CoordinateSystemToGT<org.opengis.referencing.cs.
      * @return wrapper for the given implementation
      */
     static PolarCS wrap(final org.opengis.referencing.cs.PolarCS impl) {
-        switch (impl) {
-            case null: return null;
-            case PolarCS c: return c;
-            case PolarCSFromGT c: return c.impl;
-            default: return new PolarCSToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof PolarCS) {
+            var c = (PolarCS) impl;
+            return c;
+        }
+        if (impl instanceof PolarCSFromGT) {
+            var c = (PolarCSFromGT) impl;
+            return c.impl;
+        }
+        return new PolarCSToGT(impl);
     }
 }

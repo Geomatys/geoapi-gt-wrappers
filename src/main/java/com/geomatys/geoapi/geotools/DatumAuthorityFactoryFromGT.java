@@ -55,12 +55,18 @@ final class DatumAuthorityFactoryFromGT extends AuthorityFactoryFromGT implement
      * @return wrapper for the given implementation
      */
     static DatumAuthorityFactory wrap(final org.geotools.api.referencing.datum.DatumAuthorityFactory impl) {
-        switch (impl) {
-            case null: return null;
-            case DatumAuthorityFactory c: return c;
-            case DatumAuthorityFactoryToGT c: return c.impl;
-            default: return new DatumAuthorityFactoryFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof DatumAuthorityFactory) {
+            var c = (DatumAuthorityFactory) impl;
+            return c;
+        }
+        if (impl instanceof DatumAuthorityFactoryToGT) {
+            var c = (DatumAuthorityFactoryToGT) impl;
+            return c.impl;
+        }
+        return new DatumAuthorityFactoryFromGT(impl);
     }
 
     /**

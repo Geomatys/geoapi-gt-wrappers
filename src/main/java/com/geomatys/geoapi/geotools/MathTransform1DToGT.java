@@ -45,12 +45,18 @@ final class MathTransform1DToGT extends MathTransformToGT<org.opengis.referencin
      * @return wrapper for the given implementation
      */
     static MathTransform1D wrap(final org.opengis.referencing.operation.MathTransform1D impl) {
-        switch (impl) {
-            case null: return null;
-            case MathTransform1D c: return c;
-            case MathTransform1DFromGT c: return c.impl;
-            default: return new MathTransform1DToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof MathTransform1D) {
+            var c = (MathTransform1D) impl;
+            return c;
+        }
+        if (impl instanceof MathTransform1DFromGT) {
+            var c = (MathTransform1DFromGT) impl;
+            return c.impl;
+        }
+        return new MathTransform1DToGT(impl);
     }
 
     @Override

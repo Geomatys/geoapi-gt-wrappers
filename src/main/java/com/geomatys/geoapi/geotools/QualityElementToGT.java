@@ -55,13 +55,22 @@ class QualityElementToGT<S extends org.opengis.metadata.quality.Element> extends
      * @return wrapper for the given implementation
      */
     static Element wrap(final org.opengis.metadata.quality.Element impl) {
-        switch (impl) {
-            case null: return null;
-            case Element c: return c;
-            case QualityElementFromGT<?> c: return c.impl;
-            case org.opengis.metadata.quality.PositionalAccuracy c: return PositionalAccuracyToGT.wrap(c);
-            default: return new QualityElementToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Element) {
+            var c = (Element) impl;
+            return c;
+        }
+        if (impl instanceof QualityElementFromGT<?>) {
+            var c = (QualityElementFromGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.metadata.quality.PositionalAccuracy) {
+            var c = (org.opengis.metadata.quality.PositionalAccuracy) impl;
+            return PositionalAccuracyToGT.wrap(c);
+        }
+        return new QualityElementToGT<>(impl);
     }
 
     /**

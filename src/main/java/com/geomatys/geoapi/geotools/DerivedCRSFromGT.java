@@ -56,17 +56,38 @@ class DerivedCRSFromGT extends GeneralDerivedCRSFromGT<org.geotools.api.referenc
      */
     @SuppressWarnings("unused")
     static DerivedCRS wrap(final org.geotools.api.referencing.crs.DerivedCRS impl) {
-        switch (impl) {
-            case null: return null;
-            case DerivedCRS c: return c;
-            case DerivedCRSToGT c: return c.impl;
-            case org.geotools.api.referencing.crs.GeographicCRS  c: return new Geographic (impl);
-            case org.geotools.api.referencing.crs.GeodeticCRS    c: return new Geodetic   (impl);
-            case org.geotools.api.referencing.crs.VerticalCRS    c: return new Vertical   (impl);
-            case org.geotools.api.referencing.crs.TemporalCRS    c: return new Temporal   (impl);
-            case org.geotools.api.referencing.crs.EngineeringCRS c: return new Engineering(impl);
-            default: return new DerivedCRSFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof DerivedCRS) {
+            var c = (DerivedCRS) impl;
+            return c;
+        }
+        if (impl instanceof DerivedCRSToGT) {
+            var c = (DerivedCRSToGT) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.geotools.api.referencing.crs.GeographicCRS) {
+            var c = (org.geotools.api.referencing.crs.GeographicCRS) impl;
+            return new Geographic (impl);
+        }
+        if (impl instanceof org.geotools.api.referencing.crs.GeodeticCRS) {
+            var c = (org.geotools.api.referencing.crs.GeodeticCRS) impl;
+            return new Geodetic   (impl);
+        }
+        if (impl instanceof org.geotools.api.referencing.crs.VerticalCRS) {
+            var c = (org.geotools.api.referencing.crs.VerticalCRS) impl;
+            return new Vertical   (impl);
+        }
+        if (impl instanceof org.geotools.api.referencing.crs.TemporalCRS) {
+            var c = (org.geotools.api.referencing.crs.TemporalCRS) impl;
+            return new Temporal   (impl);
+        }
+        if (impl instanceof org.geotools.api.referencing.crs.EngineeringCRS) {
+            var c = (org.geotools.api.referencing.crs.EngineeringCRS) impl;
+            return new Engineering(impl);
+        }
+        return new DerivedCRSFromGT(impl);
     }
 
     /**

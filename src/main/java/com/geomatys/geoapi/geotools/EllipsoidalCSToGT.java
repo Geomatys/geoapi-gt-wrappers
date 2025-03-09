@@ -43,11 +43,17 @@ final class EllipsoidalCSToGT extends CoordinateSystemToGT<org.opengis.referenci
      * @return wrapper for the given implementation
      */
     static EllipsoidalCS wrap(final org.opengis.referencing.cs.EllipsoidalCS impl) {
-        switch (impl) {
-            case null: return null;
-            case EllipsoidalCS c: return c;
-            case EllipsoidalCSFromGT c: return c.impl;
-            default: return new EllipsoidalCSToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof EllipsoidalCS) {
+            var c = (EllipsoidalCS) impl;
+            return c;
+        }
+        if (impl instanceof EllipsoidalCSFromGT) {
+            var c = (EllipsoidalCSFromGT) impl;
+            return c.impl;
+        }
+        return new EllipsoidalCSToGT(impl);
     }
 }

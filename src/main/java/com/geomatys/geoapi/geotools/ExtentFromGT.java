@@ -51,12 +51,18 @@ final class ExtentFromGT extends WrapperFromGT implements Extent {
      * @return wrapper for the given implementation
      */
     static Extent wrap(final org.geotools.api.metadata.extent.Extent impl) {
-        switch (impl) {
-            case null: return null;
-            case Extent c: return c;
-            case ExtentToGT c: return c.impl;
-            default: return new ExtentFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Extent) {
+            var c = (Extent) impl;
+            return c;
+        }
+        if (impl instanceof ExtentToGT) {
+            var c = (ExtentToGT) impl;
+            return c.impl;
+        }
+        return new ExtentFromGT(impl);
     }
 
     /**

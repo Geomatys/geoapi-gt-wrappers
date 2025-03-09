@@ -48,14 +48,26 @@ class QualityResultToGT<S extends org.opengis.metadata.quality.Result> extends W
      * @return wrapper for the given implementation
      */
     static Result wrap(final org.opengis.metadata.quality.Result impl) {
-        switch (impl) {
-            case null: return null;
-            case Result c: return c;
-            case QualityResultFromGT<?> c: return c.impl;
-            case org.opengis.metadata.quality.ConformanceResult  c: return new ConformanceResultToGT (c);
-            case org.opengis.metadata.quality.QuantitativeResult c: return new QuantitativeResultToGT(c);
-            default: return new QualityResultToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Result) {
+            var c = (Result) impl;
+            return c;
+        }
+        if (impl instanceof QualityResultFromGT<?>) {
+            var c = (QualityResultFromGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.metadata.quality.ConformanceResult) {
+            var c = (org.opengis.metadata.quality.ConformanceResult) impl;
+            return new ConformanceResultToGT (c);
+        }
+        if (impl instanceof org.opengis.metadata.quality.QuantitativeResult) {
+            var c = (org.opengis.metadata.quality.QuantitativeResult) impl;
+            return new QuantitativeResultToGT(c);
+        }
+        return new QualityResultToGT<>(impl);
     }
 
     /**

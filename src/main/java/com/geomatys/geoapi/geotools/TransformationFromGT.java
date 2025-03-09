@@ -43,11 +43,17 @@ final class TransformationFromGT extends SingleOperationFromGT<org.geotools.api.
      * @return wrapper for the given implementation
      */
     static Transformation wrap(final org.geotools.api.referencing.operation.Transformation impl) {
-        switch (impl) {
-            case null: return null;
-            case Transformation c: return c;
-            case TransformationToGT c: return c.impl;
-            default: return new TransformationFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof Transformation) {
+            var c = (Transformation) impl;
+            return c;
+        }
+        if (impl instanceof TransformationToGT) {
+            var c = (TransformationToGT) impl;
+            return c.impl;
+        }
+        return new TransformationFromGT(impl);
     }
 }

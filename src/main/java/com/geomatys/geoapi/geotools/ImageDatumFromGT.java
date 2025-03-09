@@ -44,12 +44,18 @@ final class ImageDatumFromGT extends DatumFromGT<org.geotools.api.referencing.da
      * @return wrapper for the given implementation
      */
     static ImageDatum wrap(final org.geotools.api.referencing.datum.ImageDatum impl) {
-        switch (impl) {
-            case null: return null;
-            case ImageDatum c: return c;
-            case ImageDatumToGT c: return c.impl;
-            default: return new ImageDatumFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof ImageDatum) {
+            var c = (ImageDatum) impl;
+            return c;
+        }
+        if (impl instanceof ImageDatumToGT) {
+            var c = (ImageDatumToGT) impl;
+            return c.impl;
+        }
+        return new ImageDatumFromGT(impl);
     }
 
     @Override

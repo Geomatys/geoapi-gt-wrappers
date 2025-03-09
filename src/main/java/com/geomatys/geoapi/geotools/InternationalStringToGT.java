@@ -48,11 +48,14 @@ final class InternationalStringToGT extends WrapperToGT implements International
      * @return wrapper for the given implementation
      */
     static InternationalString wrap(final org.opengis.util.InternationalString impl) {
-        switch (impl) {
-            case null: return null;
-            case InternationalStringFromGT c: return c.impl;
-            default: return new InternationalStringToGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof InternationalStringFromGT) {
+            var c = (InternationalStringFromGT) impl;
+            return c.impl;
+        }
+        return new InternationalStringToGT(impl);
     }
 
     /**
@@ -61,11 +64,6 @@ final class InternationalStringToGT extends WrapperToGT implements International
     @Override
     final Object implementation() {
         return impl;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return impl.isEmpty();
     }
 
     @Override
@@ -100,7 +98,8 @@ final class InternationalStringToGT extends WrapperToGT implements International
 
     @Override
     public int compareTo(final InternationalString o) {
-        if (o instanceof InternationalStringToGT i18n) {
+        if (o instanceof InternationalStringToGT) {
+            var i18n = (InternationalStringToGT) o;
             return impl.compareTo(i18n.impl);
         } else {
             return toString().compareTo(o.toString());

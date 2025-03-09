@@ -50,12 +50,18 @@ final class CoordinateOperationAuthorityFactoryFromGT extends AuthorityFactoryFr
      * @return wrapper for the given implementation
      */
     static CoordinateOperationAuthorityFactory wrap(final org.geotools.api.referencing.operation.CoordinateOperationAuthorityFactory impl) {
-        switch (impl) {
-            case null: return null;
-            case CoordinateOperationAuthorityFactory c: return c;
-            case CoordinateOperationAuthorityFactoryToGT c: return c.impl;
-            default: return new CoordinateOperationAuthorityFactoryFromGT(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof CoordinateOperationAuthorityFactory) {
+            var c = (CoordinateOperationAuthorityFactory) impl;
+            return c;
+        }
+        if (impl instanceof CoordinateOperationAuthorityFactoryToGT) {
+            var c = (CoordinateOperationAuthorityFactoryToGT) impl;
+            return c.impl;
+        }
+        return new CoordinateOperationAuthorityFactoryFromGT(impl);
     }
 
     /**

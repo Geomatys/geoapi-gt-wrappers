@@ -55,14 +55,26 @@ class MathTransformToGT<S extends org.opengis.referencing.operation.MathTransfor
      * @return wrapper for the given implementation
      */
     static MathTransform wrap(final org.opengis.referencing.operation.MathTransform impl) {
-        switch (impl) {
-            case null: return null;
-            case MathTransform c: return c;
-            case MathTransformFromGT<?> c: return c.impl;
-            case org.opengis.referencing.operation.MathTransform1D c: return new MathTransform1DToGT(c);
-            case org.opengis.referencing.operation.MathTransform2D c: return new MathTransform2DToGT(c);
-            default: return new MathTransformToGT<>(impl);
+        if (impl == null) {
+            return null;
         }
+        if (impl instanceof MathTransform) {
+            var c = (MathTransform) impl;
+            return c;
+        }
+        if (impl instanceof MathTransformFromGT<?>) {
+            var c = (MathTransformFromGT<?>) impl;
+            return c.impl;
+        }
+        if (impl instanceof org.opengis.referencing.operation.MathTransform1D) {
+            var c = (org.opengis.referencing.operation.MathTransform1D) impl;
+            return new MathTransform1DToGT(c);
+        }
+        if (impl instanceof org.opengis.referencing.operation.MathTransform2D) {
+            var c = (org.opengis.referencing.operation.MathTransform2D) impl;
+            return new MathTransform2DToGT(c);
+        }
+        return new MathTransformToGT<>(impl);
     }
 
     /**
