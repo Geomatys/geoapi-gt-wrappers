@@ -72,11 +72,17 @@ class SingleOperationFromGT<S extends org.geotools.api.referencing.operation.Sin
      */
     @Override
     public OperationMethod getMethod() {
-        return (impl instanceof Operation op) ? OperationMethodFromGT.wrap(op.getMethod()) : null;
+        if (impl instanceof Operation op) {
+            return OperationMethodFromGT.wrap(op.getMethod());
+        }
+        return null;
     }
 
     @Override
     public ParameterValueGroup getParameterValues() {
-        return (impl instanceof Operation op) ? ParameterValueGroupFromGT.wrap(op.getParameterValues()) : null;
+        if (impl instanceof Operation op) {
+            return ParameterValueGroupFromGT.wrap(op.getParameterValues());
+        }
+        return null;
     }
 }
