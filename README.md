@@ -16,6 +16,31 @@ However, as of Mars 2025, it has not been tested.
 For more details, see [the Javadoc](https://geomatys.github.io/geoapi-gt-wrappers/).
 
 
+## Maven coordinates
+This artifact can be used in a Maven project as below:
+
+```xml
+  <dependencies>
+    <dependency>
+      <groupId>com.geomatys</groupId>
+      <artifactId>geoapi-geotools</artifactId>
+      <version>1.0</version>
+    </dependency>
+  </dependencies>
+
+  <repositories>
+    <repository>
+      <id>geotoolkit.org</id>
+      <name>Geotoolkit.org repository</name>
+      <url>https://maven.geotoolkit.org</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+```
+
+
 ## Usage
 This project provides only two public classes: `Wrappers` and `Services`.
 For viewing a GeoTools object as a GeoAPI object, simply invoke the following:
